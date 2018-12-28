@@ -14,20 +14,19 @@ public class OrRead {
     public  OrRead(String path){
         this.orPath = path ;
     }
-    public List<Map> getOrFromSheet() {
+    public Map getOrFromSheet() {
         List<Map> orLists = new ArrayList<Map>() ;
         String[] splitPath = orPath.split("\\.");
         List<Map> orRecords = new ArrayList<Map>();
         String filePath = "G:\\testing\\AMTDirect_NousAutomation\\Framework\\ObjectRepository\\"+splitPath[0]+".xlsx";
         ReadExcel readExcel = new ReadExcel(filePath);
         List<Map> records = readExcel.read(splitPath[1]);
+        Map objectLocator = new HashMap();
         for(Map map: records) {
            String objectReference = (String) map.get(PropertyConfig.OBJECT_REFERENCE) ;
-            Map objectLocator = new HashMap();
             String objectKey = splitPath[0] + "." +  splitPath[1] + "." +  objectReference ;
             objectLocator.put(objectKey,map) ;
-            orLists.add(objectLocator);
         }
-        return orLists ;
+        return objectLocator ;
     }
 }

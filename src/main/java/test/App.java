@@ -64,5 +64,6 @@ public class App
         WebDriver driver = DriverFactory.createDriver(browser, hdless);
         driver.navigate().to("http://www.calculator.net/");
         driver.manage().window().maximize();
+
     }
 }
