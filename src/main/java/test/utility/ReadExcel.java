@@ -42,7 +42,10 @@ public class ReadExcel {
                     if(firstRow){
                         columnNames[index++]=cell.toString() ;
                     } else {
-                        record.put(columnNames[index++],cell.toString());
+                        if(index < columnNames.length)
+                            record.put(columnNames[index++],cell.toString());
+                        else
+                            break;
                     }
                 }
                 if(firstRow)

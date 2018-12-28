@@ -18,7 +18,8 @@ public class OrRead {
         List<Map> orLists = new ArrayList<Map>() ;
         String[] splitPath = orPath.split("\\.");
         List<Map> orRecords = new ArrayList<Map>();
-        String filePath = "G:\\testing\\AMTDirect_NousAutomation\\Framework\\ObjectRepository\\"+splitPath[0]+".xlsx";
+        ClassLoader classLoader = getClass().getClassLoader();
+        String filePath = classLoader.getResource("objectLocator/"+splitPath[0]+".xlsx").getPath();
         ReadExcel readExcel = new ReadExcel(filePath);
         List<Map> records = readExcel.read(splitPath[1]);
         Map objectLocator = new HashMap();
