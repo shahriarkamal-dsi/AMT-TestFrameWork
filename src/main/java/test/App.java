@@ -7,10 +7,16 @@ package test;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import test.driver.DriverFactory;
+import test.objectLocator.ObjectLocatorDataStorage;
+import test.objectLocator.WebObjectSearch;
+import test.objectLocator.WebObjectSearchType;
+import test.utility.PropertyConfig;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 public class App 
@@ -38,8 +44,19 @@ public class App
         boolean hdless =  headless.equals("true") ? true : false ;
        // System.out.println(appVersion);
         WebDriver driver = DriverFactory.createDriver(browser, hdless);
-        driver.navigate().to("http://www.calculator.net/");
+        driver.navigate().to("https://qa2.testamt.com/");
         driver.manage().window().maximize();
-
+            ObjectLocatorDataStorage objectLocatorDataStorage = new ObjectLocatorDataStorage();
+            try {
+                Map userName = objectLocatorDataStorage.getObjectLocator("sample.login.userName");
+                Map password = objectLocatorDataStorage.getObjectLocator("sample.login.password");
+                Map client = objectLocatorDataStorage.getObjectLocator("sample.login.client");
+                WebElement webElement = WebObjectSearch.searchWebObject(driver,userName);
+                webElement.sendKeys("AmtAutomation");
+                //driver.close();
+               // System.out.println(webElement);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 }
