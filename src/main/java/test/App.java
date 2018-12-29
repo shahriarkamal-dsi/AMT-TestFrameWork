@@ -51,8 +51,15 @@ public class App
                 Map userName = objectLocatorDataStorage.getObjectLocator("sample.login.userName");
                 Map password = objectLocatorDataStorage.getObjectLocator("sample.login.password");
                 Map client = objectLocatorDataStorage.getObjectLocator("sample.login.client");
-                WebElement webElement = WebObjectSearch.searchWebObject(driver,userName);
-                webElement.sendKeys("AmtAutomation");
+                Map loginButton = objectLocatorDataStorage.getObjectLocator("sample.login.loginButton");
+                WebElement userWeb = WebObjectSearch.searchWebObject(driver,userName);
+                WebElement passWeb = WebObjectSearch.searchWebObject(driver,password);
+                WebElement clntWeb = WebObjectSearch.searchWebObject(driver,client);
+                WebElement lognBtnWeb = WebObjectSearch.searchWebObject(driver,loginButton);
+                userWeb.sendKeys("AmtAutomation");
+                passWeb.sendKeys("2018Automate!");
+                clntWeb.sendKeys("201481");
+                lognBtnWeb.click();
                 //driver.close();
                // System.out.println(webElement);
             } catch (Exception e) {
