@@ -28,17 +28,22 @@ public class ReadExcel {
             boolean firstRow = true ;
             String[] columnNames = new String[10] ;
             List<Map> records = new ArrayList<Map>() ;
+            int rowTotal = sheet.getLastRowNum() + 1 ;
+          //  System.out.println("rowTotal "+rowTotal);
+            int currentRow = 1 ;
 
-            while(rowIt.hasNext()) {
+            while(rowIt.hasNext() && currentRow <= rowTotal ) {
+                boolean isEmptyCell = true ;
+                currentRow++ ;
                 Row row = rowIt.next();
-
-                // iterate on cells for the current row
                 Iterator<Cell> cellIterator = row.cellIterator();
                 int index = 0;
                 Map record = new HashMap();
 
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
+                    if(!cell.toString().isEmpty())
+                            isEmptyCell = false;
                     if(firstRow){
                         columnNames[index++]=cell.toString() ;
                     } else {
@@ -51,7 +56,8 @@ public class ReadExcel {
                 if(firstRow)
                     firstRow = false ;
                 else {
-                    records.add(record);
+                    if(!isEmptyCell)
+                        records.add(record);
                 }
             }
             workBook.close();

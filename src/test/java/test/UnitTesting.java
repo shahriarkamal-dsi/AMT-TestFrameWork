@@ -15,14 +15,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import java.lang.System.* ;
+
 public class UnitTesting {
 
     @Test
     public void readExcelsheetTest(){
         ClassLoader classLoader = getClass().getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/FASB.xlsx").getPath());
+        long start = System.currentTimeMillis();
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/PortFolioInsight.xlsx").getPath());
         List<Map> records = readExcel.read("TC001_TC050");
+        long finish = System.currentTimeMillis();
+        long timeElapsed = finish - start;
         System.out.println(records.get(records.size()-1));
+        System.out.println("execute time : "+timeElapsed/1000);
     }
     @Test
     public void orReadTesting(){
