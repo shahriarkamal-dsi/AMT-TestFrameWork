@@ -42,8 +42,6 @@
       <version>4.0.1</version>
     </dependency>
 
-    <!-- dependency used for XLS older file format
-         (added for information) -->
 
     <dependency>
       <groupId>org.apache.poi</groupId>
