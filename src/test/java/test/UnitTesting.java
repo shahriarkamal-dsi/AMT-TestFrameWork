@@ -3,6 +3,8 @@ package test;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import test.coreModule.ExecuteTests;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
 import test.objectLocator.WebObjectSearchType;
@@ -66,6 +68,22 @@ public class UnitTesting {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testingInvokeMethod() {
+
+        WebDriver driver = null ;
+        ExecuteTests executeTests = new ExecuteTests(driver);
+         String temp = "temp" ;
+        Object[] object = new Object[]{driver,temp};
+        executeTests.invokeMethod("UiBase","click",1,object);
+    }
+    @Test
+    public void testingReadAndExecute() {
+        WebDriver driver = null ;
+        ExecuteTests executeTests = new ExecuteTests(driver);
+        executeTests.readAndExecute("sampleTest","TC001_TC050");
     }
 
 }
