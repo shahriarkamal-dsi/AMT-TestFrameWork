@@ -23,5 +23,12 @@ public enum WebObjectSearchType implements WebObject {
         public WebElement findElement(WebDriver driver, String searchKey) {
             return null ;
         }
-    }
+    },
+    BY_XPATH{
+        @Override
+        public WebElement findElement(WebDriver driver, String searchKey) {
+            return driver.findElement(By.xpath(searchKey));
+
+        }
+    },
 }

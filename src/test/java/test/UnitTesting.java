@@ -3,22 +3,34 @@ package test;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import test.coreModule.ExecuteTests;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
 import test.objectLocator.WebObjectSearchType;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+
+import java.lang.System.* ;
 
 public class UnitTesting {
 
     @Test
     public void readExcelsheetTest(){
-        ReadExcel readExcel = new ReadExcel("G:\\testing\\AMTDirect_NousAutomation\\Framework\\Modules\\Fasb2.xlsx");
+        ClassLoader classLoader = getClass().getClassLoader();
+        long start = System.currentTimeMillis();
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/PortFolioInsight.xlsx").getPath());
         List<Map> records = readExcel.read("TC001_TC050");
-        System.out.println(records);
+        long finish = System.currentTimeMillis();
+        long timeElapsed = finish - start;
+        System.out.println(records.get(records.size()-1));
+        System.out.println("execute time : "+timeElapsed/1000);
     }
     @Test
     public void orReadTesting(){
@@ -56,6 +68,22 @@ public class UnitTesting {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testingInvokeMethod() {
+
+        WebDriver driver = null ;
+        ExecuteTests executeTests = new ExecuteTests(driver);
+         String temp = "temp" ;
+        Object[] object = new Object[]{driver,temp};
+        executeTests.invokeMethod("UiBase","click",1,object);
+    }
+    @Test
+    public void testingReadAndExecute() {
+        WebDriver driver = null ;
+        ExecuteTests executeTests = new ExecuteTests(driver);
+        executeTests.readAndExecute("sampleTest","TC001_TC050");
     }
 
 }
