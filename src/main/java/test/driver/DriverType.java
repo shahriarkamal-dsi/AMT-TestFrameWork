@@ -44,7 +44,7 @@ public enum DriverType implements Driver {
     IE {
         @Override
         public WebDriver getDriver(DesiredCapabilities desiredCapabilities, Boolean headless) {
-            WebDriverManager.iedriver().setup();
+            WebDriverManager.iedriver().arch32().setup();
            // ChromeOptions options = new  I();
            // options.setHeadless(headless);
             WebDriver driver = new InternetExplorerDriver();

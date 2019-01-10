@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class ExecuteTests {
         List<Map> records = readExcel.read(sheetName);
         for(Map map : records) {
             ArrayList<Object> objects = new ArrayList<Object>();
-            objects.add(webDriver);
+           // objects.add(webDriver);
             String actionName = (String) map.get(PropertyConfig.ACTION);
             String objectLocators = (String) map.get(PropertyConfig.OBJECT_LOCATOR);
             String testData = (String) map.get(PropertyConfig.TEST_DATA);
@@ -51,14 +52,15 @@ public class ExecuteTests {
             Class<?> callingClass = Class.forName("test.keywordScripts." + className);
             Method callingMethod ;
             if(numberOfParams == 0)
-                callingMethod = callingClass.getDeclaredMethod(methodName, WebDriver.class);
+                callingMethod = callingClass.getDeclaredMethod(methodName);
             else if(numberOfParams == 1)
-                callingMethod = callingClass.getDeclaredMethod(methodName, WebDriver.class,String.class );
+                callingMethod = callingClass.getDeclaredMethod(methodName,String.class );
             else if(numberOfParams == 2)
-                callingMethod = callingClass.getDeclaredMethod(methodName, WebDriver.class,String.class,String.class);
+                callingMethod = callingClass.getDeclaredMethod(methodName,String.class,String.class);
             else
                 return;
-            callingMethod.invoke(callingClass.newInstance(),object);
+            Constructor<?> constructor = callingClass.getConstructor(WebDriver.class);
+            callingMethod.invoke(constructor.newInstance(webDriver),object);
         } catch(Exception ex) {
                ex.printStackTrace();
         }
