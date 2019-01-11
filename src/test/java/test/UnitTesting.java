@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import test.coreModule.ExecuteTests;
+import test.coreModule.*;
 import test.keywordScripts.UiBase;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
@@ -14,6 +14,7 @@ import test.utility.ReadExcel;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -85,6 +86,25 @@ public class UnitTesting {
         WebDriver driver = null ;
         ExecuteTests executeTests = new ExecuteTests(driver);
         executeTests.readAndExecute("sampleTest","TC001_TC050");
+    }
+    @Test
+    public void testinCreateTestPlan() {
+        MainController mc = new MainController();
+        TestPlan testPlan =  mc.createTestPlan() ;
+        List<TestModule> modules = testPlan.getAllTesModules() ;
+        for(TestModule md : modules){
+            System.out.println(md.getModuleName());
+            md.setModuleName("test");
+            System.out.println(md.getAllTestSuits().size()) ;
+            md.addTestSuite(new TestSuite());
+        }
+
+         modules = testPlan.getAllTesModules() ;
+        for(TestModule md : modules){
+            System.out.println(md.getModuleName());
+            System.out.println(md.getAllTestSuits().size()) ;
+        }
+
     }
 
 }
