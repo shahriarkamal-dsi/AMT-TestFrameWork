@@ -11,10 +11,12 @@ public class PropertyConfig {
     public static String TEST_DATA = "TestData" ;
     public static String EXECUTION_FLAG = "ExecutionFlag" ;
     public static String TC_ID= "TC_ID" ;
+    public static String TEST_CASE_NAME= "TestCaseName" ;
     public static String STEP_NO = "StepNo" ;
     public static String  TEST_STEP_DESCRIPTION = "TestStepDescription" ;
     public static String FIELD_NAME = "FieldName" ;
-    public static String CRITICAL = "Critical" ;
+    public static String CRITICAL = "Critical"  ;
+    public static String SHEET_NAME = "SheetName"  ;
     public static Integer INIT = 0 ;
     public static Integer CREATED = 1 ;
     public static Integer TESTED = 2 ;

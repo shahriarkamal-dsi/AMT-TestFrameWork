@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TestCase {
-    private String testCaseNumber ;
+    private String testCaseNumber;
+    private String testCaseName;
     private List<TestStep> testSteps ;
 
     public TestCase(){
@@ -24,6 +25,13 @@ public class TestCase {
 
     public void setTestCaseNumber(String number){
         this.testCaseNumber = number ;
+    }
+    public String getTestCaseName(){
+        return testCaseName;
+    }
+
+    public void setTestCaseName(String name){
+        this.testCaseName= name;
     }
     public void addTestStep(TestStep testStep ){
         testSteps.add(testStep);

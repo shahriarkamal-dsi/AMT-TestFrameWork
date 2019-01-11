@@ -19,6 +19,22 @@ public class MainController {
             if(module.getState().equals(PropertyConfig.INIT)){
                 ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("modules/" + module.getModuleName() + ".xlsx").getPath());
                 List<Map> records = readExcel.read(PropertyConfig.CONTROLLER);
+                for (Map record : records) {
+                    if(null == record.get(PropertyConfig.EXECUTION_FLAG) || record.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty()  || !record.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes")  )
+                        continue;
+                    String sheetName = (String) record.get(PropertyConfig.SHEET_NAME);
+                    String testCaseID = (String) record.get(PropertyConfig.TC_ID);
+                    String testCaseName = (String) record.get(PropertyConfig.TEST_CASE_NAME);
+                    TestSuite testSuite = module.getTestSuite(sheetName);
+                    if(null ==  testSuite){
+                        testSuite = new TestSuite(sheetName);
+                        module.addTestSuite(testSuite);
+                    }
+                    TestCase testCase = new TestCase(testCaseID);
+                    testCase.setTestCaseName(testCaseName);
+                    testSuite.addTestCase(testCase);
+                }
+                module.setState(PropertyConfig.CREATED);
             }
         }
     }
