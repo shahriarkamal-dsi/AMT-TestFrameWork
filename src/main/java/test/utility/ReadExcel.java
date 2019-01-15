@@ -1,5 +1,6 @@
 package test.utility;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -42,13 +43,17 @@ public class ReadExcel {
 
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
+                    cell.setCellType(CellType.STRING);
+
                     if(!cell.toString().isEmpty())
                             isEmptyCell = false;
                     if(firstRow){
                         columnNames[index++]=cell.toString() ;
                     } else {
-                        if(index < columnNames.length)
-                            record.put(columnNames[index++],cell.toString());
+                        if(index < columnNames.length) {
+                            record.put(columnNames[cell.getColumnIndex()],cell.getStringCellValue() );
+                            index++;
+                        }
                         else
                             break;
                     }

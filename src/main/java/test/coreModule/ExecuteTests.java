@@ -45,6 +45,34 @@ public class ExecuteTests {
         }
 
     }
+    public void executeTest(TestCase testCase) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        long start = System.currentTimeMillis();
+        List<TestStep> testSteps = testCase.getAllTestSteps();
+        for(TestStep testStep : testSteps) {
+            ArrayList<Object> objects = new ArrayList<Object>();
+            // objects.add(webDriver);
+            String actionName = testStep.getAction();
+            String objectLocators = testStep.getObjectLocator();
+            String testData = testStep.getTestData();
+            Boolean executionFlag = testStep.isExecutionFlagOn();
+            Boolean critical = testStep.isCritical();
+            int numberOfParams = 0;
+
+            if (! executionFlag)
+                continue;
+            if(null != objectLocators && ! objectLocators.isEmpty()) {
+                objects.add(objectLocators);
+                numberOfParams++;
+            }
+            if(null != testData && ! testData.isEmpty()){
+                objects.add(testData);
+                numberOfParams++;
+            }
+            invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
+        }
+
+    }
 
     public void invokeMethod(String className,String methodName,int numberOfParams,Object[] object) {
         try {

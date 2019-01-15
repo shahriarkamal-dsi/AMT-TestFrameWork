@@ -4,19 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ObjectLocatorDataStorage {
-    private Map<String,Map> objectLocatorStorage ;
+    private static Map<String,Map> objectLocatorStorage = new HashMap<String,Map>() ;
    // private Map<String,Boolean> sheetCalled ;
 
     public ObjectLocatorDataStorage(){
-        this.objectLocatorStorage = new HashMap<String,Map>() ;
     }
 
-    public Map getObjectLocator(String orPath) throws Exception {
+    public static Map getObjectLocator(String orPath) throws Exception {
         if(objectLocatorStorage.containsKey(orPath) && null != objectLocatorStorage.get(orPath)) {
             return objectLocatorStorage.get(orPath) ;
         } else {
             OrRead orRead = new OrRead(orPath);
-            this.addObjectLocaor(orRead.getOrFromSheet());
+            addObjectLocaor(orRead.getOrFromSheet());
             if(objectLocatorStorage.containsKey(orPath) && null != objectLocatorStorage.get(orPath)) {
                 return objectLocatorStorage.get(orPath) ;
             } else {
@@ -25,7 +24,7 @@ public class ObjectLocatorDataStorage {
         }
     }
 
-    public void addObjectLocaor(Map objectLocator){
-        this.objectLocatorStorage.putAll(objectLocator);
+    private static void addObjectLocaor(Map objectLocator){
+        objectLocatorStorage.putAll(objectLocator);
     }
 }

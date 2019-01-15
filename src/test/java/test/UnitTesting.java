@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import test.coreModule.*;
+import test.driver.DriverFactory;
 import test.keywordScripts.UiBase;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
@@ -27,7 +28,7 @@ public class UnitTesting {
     public void readExcelsheetTest(){
         ClassLoader classLoader = getClass().getClassLoader();
         long start = System.currentTimeMillis();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/PortFolioInsight.xlsx").getPath());
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/sampleTest.xlsx").getPath());
         List<Map> records = readExcel.read("TC001_TC050");
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
@@ -106,5 +107,31 @@ public class UnitTesting {
         }
 
     }
+    @Test
+    public void testingCreateTestPlanAndModule() {
+        MainController mc = new MainController();
+        TestPlan testPlan = mc.createTestPlanAndModule();
+        List<TestModule> modules = testPlan.getAllTesModules() ;
+        for(TestModule md : modules){
+            System.out.println(md.getModuleName());
+            List<TestSuite> tsc = md.getAllTestSuits();
+            for(TestSuite ts : tsc){
+                List<TestCase> tcs = ts.getAllTestCases();
+                for(TestCase tc: tcs){
+                    System.out.println(tc.getTestCaseNumber());
+                    System.out.println(tc.getTestCaseName());
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testingCreateAndExecute() {
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        MainController mc = new MainController(driver);
+          mc.createAndExecute();
+    }
 
 }
+
+

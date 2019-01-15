@@ -16,7 +16,7 @@ public class TestCase {
     }
     public TestCase(String testCaseNumber){
         testSteps = new ArrayList<TestStep>() ;
-        this.testCaseNumber = testCaseNumber;
+        this.testCaseNumber = testCaseNumber.split("\\.")[0];
     }
 
     public String getTestCaseNumber() {
