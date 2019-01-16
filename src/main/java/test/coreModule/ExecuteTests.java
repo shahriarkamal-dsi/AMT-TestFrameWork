@@ -1,6 +1,7 @@
 package test.coreModule;
 
 import org.openqa.selenium.WebDriver;
+import test.utility.LogMessage;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -88,7 +89,8 @@ public class ExecuteTests {
             else
                 return;
             Constructor<?> constructor = callingClass.getConstructor(WebDriver.class);
-            callingMethod.invoke(constructor.newInstance(webDriver),object);
+            LogMessage logMessage = (LogMessage) callingMethod.invoke(constructor.newInstance(webDriver),object);
+            System.out.println(logMessage.getLogMessage());
         } catch(Exception ex) {
                ex.printStackTrace();
         }

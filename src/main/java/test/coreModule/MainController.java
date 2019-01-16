@@ -70,9 +70,6 @@ public class MainController {
         }
 
         public void executeTestesInTestSuite(TestSuite testSuite){
-
-            webDriver.navigate().to("https://qa3.testamt.com/");
-            webDriver.manage().window().maximize();
            List<TestCase> testCases = testSuite.getAllTestCases();
            ExecuteTests executeTests = new ExecuteTests(webDriver);
            for(TestCase testCase : testCases){

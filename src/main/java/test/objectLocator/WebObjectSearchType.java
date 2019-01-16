@@ -11,6 +11,12 @@ public enum WebObjectSearchType implements WebObject {
            return driver.findElement(By.id(searchKey));
         }
     },
+    BY_NAME {
+        @Override
+        public WebElement findElement(WebDriver driver, String searchKey) {
+            return driver.findElement(By.name(searchKey));
+        }
+    },
     BY_CLASSNAME{
         @Override
         public WebElement findElement(WebDriver driver, String searchKey) {
