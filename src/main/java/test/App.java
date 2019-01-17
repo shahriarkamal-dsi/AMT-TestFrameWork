@@ -5,14 +5,11 @@ package test;
  *
  */
 
-import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.driver.DriverFactory;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
-import test.objectLocator.WebObjectSearchType;
-import test.utility.PropertyConfig;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,7 +23,7 @@ public class App
         //String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
         ClassLoader classLoader = getClass().getClassLoader();
       //  System.out.println(rootPath);
-        String appConfigPath = classLoader.getResource("method.properties").getPath();
+        String appConfigPath = classLoader.getResource("default.properties").getPath();
 
         Properties appProps = new Properties();
         try {
