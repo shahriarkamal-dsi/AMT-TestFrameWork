@@ -75,7 +75,7 @@ public class ExecuteTests {
 
     }
 
-    public void invokeMethod(String className,String methodName,int numberOfParams,Object[] object) {
+    public LogMessage invokeMethod(String className,String methodName,int numberOfParams,Object[] object) {
         try {
 
             Class<?> callingClass = Class.forName("test.keywordScripts." + className);
@@ -87,12 +87,13 @@ public class ExecuteTests {
             else if(numberOfParams == 2)
                 callingMethod = callingClass.getDeclaredMethod(methodName,String.class,String.class);
             else
-                return;
+                return new LogMessage(false, "number of parameter exceeds");
             Constructor<?> constructor = callingClass.getConstructor(WebDriver.class);
             LogMessage logMessage = (LogMessage) callingMethod.invoke(constructor.newInstance(webDriver),object);
-            System.out.println(logMessage.getLogMessage());
+            return logMessage;
         } catch(Exception ex) {
                ex.printStackTrace();
+               return  new LogMessage(false,"exception occured");
         }
     }
 }

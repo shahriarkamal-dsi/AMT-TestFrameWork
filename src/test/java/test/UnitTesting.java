@@ -1,5 +1,6 @@
 package test;
 
+import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,6 +12,7 @@ import test.keywordScripts.UIBase;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
 import test.objectLocator.WebObjectSearchType;
+import test.utility.LogMessage;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -22,72 +24,71 @@ import java.util.Map;
 import java.util.Scanner;
 
 import java.lang.System.* ;
+import static org.junit.Assert.*;
+import org.hamcrest.collection.IsMapContaining;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static test.utility.PropertyConfig.*;
 
 public class UnitTesting {
 
     @Test
     public void readExcelsheetTest(){
         ClassLoader classLoader = getClass().getClassLoader();
-        long start = System.currentTimeMillis();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/sampleTest.xlsx").getPath());
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/sample.xlsx").getPath());
         List<Map> records = readExcel.read("TC001_TC050");
-        long finish = System.currentTimeMillis();
-        long timeElapsed = finish - start;
-        System.out.println(records.get(records.size()-1));
-        System.out.println("execute time : "+timeElapsed/1000);
+        assertTrue(records.size() > 1 );
+        Map  data = records.get(0);
+        assertTrue(data.containsKey(TC_ID));
+        assertTrue("001".equals( (String) data.get(PropertyConfig.TC_ID)));
+
     }
     @Test
     public void orReadTesting(){
-        OrRead orRead  = new OrRead("OR_PI.RPRCharge.txtndLinkedForms");
+        OrRead orRead  = new OrRead("Common.Login.txtUserName");
         Map records = orRead.getOrFromSheet();
-        System.out.println(records);
+        assertTrue(records.size() > 1 );
+        int size = records.size();
+        assertTrue(records.containsKey("Common.Login.txtUserName") );
+        assertTrue(records.containsKey("Common.Login.txtPassword") );
+         orRead  = new OrRead("Common.Login.txtUserNameFake");
+         records = orRead.getOrFromSheet();
+        assertTrue(records.size() == size);
+        assertFalse(records.containsKey("Common.Login.txtUserNameFake"));
     }
     @Test
     public void objectLocatorStorageTesting(){
         ObjectLocatorDataStorage objectLocatorDataStorage = new ObjectLocatorDataStorage();
         try {
-            Map record = objectLocatorDataStorage.getObjectLocator("OR_PI.RPRCharge.txtndLinkedForms");
-            System.out.println(record);
-             record = objectLocatorDataStorage.getObjectLocator("OR_PI.RPRCharge.cbMasterCharge");
-            System.out.println(record);
-            record = objectLocatorDataStorage.getObjectLocator("OR_PI.SpaceEntryForm.lnkDateMgrIgnore");
-            System.out.println(record);
-            record = objectLocatorDataStorage.getObjectLocator("OR_PI.SpaceEntryForm.panelDateMgrConfirmation");
-            record = objectLocatorDataStorage.getObjectLocator("OR_PI.RPRCharge.txtndLinkedForms");
-            System.out.println(record);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    @Test
-    public void webObjectTest(){
-        ObjectLocatorDataStorage objectLocatorDataStorage = new ObjectLocatorDataStorage();
-        try {
-            WebDriver driver = null ;
-            Map record = objectLocatorDataStorage.getObjectLocator("OR_PI.SpaceEntryForm.pgSpaceEntryForm");
-            String objectSearchType = ( (String)record.get(PropertyConfig.OBJECT_SEARCH_KEY)).toUpperCase();
-            WebObjectSearchType webObjectSearchType = WebObjectSearchType.valueOf(objectSearchType);
-            WebElement webElement =  webObjectSearchType.findElement(driver,(String) record.get(PropertyConfig.OBJECT_LOCATOR));
-            System.out.println(webElement);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
+            long start = System.currentTimeMillis();
+            Map record = objectLocatorDataStorage.getObjectLocator("Common.Login.txtUserName");
+            long finish = System.currentTimeMillis();
+            long timeElapsed1 = finish - start;
+            start = System.currentTimeMillis();
+             record = objectLocatorDataStorage.getObjectLocator("Common.Login.txtUserName");
+             finish = System.currentTimeMillis();
+            long timeElapsed2 = finish - start;
+            assertTrue(timeElapsed2 < timeElapsed1);
+            start = System.currentTimeMillis();
+            record = objectLocatorDataStorage.getObjectLocator("Common.Login.txtPassword");
+            finish = System.currentTimeMillis();
+            long timeElapsed3 = finish - start;
+            assertTrue(timeElapsed3 == timeElapsed2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @Test
     public void testingInvokeMethod() {
 
         WebDriver driver = null ;
         ExecuteTests executeTests = new ExecuteTests(driver);
-         String temp = "temp" ;
-        Object[] object = new Object[]{driver,temp};
-        executeTests.invokeMethod("UiBase","click",1,object);
-    }
-    @Test
-    public void testingReadAndExecute() {
-        WebDriver driver = null ;
-        ExecuteTests executeTests = new ExecuteTests(driver);
-        executeTests.readAndExecute("sampleTest","TC001_TC050");
+         String test = "test" ;
+        Object[] object = new Object[]{test};
+        LogMessage logMessage = executeTests.invokeMethod("UIBase","test_click",1,object);
+        assertFalse(!logMessage.isPassed().booleanValue());
+        assertTrue(logMessage.getLogMessage().equals(test));
     }
     @Test
     public void testinCreateTestPlan() {
@@ -95,18 +96,8 @@ public class UnitTesting {
         TestPlan testPlan =  mc.createTestPlan() ;
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule md : modules){
-            System.out.println(md.getModuleName());
-            md.setModuleName("test");
-            System.out.println(md.getAllTestSuits().size()) ;
-            md.addTestSuite(new TestSuite());
+            assertTrue(md.getModuleName().equals("sample"));
         }
-
-         modules = testPlan.getAllTesModules() ;
-        for(TestModule md : modules){
-            System.out.println(md.getModuleName());
-            System.out.println(md.getAllTestSuits().size()) ;
-        }
-
     }
     @Test
     public void testingCreateTestPlanAndModule() {
@@ -114,24 +105,16 @@ public class UnitTesting {
         TestPlan testPlan = mc.createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule md : modules){
-            System.out.println(md.getModuleName());
             List<TestSuite> tsc = md.getAllTestSuits();
             for(TestSuite ts : tsc){
                 List<TestCase> tcs = ts.getAllTestCases();
                 for(TestCase tc: tcs){
-                    System.out.println(tc.getTestCaseNumber());
-                    System.out.println(tc.getTestCaseName());
+                  assertTrue(tc.getTestCaseNumber().equals("001"));
                 }
             }
         }
     }
 
-    @Test
-    public void testingCreateAndExecute() {
-        WebDriver driver = DriverFactory.createDriver("chrome", false);
-        MainController mc = new MainController(driver);
-          mc.createAndExecute();
-    }
 
 }
 

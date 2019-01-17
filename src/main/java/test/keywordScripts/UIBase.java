@@ -64,4 +64,8 @@ public class UIBase {
             return null;
         }
     }
+
+    public LogMessage test_click(String objectLocator){
+        return new LogMessage(true,objectLocator);
+    }
 }
