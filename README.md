@@ -35,6 +35,17 @@ It provides the various property.  At present in which browser  test cases will 
 
 -> mvn install (for build and  running the sample application test)  
 
+### Prerequisites
+1.Java 8 
+
+2.Maven 
+
+## Running the tests 
+-> mvn test -DTest=UnitTesting test  ( for running unit test cases) 
+
+-> mvn test -DTest=AppTest  test  ( for running  sample test application.) 
+
+
 
 
  
