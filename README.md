@@ -22,5 +22,31 @@ Example :
 Common.Login.txtUserName. 
 There is a keyword in common.xlsx in Login tab named txtUserName.  
 
+###  3. Keyword(ObjectLocators) 
+Keywords are kept in difference directory and sheet, There is multiple sheet, multiple tab for keyword record.  It just need proper reference in test cases. 
+![alt text](https://github.com/shahriar1628/seleniumTestingFramework/blob/master/readmdImage/tObj.PNG)
+
+###  3. Default.properties : 
+It provides the various property.  At present in which browser  test cases will be executed, it can be mentioned.    
+
+
+## Application running 
+-> git clone https://github.com/shahriar1628/seleniumTestingFramework.git 
+
+-> mvn install (for build and  running the sample application test)  
+
+### Prerequisites
+1.Java 8 
+
+2.Maven 
+
+## Running the tests 
+-> mvn test -Dtest=UnitTesting test  ( for running unit test cases) 
+
+-> mvn test -Dtest=AppTest  test  ( for running  sample test application.) 
+
+
+
+
  
 
