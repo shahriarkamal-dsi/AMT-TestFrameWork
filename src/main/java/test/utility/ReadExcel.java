@@ -51,7 +51,7 @@ public class ReadExcel {
                         columnNames[index++]=cell.toString() ;
                     } else {
                         if(index < columnNames.length) {
-                            record.put(columnNames[cell.getColumnIndex()],cell.getStringCellValue() );
+                            record.put(columnNames[cell.getColumnIndex()],cell.getStringCellValue().trim() );
                             index++;
                         }
                         else
