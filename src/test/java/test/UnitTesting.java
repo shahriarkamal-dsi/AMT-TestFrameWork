@@ -25,7 +25,6 @@ import java.util.Scanner;
 
 import java.lang.System.* ;
 import static org.junit.Assert.*;
-import org.hamcrest.collection.IsMapContaining;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static test.utility.PropertyConfig.*;
