@@ -41,9 +41,9 @@ It provides the various property.  At present in which browser  test cases will 
 2.Maven 
 
 ## Running the tests 
--> mvn test -DTest=UnitTesting test  ( for running unit test cases) 
+-> mvn test -Dtest=UnitTesting test  ( for running unit test cases) 
 
--> mvn test -DTest=AppTest  test  ( for running  sample test application.) 
+-> mvn test -Dtest=AppTest  test  ( for running  sample test application.) 
 
 
 
