@@ -2,9 +2,7 @@ package test.keywordScripts;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import test.objectLocator.ObjectLocatorDataStorage;
-import test.objectLocator.WebObjectSearch;
-import test.utility.LogMessage;
+import test.Log.LogMessage;
 
 import java.util.Map;
 

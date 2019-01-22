@@ -10,6 +10,7 @@ public class TestCase {
     private String testCaseNumber;
     private String testCaseName;
     private List<TestStep> testSteps ;
+    private boolean passed ;
 
     public TestCase(){
         testSteps = new ArrayList<TestStep>() ;
@@ -39,6 +40,13 @@ public class TestCase {
 
     public List<TestStep>  getAllTestSteps(){
         return  testSteps ;
+    }
+
+    public boolean isPassed() {
+        return  passed;
+    }
+    public void setPassed(Boolean val){
+        passed = val ;
     }
 
 }

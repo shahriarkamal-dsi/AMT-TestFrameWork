@@ -1,8 +1,9 @@
-package test.utility;
+package test.Log;
 
 public class LogMessage {
     private Boolean passed = false ;  ;
     private String logMessage = "" ;
+    private Boolean skipped = false;
 
     public LogMessage(){
 
@@ -28,5 +29,13 @@ public class LogMessage {
 
     public void setLogMessage(String logMessage) {
         this.logMessage = logMessage ;
+    }
+
+    public boolean isSkipped(){
+        return  skipped ;
+    }
+
+    public void setSkippedTrue(){
+        skipped = true;
     }
 }

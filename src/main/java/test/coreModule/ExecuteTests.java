@@ -1,7 +1,9 @@
 package test.coreModule;
 
 import org.openqa.selenium.WebDriver;
-import test.utility.LogMessage;
+import sun.rmi.runtime.Log;
+import test.Log.CreateLog;
+import test.Log.LogMessage;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -22,6 +24,8 @@ public class ExecuteTests {
         long start = System.currentTimeMillis();
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/" + fileName + ".xlsx").getPath());
         List<Map> records = readExcel.read(sheetName);
+        CreateLog createLog = new CreateLog("sampleReport");
+        createLog.createLogger("sample test");
         for(Map map : records) {
             ArrayList<Object> objects = new ArrayList<Object>();
            // objects.add(webDriver);
@@ -42,13 +46,16 @@ public class ExecuteTests {
                 objects.add(testData);
                 numberOfParams++;
             }
-            invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
+            LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
+            createLog.writeLog("sample test",logMessage.getLogMessage(),logMessage.isPassed());
         }
 
     }
     public void executeTest(TestCase testCase) {
         ClassLoader classLoader = getClass().getClassLoader();
         long start = System.currentTimeMillis();
+        boolean passed = true ;
+        List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
         List<TestStep> testSteps = testCase.getAllTestSteps();
         for(TestStep testStep : testSteps) {
             ArrayList<Object> objects = new ArrayList<Object>();
@@ -60,8 +67,12 @@ public class ExecuteTests {
             Boolean critical = testStep.isCritical();
             int numberOfParams = 0;
 
-            if (! executionFlag)
+            if (! executionFlag) {
+                LogMessage logMessage = new LogMessage(true,testStep.getTestStepDescription() + " --" + testStep.getFieldName());
+                logMessage.setSkippedTrue();
+                logMessages.add(logMessage)  ;
                 continue;
+            }
             if(null != objectLocators && ! objectLocators.isEmpty()) {
                 objects.add(objectLocators);
                 numberOfParams++;
@@ -70,7 +81,9 @@ public class ExecuteTests {
                 objects.add(testData);
                 numberOfParams++;
             }
-            invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
+            LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
+            logMessage.setLogMessage(testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage() );
+            logMessages.add(logMessage);
         }
 
     }

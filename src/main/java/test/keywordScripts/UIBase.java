@@ -2,8 +2,7 @@ package test.keywordScripts;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import test.utility.LogMessage;
-import org.openqa.selenium.JavascriptExecutor;
+import test.Log.LogMessage;
 
 import java.util.Map;
 

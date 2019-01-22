@@ -1,29 +1,20 @@
 package test;
 
-import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import test.Log.CreateLog;
 import test.coreModule.*;
-import test.driver.DriverFactory;
-import test.keywordScripts.UIBase;
 
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
-import test.objectLocator.WebObjectSearchType;
-import test.utility.LogMessage;
+import test.Log.LogMessage;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
 import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
-import java.lang.System.* ;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -112,6 +103,15 @@ public class UnitTesting {
                 }
             }
         }
+    }
+
+    @Test
+    public void testCreateLog(){
+        CreateLog createLog = new CreateLog("Log") ;
+        createLog.createLogger("sample test");
+        createLog.writeLog("sample test","test",true);
+        File file = new File("./Report/Log.html");
+        assertTrue(file.exists());
     }
 
 
