@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import sun.rmi.runtime.Log;
 import test.Log.CreateLog;
 import test.Log.LogMessage;
+import test.Log.LogReport;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -51,7 +52,7 @@ public class ExecuteTests {
         }
 
     }
-    public void executeTest(TestCase testCase) {
+    public List<LogMessage> executeTest(TestCase testCase) {
         ClassLoader classLoader = getClass().getClassLoader();
         long start = System.currentTimeMillis();
         boolean passed = true ;
@@ -82,9 +83,12 @@ public class ExecuteTests {
                 numberOfParams++;
             }
             LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
+            passed = logMessage.isPassed();
             logMessage.setLogMessage(testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage() );
             logMessages.add(logMessage);
         }
+        testCase.setPassed(passed);
+        return logMessages;
 
     }
 

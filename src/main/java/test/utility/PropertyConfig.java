@@ -1,5 +1,8 @@
 package test.utility;
 
+import java.io.FileInputStream;
+import java.util.Properties;
+
 public class PropertyConfig {
     public static String  MODULE_CONTROLLER = "ModuleController" ;
     public static String  CONTROLLER = "Controller" ;
@@ -21,6 +24,23 @@ public class PropertyConfig {
     public static Integer INIT = 0 ;
     public static Integer CREATED = 1 ;
     public static Integer TESTED = 2 ;
+
+
+
+
+    public static String  getPropertyValue(String property){
+        try {
+            ClassLoader classLoader = PropertyConfig.class.getClassLoader();
+            String appConfigPath = classLoader.getResource("default.properties").getPath();
+            Properties appProps = new Properties();
+            appProps.load(new FileInputStream(appConfigPath));
+            return appProps.getProperty(property);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            return null ;
+
+        }
+    }
 
 
 }

@@ -2,11 +2,16 @@ package test.coreModule;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import test.Log.EmailSend;
+import test.Log.LogMessage;
+import test.Log.LogReport;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class MainController {
         final ClassLoader CLASS_LOADER = getClass().getClassLoader();
@@ -48,6 +53,7 @@ public class MainController {
     }
 
     public void  createAndExecute() {
+        deleteLogReports();
         TestPlan testPlan = createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule testModule : modules){
@@ -67,13 +73,15 @@ public class MainController {
                 executeTestesInTestSuite(testSuite);
                 }
             }
+        EmailSend.sendLogReport();
         }
 
         public void executeTestesInTestSuite(TestSuite testSuite){
            List<TestCase> testCases = testSuite.getAllTestCases();
            ExecuteTests executeTests = new ExecuteTests(webDriver);
            for(TestCase testCase : testCases){
-               executeTests.executeTest(testCase);
+               List<LogMessage> logMessages =  executeTests.executeTest(testCase);
+               LogReport.getInstance().addTestcaseLogreport(testCase,logMessages);
            }
             closeAlltabs(webDriver);
         }
@@ -105,23 +113,32 @@ public class MainController {
 
 
 
-    public TestPlan createTestPlan(){
+    public TestPlan createTestPlan() {
         long start = System.currentTimeMillis();
         ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("testPlan/" + PropertyConfig.MODULE_CONTROLLER + ".xlsx").getPath());
         List<Map> records = readExcel.read(PropertyConfig.MODULE_CONTROLLER);
         TestPlan testPlan = new TestPlan();
         testPlan.setTestPlanName(LocalDateTime.now().toString());
 
-        for(Map map : records) {
-            String  moduleName = (String) map.get(PropertyConfig.MODULE_NAME);
+        for (Map map : records) {
+            String moduleName = (String) map.get(PropertyConfig.MODULE_NAME);
             String executionFlag = (String) map.get(PropertyConfig.EXECUTION_FLAG);
-            if ( null == moduleName || moduleName.isEmpty())
+            if (null == moduleName || moduleName.isEmpty())
                 continue;
-            if ( null == executionFlag || !executionFlag.toLowerCase().equals("yes"))
+            if (null == executionFlag || !executionFlag.toLowerCase().equals("yes"))
                 continue;
             TestModule testModule = new TestModule(moduleName);
             testPlan.addTestModule(testModule);
-            }
-        return testPlan ;
         }
+        return testPlan;
+    }
+
+    private void deleteLogReports(){
+        File file = new File("./Report/" + PropertyConfig.getPropertyValue("passedReprtName"));
+        file.delete();
+         file = new File("./Report/" + PropertyConfig.getPropertyValue("failedReprtName"));
+        file.delete();
+    }
+
+
     }

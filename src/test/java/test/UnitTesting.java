@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import test.Log.CreateLog;
 import test.coreModule.*;
 
+import test.Log.EmailSend;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
 import test.Log.LogMessage;
@@ -112,6 +113,11 @@ public class UnitTesting {
         createLog.writeLog("sample test","test",true);
         File file = new File("./Report/Log.html");
         assertTrue(file.exists());
+    }
+
+    @Test
+    public void testingEmailSent() {
+        EmailSend.sendLogReport();
     }
 
 
