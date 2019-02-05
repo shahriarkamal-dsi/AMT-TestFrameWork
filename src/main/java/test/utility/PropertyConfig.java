@@ -9,7 +9,7 @@ public class PropertyConfig {
     public static String OBJECT_REFERENCE = "ObjReference" ;
     public static String  MODULE_NAME = "ModuleName" ;
     public static String OBJECT_SEARCH_KEY = "ObjSearchKey" ;
-    public static String OBJECT_LOCATOR = "ObjectLocators" ;
+    public static String OBJECT_LOCATORS = "ObjectLocators" ;
     public static String ACTION = "Action" ;
     public static String TEST_DATA = "TestData" ;
     public static String EXECUTION_FLAG = "ExecutionFlag" ;
@@ -24,6 +24,7 @@ public class PropertyConfig {
     public static Integer INIT = 0 ;
     public static Integer CREATED = 1 ;
     public static Integer TESTED = 2 ;
+    public static Integer WAIT_TIME_SECONDS = 10 ;
 
 
 

@@ -3,6 +3,7 @@ package test.keywordScripts;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
+import test.objectLocator.WebObjectSearch;
 
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class UIText {
 
     public LogMessage SetText(String objectLocator, String textData){
         try {
-            WebElement userWeb = getWebElement(objectLocator);
+            WebElement userWeb = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == userWeb )
                 return new LogMessage(false,"webElement is not founding");
             userWeb.clear();
@@ -28,20 +29,11 @@ public class UIText {
             return new LogMessage(true,"text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured");
+            return new LogMessage(false,"exception occured:- " + ex.getMessage());
         }
     }
 
 
-    private WebElement getWebElement(String objectLocator){
-        try {
-            Map objectLocatorData = getObjectLocator(objectLocator);
-            WebElement userWeb = searchWebObject(this.webDriver,objectLocatorData);
-            return userWeb ;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 
 }

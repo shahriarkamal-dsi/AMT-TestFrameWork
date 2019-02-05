@@ -1,10 +1,8 @@
 package test.coreModule;
 
 import org.openqa.selenium.WebDriver;
-import sun.rmi.runtime.Log;
 import test.Log.CreateLog;
 import test.Log.LogMessage;
-import test.Log.LogReport;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -31,7 +29,7 @@ public class ExecuteTests {
             ArrayList<Object> objects = new ArrayList<Object>();
            // objects.add(webDriver);
             String actionName = (String) map.get(PropertyConfig.ACTION);
-            String objectLocators = (String) map.get(PropertyConfig.OBJECT_LOCATOR);
+            String objectLocators = (String) map.get(PropertyConfig.OBJECT_LOCATORS);
             String testData = (String) map.get(PropertyConfig.TEST_DATA);
             String executionFlag = (String) map.get(PropertyConfig.EXECUTION_FLAG);
             String critical = (String) map.get(PropertyConfig.CRITICAL);

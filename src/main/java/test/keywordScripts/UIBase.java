@@ -1,13 +1,18 @@
 package test.keywordScripts;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import test.Log.LogMessage;
+import test.objectLocator.ObjectLocatorDataStorage;
+import test.objectLocator.WebObjectSearch;
+import test.utility.PropertyConfig;
 
+import javax.swing.text.AbstractDocument;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import static test.objectLocator.ObjectLocatorDataStorage.getObjectLocator;
-import static test.objectLocator.WebObjectSearch.searchWebObject;
 
 public class UIBase {
 
@@ -22,20 +27,22 @@ public class UIBase {
     }
 
 
-    public LogMessage  click(String objectLocator) {
+    public LogMessage  Click(String objectLocator) {
         try {
-            WebElement webElement = getWebElement(objectLocator);
+            WebElement webElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == webElement)
                 return new LogMessage(false,"web element not fouding");
-            webElement.click();
-           // JavascriptExecutor ex = (JavascriptExecutor) webDriver;
-            //ex.executeAsyncScript("arguments[0].click();",webElement);
+            try
+            {
+                webElement.click();
+            } catch(Exception ex) {
+                JavascriptExecutor executor = (JavascriptExecutor) webDriver;
+                executor.executeScript("arguments[0].click();",webElement);
+            }
             return new LogMessage(true,"web element is clicked");
-           // ex.ExecuteScript("arguments[0].click();", elementToClick);
-
         }catch(Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured.");
+            return new LogMessage(false,"exception occured:- " + ex.getMessage());
         }
     }
 
@@ -48,21 +55,97 @@ public class UIBase {
 
         }catch(Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured.");
+            return new LogMessage(false,"exception occured:- " + ex.getMessage());
         }
     }
 
-
-    private WebElement getWebElement(String objectLocator) {
+    public LogMessage VerifyPageLoadedTrue(String objectlocator) {
         try {
-            Map objectLocatorData = getObjectLocator(objectLocator);
-            WebElement userWeb = searchWebObject(this.webDriver, objectLocatorData);
-            return userWeb;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocator);
+            String objectData =  (String) objectLocatorData.get(PropertyConfig.OBJECT_LOCATORS);
+            if(webDriver.getCurrentUrl().contains(objectData)) {
+                return new LogMessage(true,"page is loaded successfully");
+            } else {
+                webDriver.manage().timeouts().implicitlyWait(PropertyConfig.WAIT_TIME_SECONDS, TimeUnit.SECONDS) ;
+                if(webDriver.getCurrentUrl().contains(objectData))
+                    return new LogMessage(true,"page is loaded successfully");
+                 else
+                    return new LogMessage(false,"page is not loaded");
+
+            }
+        } catch (Exception ex) {
+            return new LogMessage(false,"exception occured:- " + ex.getMessage());
         }
     }
+    public LogMessage ClickDbClickRClick(WebElement element, String action) {
+        try {
+            action = action.toUpperCase();
+            boolean clikced = false ;
+            if(action.equals("CLICK")) {
+                Actions act = new Actions(webDriver);
+               // act.click(element).perform();
+                act.doubleClick(element).perform();
+               // element.click();
+                clikced = true ;
+            } else if(action.equals("DBLCLICK") || action.equals("DOUBLECLICK") || action.equals("DOUBLE CLICK") ) {
+                Actions act = new Actions(webDriver);
+                act.doubleClick(element).perform();
+                clikced = true ;
+            } else if(action.equals("RIGHTCLICK") || action.equals("RIGHT CLICK")) {
+                Actions act = new Actions(webDriver);
+                act.contextClick(element).perform();
+                clikced = true ;
+            }
+            if(clikced)
+                return  new LogMessage(true,"element clicked");
+            else
+                return new LogMessage(false, "action unknown");
+
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+            return  new LogMessage(false,"exception occured: " + ex.getMessage());
+        }
+    }
+
+    public LogMessage Delay(String delayTime) {
+        try {
+            Thread.sleep(7*1000);
+            //if(null != webDriver)
+              //  webDriver.manage().timeouts().implicitlyWait(Integer.valueOf("10"), TimeUnit.SECONDS) ;
+            return new LogMessage(true,"wait for delay succesffull");
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false,  "excepption occured: " + ex.getMessage());
+        }
+    }
+
+    public LogMessage VerifyVisibleOnScreenFalse(String objectLocatorData) {
+        try {
+               WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+               if(null == element)
+                   return  new LogMessage(false, "element is not found");
+               String logMessage = element.isDisplayed() == true ? "element is displayed " : "element is not displayed " ;
+               return new LogMessage( !element.isDisplayed(),logMessage);
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+            return  new LogMessage(false, "exception occured " + ex.getMessage());
+        }
+    }
+
+    public LogMessage VerifyVisibleOnScreenTrue(String objectLocatorData) {
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if(null == element)
+                return  new LogMessage(false, "element is not found");
+            String logMessage = element.isDisplayed() == true ? "element is displayed " : "element is not displayed" ;
+            return new LogMessage( element.isDisplayed(),logMessage);
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+            return  new LogMessage(false, "exception occured " + ex.getMessage());
+        }
+    }
+
+
 
     public LogMessage test_click(String objectLocator){
         return new LogMessage(true,objectLocator);

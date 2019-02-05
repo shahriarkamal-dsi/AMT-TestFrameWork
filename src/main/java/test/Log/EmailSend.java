@@ -31,7 +31,6 @@ public class EmailSend {
             email.setSmtpPort(465);
             email.setAuthenticator(new DefaultAuthenticator(PropertyConfig.getPropertyValue("testingEmailAddress"), PropertyConfig.getPropertyValue("testingEmailPassword")));
             email.setSSL(true);
-           // email.addTo("shahriarcsedu@gmail.com", "Shahriar Kamal");
             String[] recepients = receivers.split(",");
             for(String recepient : recepients)
                 email.addTo(recepient);
@@ -49,25 +48,4 @@ public class EmailSend {
             ex.printStackTrace();
         }
     }
-
-
-    public static void email() {
-        try {
-            Email email = new SimpleEmail();
-            email.setHostName("smtp.googlemail.com");
-            email.setSmtpPort(465);
-            email.setAuthenticator(new DefaultAuthenticator("shahriarkamal.dsi@gmail.com", "4018qwert"));
-            email.setSSL(true);
-            email.setFrom("shahriarkamal.dsi@gmail.com");
-            email.setSubject("TestMail");
-            email.setMsg("This is a test mail ... :-)");
-            email.addTo("shahriarcsedu@gmail.com");
-            email.send();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-        }
-    }
-
 }

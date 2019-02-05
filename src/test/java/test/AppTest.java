@@ -4,11 +4,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import test.beforeTest.PropertyCreate;
 import test.coreModule.ExecuteTests;
 import test.coreModule.MainController;
 import test.driver.DriverFactory;
+import test.keywordScripts.UIBase;
+import test.keywordScripts.UIText;
+import test.utility.ReadExcel;
 
 import java.io.FileInputStream;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -23,7 +29,7 @@ public class AppTest
     public void testingReadAndExecute() {
         WebDriver driver = DriverFactory.createDriver("chrome", false);
         ExecuteTests executeTests = new ExecuteTests(driver);
-        executeTests.readAndExecute("sample","TC001_TC050");
+        executeTests.readAndExecute("Fasb2","TC001_TC050");
     }
     @Test
     public void testingCreateAndExecute() {
@@ -42,5 +48,22 @@ public class AppTest
         }catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    @Test
+    public void propertyCreate() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+        List<Map> records = readExcel.read("Property");
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        UIBase uiBase = new UIBase(driver) ;
+        UIText uiText = new UIText(driver) ;
+        uiBase.navigateToAPage("https://qa3.testamt.com/");
+        uiText.SetText("Common.Login.txtUserName","Sanjoy01");
+        uiText.SetText("Common.Login.txtPassword","amtDirect01!");
+        uiText.SetText("Common.Login.txtClientID","201483");
+        uiBase.Click("Common.Login.btnLogIn");
+        PropertyCreate propertyCreate = new PropertyCreate(driver);
+        propertyCreate.createProperty(records.get(0));
     }
 }

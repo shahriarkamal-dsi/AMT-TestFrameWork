@@ -44,7 +44,7 @@ public class TestStep {
 
     public String getObjectLocator(){
         try {
-            return (String) step.get(PropertyConfig.OBJECT_LOCATOR);
+            return (String) step.get(PropertyConfig.OBJECT_LOCATORS);
         }catch(Exception ex) {
             return null;
         }

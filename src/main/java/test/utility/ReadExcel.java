@@ -27,7 +27,7 @@ public class ReadExcel {
             XSSFSheet sheet = workBook.getSheet(sheetName);
             Iterator<Row> rowIt = sheet.iterator();
             boolean firstRow = true ;
-            String[] columnNames = new String[10] ;
+            String[] columnNames = new String[20] ;
             List<Map> records = new ArrayList<Map>() ;
             int rowTotal = sheet.getLastRowNum() + 1 ;
           //  System.out.println("rowTotal "+rowTotal);
