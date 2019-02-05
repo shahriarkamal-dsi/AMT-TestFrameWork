@@ -27,8 +27,10 @@ public class PropertyCreate {
 
     public LogMessage createProperty(Map data) {
         try {
+            String rootWindow = webDriver.getWindowHandle() ;
             String[] textFields = new String[] {"propertyName","propertyCode","address1" , "postal" , "city" , "sqFtRentable"} ;
             String[] dropDownFields = new String[] {"country","state","codeType" , "status" , "currency", "buildingList", "region", "assetType"} ;
+            String autoManageChkBox = "autoManage" ;
             String  objectlocatorPrefix = "Common.Property." ;
             UIMenu menu = new UIMenu(webDriver);
             //menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract") ;
@@ -36,21 +38,31 @@ public class PropertyCreate {
             switchTabs(webDriver);
 
             Thread.sleep(10*1000);
-           /*
+
             for(String elementName : textFields) {
                 WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix  + elementName) ;
                 element.sendKeys( (String) data.get(elementName));
-            }*/
+                Thread.sleep(2*1000);
+            }
 
             for(String elementName : dropDownFields) {
                 WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix  + elementName) ;
                 Select select = new Select(element);
                 select.selectByVisibleText( (String)data.get(elementName));
-                Thread.sleep(1*1000);
-
+                if(elementName.equals("codeType")) {
+                    webDriver.switchTo().alert().accept();
+                    Thread.sleep(3*000);
+                }
+                Thread.sleep(2*1000);
             }
+            WebElement checkBoxItem = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + autoManageChkBox) ;
+            if(  data.get(autoManageChkBox).toString().toLowerCase().equals("true"))
+                checkBoxItem.click();
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "save") ;
             element.click();
+            webDriver.close();
+            webDriver.switchTo().window(rootWindow);
+            Thread.sleep(3*1000);
             return new LogMessage(true, "create property successfull") ;
         } catch ( Exception ex) {
             ex.printStackTrace();

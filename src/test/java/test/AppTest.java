@@ -64,6 +64,8 @@ public class AppTest
         uiText.SetText("Common.Login.txtClientID","201483");
         uiBase.Click("Common.Login.btnLogIn");
         PropertyCreate propertyCreate = new PropertyCreate(driver);
-        propertyCreate.createProperty(records.get(0));
+        for(Map record : records) {
+            propertyCreate.createProperty(record);
+        }
     }
 }
