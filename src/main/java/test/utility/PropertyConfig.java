@@ -10,6 +10,7 @@ public class PropertyConfig {
     public static String  MODULE_NAME = "ModuleName" ;
     public static String OBJECT_SEARCH_KEY = "ObjSearchKey" ;
     public static String OBJECT_LOCATORS = "ObjectLocators" ;
+    public static String PARENT_LOCATOR = "ParentLocator" ;
     public static String ACTION = "Action" ;
     public static String TEST_DATA = "TestData" ;
     public static String EXECUTION_FLAG = "ExecutionFlag" ;

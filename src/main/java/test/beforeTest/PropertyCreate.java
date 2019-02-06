@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import test.Log.LogMessage;
+import test.keywordScripts.UIDropDown;
 import test.keywordScripts.UIMenu;
 import test.objectLocator.WebObjectSearch;
 
@@ -33,11 +34,15 @@ public class PropertyCreate {
             String autoManageChkBox = "autoManage" ;
             String  objectlocatorPrefix = "Common.Property." ;
             UIMenu menu = new UIMenu(webDriver);
-            //menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract") ;
+          //  menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract") ;
             menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Property") ;
             switchTabs(webDriver);
 
             Thread.sleep(10*1000);
+
+          //  UIDropDown uiDropDown = new UIDropDown(webDriver);
+           // uiDropDown.SelectItem(objectlocatorPrefix + "leaseStatus","Active");
+
 
             for(String elementName : textFields) {
                 WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix  + elementName) ;
@@ -63,6 +68,7 @@ public class PropertyCreate {
             webDriver.close();
             webDriver.switchTo().window(rootWindow);
             Thread.sleep(3*1000);
+
             return new LogMessage(true, "create property successfull") ;
         } catch ( Exception ex) {
             ex.printStackTrace();

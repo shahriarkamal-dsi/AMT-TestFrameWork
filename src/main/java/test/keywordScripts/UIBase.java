@@ -9,7 +9,6 @@ import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
-import javax.swing.text.AbstractDocument;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -26,24 +25,29 @@ public class UIBase {
 
     }
 
-
-    public LogMessage  Click(String objectLocator) {
+    public LogMessage Click(WebElement webElement) {
         try {
-            WebElement webElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == webElement)
                 return new LogMessage(false,"web element not fouding");
             try
             {
                 webElement.click();
             } catch(Exception ex) {
+                ex.printStackTrace();
                 JavascriptExecutor executor = (JavascriptExecutor) webDriver;
                 executor.executeScript("arguments[0].click();",webElement);
             }
             return new LogMessage(true,"web element is clicked");
-        }catch(Exception ex){
+
+        }catch ( Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false,"exception occured:- " + ex.getMessage());
         }
+    }
+
+
+    public LogMessage  Click(String objectLocatorData) {
+        return Click( WebObjectSearch.getWebElement(webDriver,objectLocatorData));
     }
 
     public LogMessage  navigateToAPage(String testData) {
