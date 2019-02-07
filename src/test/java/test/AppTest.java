@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import test.beforeTest.LeaseCreate;
 import test.beforeTest.PropertyCreate;
 import test.coreModule.ExecuteTests;
 import test.coreModule.MainController;
@@ -67,5 +68,23 @@ public class AppTest
         for(Map record : records) {
             propertyCreate.createProperty(record);
         }
+    }
+
+    @Test
+    public void leaseCreate(){
+        ClassLoader classLoader = getClass().getClassLoader();
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+        List<Map> records = readExcel.read("Lease");
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        UIBase uiBase = new UIBase(driver) ;
+        UIText uiText = new UIText(driver) ;
+        uiBase.navigateToAPage("https://qa4.testamt.com/");
+        uiText.SetText("Common.Login.txtUserName","saimaalam01");
+        uiText.SetText("Common.Login.txtPassword","amtDirect01!");
+        uiText.SetText("Common.Login.txtClientID","201483");
+        uiBase.Click("Common.Login.btnLogIn");
+
+        LeaseCreate leaseCreate = new LeaseCreate(driver);
+        leaseCreate.createLease(records.get(0));
     }
 }
