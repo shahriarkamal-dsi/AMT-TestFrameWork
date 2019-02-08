@@ -113,7 +113,7 @@ public class UIBase {
 
     public LogMessage Delay(String delayTime) {
         try {
-            Thread.sleep(7*1000);
+            Thread.sleep(Integer.valueOf(delayTime).intValue()*1000);
             //if(null != webDriver)
               //  webDriver.manage().timeouts().implicitlyWait(Integer.valueOf("10"), TimeUnit.SECONDS) ;
             return new LogMessage(true,"wait for delay succesffull");

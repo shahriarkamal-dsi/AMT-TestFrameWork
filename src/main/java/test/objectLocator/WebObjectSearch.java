@@ -4,18 +4,19 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.utility.PropertyConfig;
 
+import java.util.List;
 import java.util.Map;
 
 public class WebObjectSearch {
-    static public WebElement searchWebObject(WebDriver driver,Map objectLocator) throws Exception {
+    static public List<WebElement> searchWebObject(WebDriver driver,Map objectLocator) throws Exception {
         try {
             String objectSearchType = ( (String)objectLocator.get(PropertyConfig.OBJECT_SEARCH_KEY)).toUpperCase();
             WebObjectSearchType webObjectSearchType = WebObjectSearchType.valueOf(objectSearchType);
-            WebElement webElement =  webObjectSearchType.findElement(driver,(String) objectLocator.get(PropertyConfig.OBJECT_LOCATORS));
-            return webElement;
+            List<WebElement> webElements =  webObjectSearchType.findElement(driver,(String) objectLocator.get(PropertyConfig.OBJECT_LOCATORS));
+            return webElements;
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new Exception("webElement not founding");
+            throw new Exception("webElements not founding");
         }
     }
 
@@ -33,8 +34,17 @@ public class WebObjectSearch {
     static public WebElement getWebElement(WebDriver webDriver  ,String objectLocator) {
         try {
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
-            WebElement userWeb = searchWebObject(webDriver, objectLocatorData);
-            return userWeb;
+            List<WebElement> userelemnts = searchWebObject(webDriver, objectLocatorData);
+            return userelemnts.get(userelemnts.size()-1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    static public List<WebElement> getWebElements(WebDriver webDriver  ,String objectLocator) {
+        try {
+            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
+            return searchWebObject(webDriver, objectLocatorData);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

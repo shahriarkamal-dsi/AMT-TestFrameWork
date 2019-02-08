@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import sun.rmi.runtime.Log;
+import test.Log.LogMessage;
 import test.beforeTest.LeaseCreate;
 import test.beforeTest.PropertyCreate;
 import test.coreModule.ExecuteTests;
@@ -11,6 +13,7 @@ import test.coreModule.MainController;
 import test.driver.DriverFactory;
 import test.keywordScripts.UIBase;
 import test.keywordScripts.UIText;
+import test.keywordScripts.UtilKeywordScript;
 import test.utility.ReadExcel;
 
 import java.io.FileInputStream;
@@ -68,6 +71,7 @@ public class AppTest
         for(Map record : records) {
             propertyCreate.createProperty(record);
         }
+        UtilKeywordScript.closeAllPages(driver);
     }
 
     @Test
@@ -85,6 +89,10 @@ public class AppTest
         uiBase.Click("Common.Login.btnLogIn");
 
         LeaseCreate leaseCreate = new LeaseCreate(driver);
-        leaseCreate.createLease(records.get(0));
+       LogMessage logMessage =  leaseCreate.createLease(records.get(0));
+       assertTrue(logMessage.isPassed());
+      //  UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
+      //  utilKeywordScript.redirectHomePage();
+        //UtilKeywordScript.closeAllPages(driver);
     }
 }

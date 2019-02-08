@@ -12,6 +12,7 @@ import test.objectLocator.WebObject;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
+import java.util.List;
 import java.util.Map;
 
 public class UIDropDown {
@@ -27,7 +28,6 @@ public class UIDropDown {
 
     public LogMessage SelectItem(String objectLocator,String testData) {
         try {
-
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
             if(null != objectLocatorData.get(PropertyConfig.PARENT_LOCATOR)) {
                 return SelectItem(objectLocator,(String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR),testData);
@@ -51,21 +51,27 @@ public class UIDropDown {
             if (null == dropDownElement)
                 return new LogMessage(false," drop down element is not found.");
 
-            JavascriptExecutor js = (JavascriptExecutor) webDriver;
-            js.executeScript("arguments[0].scrollIntoView();", dropDownElement);
-            Thread.sleep(3*1000);
-            dropDownElement.click();
-            Thread.sleep(3*1000);
-            WebElement dropDownDataElement = webDriver.findElement(By.xpath(dropDownObjectLocatorData + "/*[text() = '" + testData + "']"));
-            if (null == dropDownDataElement)
+           // JavascriptExecutor js = (JavascriptExecutor) webDriver;
+          //  js.executeScript("arguments[0].scrollIntoView();", dropDownElement);
+            UtilKeywordScript.delay(3);
+           // if(dropDownElement.getTagName().equals("input"))
+             //   dropDownElement.sendKeys(testData);
+          //  else
+                dropDownElement.click();
+            UtilKeywordScript.delay(3);
+            List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[text() = '" + testData + "']"));
+            if (null == dropDownDataElements || dropDownDataElements.isEmpty())
                 return new LogMessage(false," drop down list element is not found.");
-            dropDownDataElement.click();
+            dropDownDataElements.get(dropDownDataElements.size()-1).click();
+            //UIBase uiBase = new UIBase(webDriver);
+           // uiBase.Click(dropDownDataElement);
             return new LogMessage(true, "drop down item is selected") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "exception occured: " + ex.getMessage()) ;
         }
     }
+
 
 
 

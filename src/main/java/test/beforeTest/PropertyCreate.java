@@ -1,12 +1,16 @@
 package test.beforeTest;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.UIDropDown;
 import test.keywordScripts.UIMenu;
+import test.keywordScripts.UtilKeywordScript;
 import test.objectLocator.WebObjectSearch;
 
 import java.util.Iterator;
@@ -37,17 +41,12 @@ public class PropertyCreate {
           //  menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract") ;
             menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Property") ;
             switchTabs(webDriver);
-
-            Thread.sleep(10*1000);
-
-          //  UIDropDown uiDropDown = new UIDropDown(webDriver);
-           // uiDropDown.SelectItem(objectlocatorPrefix + "leaseStatus","Active");
-
+            UtilKeywordScript.delay(10);
 
             for(String elementName : textFields) {
                 WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix  + elementName) ;
                 element.sendKeys( (String) data.get(elementName));
-                Thread.sleep(2*1000);
+                UtilKeywordScript.delay(3);
             }
 
             for(String elementName : dropDownFields) {
@@ -56,19 +55,19 @@ public class PropertyCreate {
                 select.selectByVisibleText( (String)data.get(elementName));
                 if(elementName.equals("codeType")) {
                     webDriver.switchTo().alert().accept();
-                    Thread.sleep(3*000);
+                    UtilKeywordScript.delay(3);
                 }
-                Thread.sleep(2*1000);
+                UtilKeywordScript.delay(3);
             }
             WebElement checkBoxItem = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + autoManageChkBox) ;
             if(  data.get(autoManageChkBox).toString().toLowerCase().equals("true"))
                 checkBoxItem.click();
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "save") ;
             element.click();
+            UtilKeywordScript.delay(15);
             webDriver.close();
             webDriver.switchTo().window(rootWindow);
-            Thread.sleep(3*1000);
-
+            UtilKeywordScript.delay(3);
             return new LogMessage(true, "create property successfull") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
