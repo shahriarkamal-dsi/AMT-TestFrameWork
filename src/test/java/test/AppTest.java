@@ -90,10 +90,10 @@ public class AppTest
         uiBase.Click("Common.Login.btnLogIn");
 
         LeaseCreate leaseCreate = new LeaseCreate(driver);
-       LogMessage logMessage =  leaseCreate.createLease(records.get(0));
-       assertTrue(logMessage.isPassed());
-      //  UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
-      //  utilKeywordScript.redirectHomePage();
-        //UtilKeywordScript.closeAllPages(driver);
+        for(Map record : records){
+            LogMessage logMessage =  leaseCreate.createLease(record);
+            assertTrue(logMessage.isPassed());
+        }
+        UtilKeywordScript.closeAllPages(driver);
     }
 }

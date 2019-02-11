@@ -32,7 +32,7 @@ public class LeaseCreate {
     public LogMessage createLease(Map data){
 
         try {
-
+            String rootWindow = webDriver.getWindowHandle() ;
             String  objectlocatorPrefix = "Common.Lease." ;
             UIMenu menu = new UIMenu(webDriver);
             menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract");
@@ -42,11 +42,6 @@ public class LeaseCreate {
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             uiDropDown.SelectItem(objectlocatorPrefix + "propertyList",(String) data.get("propertyName"));
 
-          // WebElement propertyName = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix +"propertyName");
-           // propertyName.sendKeys((String) data.get("propertyName"));
-            //WebElement dbaName = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix+"dbaName");
-           // dbaName.click();
-           // UtilKeywordScript.delay(1);
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
@@ -69,19 +64,14 @@ public class LeaseCreate {
             WebElement btnSave = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "saveButton");
             btnSave.click();
 
-            /*
-            Map findData = new HashMap();
-            findData.put(PropertyConfig.OBJECT_LOCATORS, "//div[@class,'alert alert-warning']");
-            findData.put(PropertyConfig.OBJECT_SEARCH_KEY, "by_xpath");
-            List<WebElement> elements = WebObjectSearch.searchWebObject(webDriver,findData);
-            if(null != elements || !elements.isEmpty()) {
-                return new LogMessage(false,elements.get(0).getText());
-            }*/
-
-
-
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
+
+            UtilKeywordScript.delay(15);
+            webDriver.close();
+            webDriver.switchTo().window(rootWindow);
+            UtilKeywordScript.delay(3);
+
             return new LogMessage(true,"Lease create successfully");
         }catch (Exception ex){
             ex.printStackTrace();
