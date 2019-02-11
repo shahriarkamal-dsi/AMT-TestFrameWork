@@ -29,6 +29,7 @@ public class AppTest
     /**
      * Rigorous Test :-)
      */
+    /*
     @Test
     public void testingReadAndExecute() {
         WebDriver driver = DriverFactory.createDriver("chrome", false);
@@ -52,7 +53,7 @@ public class AppTest
         }catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
+    }*/
 
     @Test
     public void propertyCreate() {
@@ -62,8 +63,8 @@ public class AppTest
         WebDriver driver = DriverFactory.createDriver("chrome", false);
         UIBase uiBase = new UIBase(driver) ;
         UIText uiText = new UIText(driver) ;
-        uiBase.navigateToAPage("https://qa3.testamt.com/");
-        uiText.SetText("Common.Login.txtUserName","Sanjoy01");
+        uiBase.navigateToAPage("https://qa4.testamt.com/");
+        uiText.SetText("Common.Login.txtUserName","saimaalam01");
         uiText.SetText("Common.Login.txtPassword","amtDirect01!");
         uiText.SetText("Common.Login.txtClientID","201483");
         uiBase.Click("Common.Login.btnLogIn");
