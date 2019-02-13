@@ -7,6 +7,7 @@ import test.Log.LogMessage;
 import test.keywordScripts.UIDropDown;
 import test.keywordScripts.UILink;
 import test.keywordScripts.UIMenu;
+import test.keywordScripts.UITable;
 import test.keywordScripts.UtilKeywordScript;
 import test.objectLocator.WebObject;
 import test.objectLocator.WebObjectSearch;
@@ -64,6 +65,8 @@ public class LeaseCreate {
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
 
             UtilKeywordScript.delay(15);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add New Suite")));
@@ -78,6 +81,7 @@ public class LeaseCreate {
             spaceCreate.spaceCreate();
 
 
+            UtilKeywordScript.delay( 5);
             webDriver.close();
             webDriver.switchTo().window(rootWindow);
             UtilKeywordScript.delay(3);
@@ -130,10 +134,15 @@ public class LeaseCreate {
             WebElement btnSearch = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "btnSearch");
             btnSearch.click();
 
-            UtilKeywordScript.delay(15);
+            UtilKeywordScript.delay(10);
 
-            switchTabs(webDriver);
+            UtilKeywordScript.switchLatestTab(webDriver);
 
+            UITable uiTable  = new UITable(webDriver);
+             LogMessage logMessage =  uiTable.ClickLinkInTable(objectLocatorPrefix + "leasetable","DBA Name," + (String)data.get("LeaseName"));
+            UtilKeywordScript.delay(10);
+             UtilKeywordScript.switchLatestTab(webDriver);
+             System.out.println(logMessage.getLogMessage());
             return new LogMessage(true, " Lease found successfully");
         }catch (Exception e){
             e.printStackTrace();

@@ -89,6 +89,20 @@ public class UtilKeywordScript {
         }
     }
 
+
+    public static void switchLatestTab(WebDriver webDriver) {
+        try {
+            Set<String> windows = webDriver.getWindowHandles();
+            Iterator<String> iter = windows.iterator();
+            String lastTab = "" ;
+            while (iter.hasNext())
+                lastTab=iter.next();
+            webDriver.switchTo().window(lastTab);
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void delay(int time) {
         try {
             Thread.sleep(time * 1000);
