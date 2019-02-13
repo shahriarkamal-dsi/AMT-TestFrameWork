@@ -29,7 +29,7 @@ public class UITable extends  UtilKeywordScript{
     b. from calling method from  excel sheet, please use this method to get all table data, then code what need to be done,
     thats how any type table can be worked properly from excel sheet.
      */
-    private List<Map> getAllValuesfromTable(String objectLocatorData) {
+    public List<Map> getAllValuesfromTable(String objectLocatorData) {
         try {
             webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS) ;
             List<Map> tableData = new ArrayList<Map>();
@@ -87,7 +87,7 @@ public class UITable extends  UtilKeywordScript{
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
             if(tables.size() <2) {
-                return new HashMap();
+                return getSingleRowfromSingleTable(objectLocatorData,columnName,columnValue,rowIndex);
             }
             WebElement head = tables.get(0) ;
             WebElement body = tables.get(1) ;
@@ -126,6 +126,7 @@ public class UITable extends  UtilKeywordScript{
                 else if(getMatchrow) {
                     return rowdata;
                 }
+                countRow++;
             }
             return new HashMap();
         } catch(Exception ex) {
@@ -135,8 +136,90 @@ public class UITable extends  UtilKeywordScript{
     }
 
 
+
+    private Map getSingleRowfromSingleTable(String objectLocatorData,String columnName,String columnValue, Integer rowIndex ) {
+        try {
+            List<Map> tableData = new ArrayList<Map>();
+            WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
+            WebElement head = tables.get(0) ;
+            List<WebElement>  headCells = head.findElement(By.tagName("thead")).findElement(By.tagName("tr")).findElements(By.tagName("th"));
+            /*
+            for(WebElement row : rows) {
+                List<WebElement> headCells = row.findElements(By.tagName("th"));
+                for(WebElement headcell : headCells) {
+                }
+            }*/
+
+            List<WebElement> rows = head.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+            int countRow = 0 ;
+            boolean getMatchrow = false ;
+            for(WebElement row : rows) {
+                Map rowdata = new HashMap<String,WebElement>();
+                List<WebElement> bodyCells = row.findElements(By.tagName("td"));
+                int index = 0;
+                for(WebElement bodyCell : bodyCells) {
+                    if(null  != columnName && null != columnValue ) {
+                        if(columnName.equals(headCells.get(index).getText())) {
+                            if(columnValue.equals(bodyCell.getText())) {
+                                getMatchrow = true;
+                            }
+                        }
+                    }
+                    String key =  String.valueOf(index) + "," + headCells.get(index).getText();
+                    rowdata.put(key,bodyCell);
+                    index++;
+
+                    //System.out.println(bodyCell.getText());
+                    //System.out.println(headcell.getAttribute("data-title"));
+                }
+                if(null  != rowIndex &&  countRow == rowIndex.intValue())
+                    return rowdata ;
+                else if(getMatchrow) {
+                    return rowdata;
+                }
+                countRow++;
+            }
+            return new HashMap();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+
     private List<Map> getAllValuesfromSingleTable(String objectLocatorData ) {
+        try {
+        webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS) ;
+        List<Map> tableData = new ArrayList<Map>();
+        WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+        List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
+        WebElement head = tables.get(0) ;
+        List<WebElement>  headCells = head.findElement(By.tagName("thead")).findElement(By.tagName("tr")).findElements(By.tagName("th"));
+            /*
+            for(WebElement row : rows) {
+                List<WebElement> headCells = row.findElements(By.tagName("th"));
+                for(WebElement headcell : headCells) {
+                }
+            }*/
+
+            List<WebElement> rows = head.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+        for(WebElement row : rows) {
+            Map rowdata = new HashMap<String,WebElement>();
+            List<WebElement> bodyCells = row.findElements(By.tagName("td"));
+            int index = 0;
+            for(WebElement bodyCell : bodyCells) {
+                String key =  String.valueOf(index) + "," + headCells.get(index).getText();
+                rowdata.put(key,bodyCell);
+                index++;
+            }
+            tableData.add(rowdata);
+        }
+        return tableData;
+    } catch(Exception ex) {
+        ex.printStackTrace();
         return null;
+    }
     }
 
     public LogMessage ClickCellInTable(String objectLocatorData, String testData) {
@@ -158,12 +241,46 @@ public class UITable extends  UtilKeywordScript{
                          String text = element.getText();
                          if(columnValue.equals(element.getText())) {
                              UIBase uibase = new UIBase(webDriver);
+
                              element.click();
                              uibase.ClickDbClickRClick(element,"DBLCLICK");
                              return new LogMessage(true, "element is clicked");
                          }
                      }
                 }
+            return new LogMessage(true, "proper cell is not present.");
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false,"exception occured: " + ex.getMessage());
+        }
+    }
+
+
+
+    public LogMessage ClickLinkInTable(String objectLocatorData, String testData) {
+        try {
+            String columnName = "" ;
+            String columnValue = "" ;
+            if(!validateTestData(testData,2))
+                return  new LogMessage(false, "test data invalid");
+            String[] data = testData.split(",");
+            columnName = data[0] ;
+            columnValue = data[1] ;
+            Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
+            if(null == row || row.isEmpty())
+                return new LogMessage(false, "no table data");
+            for (String key : row.keySet()) {
+                String clName = key.split(",")[1];
+                if(columnName.equals(clName)){
+                    WebElement element = row.get(key) ;
+                    String text = element.getText();
+                    if(columnValue.equals(element.getText())) {
+                        WebElement elm = element.findElement(By.linkText(columnValue));
+                        elm.click();
+                        return new LogMessage(true, "element is clicked");
+                    }
+                }
+            }
             return new LogMessage(true, "proper cell is not present.");
         } catch(Exception ex) {
             ex.printStackTrace();
