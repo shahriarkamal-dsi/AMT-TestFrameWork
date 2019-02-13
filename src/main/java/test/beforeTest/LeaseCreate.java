@@ -104,16 +104,33 @@ public class LeaseCreate {
         }
     }
 
-    public LogMessage select(Map data, String objectLocator, String propertyName){
+    public LogMessage searchLease(Map data){
 
-        WebElement propertyListBox = WebObjectSearch.getWebElement(webDriver,objectLocator);
-        List<WebElement> propertyNames = propertyListBox.findElements(By.tagName("li"));
-        for (WebElement property : propertyNames){
-            if (property.getText().equals(data.get(propertyName).toString())){
-                property.click();
-                return new LogMessage(true, "Property found successfully");
-            }
+        try{
+            //String rootWindow = webDriver.getWindowHandle() ;
+            String  objectLocatorPrefix = "Common.GlobalSearch." ;
+
+            WebElement search = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "search");
+            search.click();
+
+            WebElement txtSearch = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "txtSearch");
+            txtSearch.sendKeys((String)data.get("LeaseName"));
+
+            WebElement btnSearch = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "btnSearch");
+            btnSearch.click();
+
+            UtilKeywordScript.delay(15);
+
+            switchTabs(webDriver);
+
+            return new LogMessage(true, " Lease found successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, " Exception Occured");
         }
-        return new LogMessage(false, " Invalid property name");
+
+
     }
+
+
 }
