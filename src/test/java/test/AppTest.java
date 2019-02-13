@@ -96,4 +96,21 @@ public class AppTest
         }
         UtilKeywordScript.closeAllPages(driver);
     }
+
+    @Test
+    public void Search(){
+        ClassLoader classLoader = getClass().getClassLoader();
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+        List<Map> records = readExcel.read("Space");
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        UIBase uiBase = new UIBase(driver) ;
+        UIText uiText = new UIText(driver) ;
+        uiBase.navigateToAPage("https://qa4.testamt.com/");
+        uiText.SetText("Common.Login.txtUserName","saimaalam01");
+        uiText.SetText("Common.Login.txtPassword","amtDirect01!");
+        uiText.SetText("Common.Login.txtClientID","201483");
+        uiBase.Click("Common.Login.btnLogIn");
+        LeaseCreate leaseCreate = new LeaseCreate(driver);
+        leaseCreate.searchLease(records.get(0));
+    }
 }
