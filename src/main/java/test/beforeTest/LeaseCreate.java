@@ -1,13 +1,11 @@
 package test.beforeTest;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.UIDropDown;
+import test.keywordScripts.UILink;
 import test.keywordScripts.UIMenu;
 import test.keywordScripts.UtilKeywordScript;
 import test.objectLocator.WebObject;
@@ -68,6 +66,18 @@ public class LeaseCreate {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
 
             UtilKeywordScript.delay(15);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add New Suite")));
+
+            UILink uiLink = new UILink(webDriver);
+            uiLink.clickLink("","Add New Suite");
+            UtilKeywordScript.delay(5);
+            switchTabs(webDriver);
+            webDriver.manage().window().maximize();
+
+            SpaceCreate spaceCreate = new SpaceCreate(webDriver);
+            spaceCreate.spaceCreate();
+
+
             webDriver.close();
             webDriver.switchTo().window(rootWindow);
             UtilKeywordScript.delay(3);
@@ -91,13 +101,14 @@ public class LeaseCreate {
                 winNames[i]=iter.next();
                 i++;
             }
-
+          /*
             if(winNames.length > 1) {
                 for(i = winNames.length; i > 1; i--) {
                     webDriver.switchTo().window(winNames[i - 1]);
                 }
             }
-
+          */
+            webDriver.switchTo().window(winNames[windows.size()-1]);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -129,8 +140,6 @@ public class LeaseCreate {
             return new LogMessage(false, " Exception Occured");
         }
 
-
     }
-
 
 }
