@@ -1,9 +1,12 @@
 package test.keywordScripts;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
@@ -154,4 +157,17 @@ public class UIBase {
     public LogMessage test_click(String objectLocator){
         return new LogMessage(true,objectLocator);
     }
+
+    public LogMessage loadPage(WebDriver webDriver){
+        try{
+            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
+            return new LogMessage(true,"Page load successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, "Exception occurred during loading page");
+        }
+    }
+
 }

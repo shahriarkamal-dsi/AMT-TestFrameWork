@@ -90,7 +90,7 @@ public class UtilKeywordScript {
     }
 
 
-    public static void switchLatestTab(WebDriver webDriver) {
+    public static void switchLastTab(WebDriver webDriver) {
         try {
             Set<String> windows = webDriver.getWindowHandles();
             Iterator<String> iter = windows.iterator();
