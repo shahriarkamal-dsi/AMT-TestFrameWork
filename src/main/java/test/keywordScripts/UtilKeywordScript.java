@@ -55,7 +55,6 @@ public class UtilKeywordScript {
                         webDriver.navigate().to(homeUrl);
                     }
                     return new LogMessage(true , "redirect home page successsfully");
-                    //webDriver.close();
         } catch ( Exception ex) {
               return new LogMessage(false , "exception occured: " + ex.getMessage());
         }
@@ -83,7 +82,6 @@ public class UtilKeywordScript {
             webDriver.close();
 
             return new LogMessage(true , "redirect home page successsfully");
-            //webDriver.close();
         } catch ( Exception ex) {
             return new LogMessage(false , "exception occured: " + ex.getMessage());
         }
@@ -109,5 +107,23 @@ public class UtilKeywordScript {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public  LogMessage login(String url, String userName, String password, String client){
+
+        try{
+            UIBase uiBase = new UIBase(webDriver) ;
+            UIText uiText = new UIText(webDriver) ;
+            uiBase.navigateToAPage(url);
+            uiText.SetText("Common.Login.txtUserName",userName);
+            uiText.SetText("Common.Login.txtPassword",password);
+            uiText.SetText("Common.Login.txtClientID",client);
+            uiBase.Click("Common.Login.btnLogIn");
+            return new LogMessage(true,"Login successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Login fail " + e.getMessage());
+        }
+
     }
 }

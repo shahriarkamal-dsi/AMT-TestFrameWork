@@ -8,6 +8,7 @@ import sun.rmi.runtime.Log;
 import test.Log.LogMessage;
 import test.beforeTest.LeaseCreate;
 import test.beforeTest.PropertyCreate;
+import test.beforeTest.SpaceCreate;
 import test.coreModule.ExecuteTests;
 import test.coreModule.MainController;
 import test.driver.DriverFactory;
@@ -55,32 +56,17 @@ public class AppTest
         }
     }*/
 
-    public LogMessage login(WebDriver driver, String url, String userName, String password, String client){
 
-       try{
-           UIBase uiBase = new UIBase(driver) ;
-           UIText uiText = new UIText(driver) ;
-           uiBase.navigateToAPage("https://qa4.testamt.com/");
-           uiText.SetText("Common.Login.txtUserName","saimaalam01");
-           uiText.SetText("Common.Login.txtPassword","amtDirect01!");
-           uiText.SetText("Common.Login.txtClientID","201483");
-           uiBase.Click("Common.Login.btnLogIn");
-           return new LogMessage(true,"Login successfully");
-       }catch (Exception e){
-           e.printStackTrace();
-           return new LogMessage(false,"Login fail");
-       }
-
-    }
 
     @Test
     public void propertyCreate() {
 
         ClassLoader classLoader = getClass().getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
         List<Map> records = readExcel.read("Property");
         WebDriver driver = DriverFactory.createDriver("chrome", false);
-        login(driver,"https://qa4.testamt.com/","saimaalam01","amtDirect01", "201483");
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
+        utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
         PropertyCreate propertyCreate = new PropertyCreate(driver);
         for(Map record : records) {
             propertyCreate.createProperty(record);
@@ -93,12 +79,12 @@ public class AppTest
     public void leaseCreate(){
 
         ClassLoader classLoader = getClass().getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
         List<Map> records = readExcel.read("Lease");
         WebDriver driver = DriverFactory.createDriver("chrome", false);
-        login(driver,"https://qa4.testamt.com/","saimaalam01","amtDirect01", "201483");
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
+        utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
         LeaseCreate leaseCreate = new LeaseCreate(driver);
-        //leaseCreate.createLease(records.get(0));
         for(Map record : records){
             LogMessage logMessage =  leaseCreate.createLease(record);
             assertTrue(logMessage.isPassed());
@@ -111,25 +97,18 @@ public class AppTest
     public void createSpace(){
 
         ClassLoader classLoader = getClass().getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
         List<Map> records = readExcel.read("Space");
         WebDriver driver = DriverFactory.createDriver("chrome", false);
-        login(driver,"https://qa4.testamt.com/","saimaalam01","amtDirect01", "201483");
-        LeaseCreate leaseCreate = new LeaseCreate(driver);
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
+        utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
+        SpaceCreate spaceCreate = new SpaceCreate(driver);
         for(Map record : records){
-            LogMessage logMessage =  leaseCreate.searchLease(record);
+            LogMessage logMessage =  spaceCreate.createSpace(record);
             assertTrue(logMessage.isPassed());
         }
         UtilKeywordScript.closeAllPages(driver);
 
-
     }
 
-    @Test
-    public void test(){
-
-        WebDriver driver = DriverFactory.createDriver("chrome", false);
-        login(driver,"https://qa4.testamt.com/","saimaalam01","amtDirect01", "201483");
-
-    }
 }

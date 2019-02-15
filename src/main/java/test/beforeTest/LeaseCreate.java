@@ -5,7 +5,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
-import test.objectLocator.WebObjectSearch;
 
 import java.util.*;
 
@@ -24,22 +23,22 @@ public class LeaseCreate {
     public LogMessage createLease(Map data){
 
         try {
-            String rootWindow = webDriver.getWindowHandle();
             String  objectlocatorPrefix = "Common.Lease.";
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
 
             UIMenu menu = new UIMenu(webDriver);
             UIBase uiBase = new UIBase(webDriver);
             UIText uiText = new UIText(webDriver);
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
 
             menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract");
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
             UtilKeywordScript.delay(3);
             UIDropDown uiDropDown = new UIDropDown(webDriver);
-            uiDropDown.SelectItem(objectlocatorPrefix + "propertyList",(String) data.get("propertyName"));
+            uiDropDown.SelectItem(objectlocatorPrefix + "propertyList",(String)data.get("propertyName"));
 
-            uiBase.loadPage(webDriver);
+            uiBase.WaitingForPageLoad();
 
             uiText.SetText(objectlocatorPrefix +"dbaName",(String)data.get("dbaName"));
             uiText.SetText(objectlocatorPrefix +"leaseCode",(String)data.get("leaseCode"));
@@ -57,20 +56,19 @@ public class LeaseCreate {
 
             uiBase.Click(objectlocatorPrefix + "saveButton");
 
-            uiBase.loadPage(webDriver);
+            uiBase.WaitingForPageLoad();
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
 
             UtilKeywordScript.delay( 5);
-            webDriver.close();
-            webDriver.switchTo().window(rootWindow);
+            utilKeywordScript.redirectHomePage();
             UtilKeywordScript.delay(3);
 
             return new LogMessage(true,"Lease create successfully");
         }catch (Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false, "Exception Occurred");
+            return new LogMessage(false, "Exception Occurred " + ex.getMessage());
         }
 
     }
@@ -78,13 +76,10 @@ public class LeaseCreate {
     public LogMessage searchLease(Map data){
 
         try{
-            String rootWindow = webDriver.getWindowHandle();
-
-            String  objectLocatorPrefix = "Common.GlobalSearch." ;
+            String  objectLocatorPrefix = "Common.GlobalSearch.";
             UIText uiText = new UIText(webDriver);
             UIBase uiBase = new UIBase(webDriver);
             UITable uiTable  = new UITable(webDriver);
-            SpaceCreate spaceCreate = new SpaceCreate(webDriver);
 
             uiBase.Click(objectLocatorPrefix + "search");
             uiText.SetText(objectLocatorPrefix +"txtSearch",(String)data.get("LeaseName"));
@@ -98,16 +93,10 @@ public class LeaseCreate {
             UtilKeywordScript.switchLastTab(webDriver);
             UtilKeywordScript.delay(10);
 
-            spaceCreate.createSpace(data);
-
-            UtilKeywordScript.delay( 5);
-            webDriver.close();
-            UtilKeywordScript.delay( 5);
-            webDriver.switchTo().window(rootWindow);
             return new LogMessage(true, " Lease found successfully");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false, " Exception occurred");
+            return new LogMessage(false, " Exception occurred " + e.getMessage());
         }
 
     }

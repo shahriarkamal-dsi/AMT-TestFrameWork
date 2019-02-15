@@ -11,7 +11,6 @@ import test.keywordScripts.UILink;
 import test.keywordScripts.UIText;
 import test.keywordScripts.UtilKeywordScript;
 import test.objectLocator.WebObjectSearch;
-import test.utility.ReadExcel;
 
 import java.util.List;
 import java.util.Map;
@@ -30,13 +29,17 @@ public class SpaceCreate {
 
     public LogMessage createSpace(Map data){
         try{
-            String rootWindow = webDriver.getWindowHandle();
             String  objectLocatorPrefix = "Common.Space." ;
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
 
             UILink uiLink = new UILink(webDriver);
             UIBase uiBase = new UIBase(webDriver);
             UIText uiText = new UIText(webDriver);
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+
+            LeaseCreate leaseCreate = new LeaseCreate(webDriver);
+            leaseCreate.searchLease(data);
+            UtilKeywordScript.delay(5);
 
             uiLink.clickLink("","Add New Suite");
 
@@ -51,20 +54,23 @@ public class SpaceCreate {
 
             List<WebElement>  linkedItems  = WebObjectSearch.getWebElements(webDriver, objectLocatorPrefix + "linked");
             uiBase.Click(linkedItems.get(0));
+            UtilKeywordScript.delay(5);
+
             uiBase.Click(objectLocatorPrefix + "btnSave");
 
-            uiBase.loadPage(webDriver);
+            uiBase.WaitingForPageLoad();
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
 
             uiBase.Click(objectLocatorPrefix + "btnClose");
             UtilKeywordScript.delay(5);
-            webDriver.switchTo().window(rootWindow);
+
+            utilKeywordScript.redirectHomePage();
 
             return new LogMessage(true,"Space create successfully!");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false,"Exception occurred");
+            return new LogMessage(false,"Exception occurred " + e.getMessage());
         }
     }
 

@@ -158,7 +158,7 @@ public class UIBase {
         return new LogMessage(true,objectLocator);
     }
 
-    public LogMessage loadPage(WebDriver webDriver){
+    public LogMessage WaitingForPageLoad(){
         try{
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
