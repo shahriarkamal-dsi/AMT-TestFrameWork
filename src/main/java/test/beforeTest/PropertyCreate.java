@@ -32,15 +32,15 @@ public class PropertyCreate {
 
     public LogMessage createProperty(Map data) {
         try {
-            String rootWindow = webDriver.getWindowHandle() ;
             String[] textFields = new String[] {"propertyName","propertyCode","address1" , "postal" , "city" , "sqFtRentable"} ;
             String[] dropDownFields = new String[] {"country","state","codeType" , "status" , "currency", "buildingList", "region", "assetType"} ;
             String autoManageChkBox = "autoManage" ;
             String  objectlocatorPrefix = "Common.Property." ;
             UIMenu menu = new UIMenu(webDriver);
-          //  menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract") ;
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+
             menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Property") ;
-            switchTabs(webDriver);
+            UtilKeywordScript.switchLastTab(webDriver);
             UtilKeywordScript.delay(10);
 
             for(String elementName : textFields) {
@@ -65,38 +65,12 @@ public class PropertyCreate {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "save") ;
             element.click();
             UtilKeywordScript.delay(15);
-            webDriver.close();
-            webDriver.switchTo().window(rootWindow);
+            utilKeywordScript.redirectHomePage();
             UtilKeywordScript.delay(3);
             return new LogMessage(true, "create property successfull") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "exception occured: " + ex.getMessage()) ;
-        }
-    }
-
-    public  void switchTabs(WebDriver webDriver) {
-        try {
-            Set<String> windows = webDriver.getWindowHandles();
-            Iterator<String> iter = windows.iterator();
-            String[] winNames=new String[windows.size()];
-            int i=0;
-            while (iter.hasNext()) {
-                winNames[i]=iter.next();
-                i++;
-            }
-
-            if(winNames.length > 1) {
-                for(i = winNames.length; i > 1; i--) {
-                    webDriver.switchTo().window(winNames[i - 1]);
-                   // webDriver.close();
-                }
-            }
-           // webDriver.switchTo().window(winNames[0]);
-            //webDriver.close();
-        }
-        catch(Exception e){
-            e.printStackTrace();
         }
     }
 
