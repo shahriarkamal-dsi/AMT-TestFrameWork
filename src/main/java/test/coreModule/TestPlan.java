@@ -2,7 +2,6 @@ package test.coreModule;
 
 import org.junit.Test;
 
-import javax.jws.WebParam;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

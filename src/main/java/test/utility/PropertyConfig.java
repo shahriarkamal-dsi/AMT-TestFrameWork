@@ -43,6 +43,29 @@ public class PropertyConfig {
 
         }
     }
+    public static String  getLoginUrl(){
 
+        try {
+            String loginUrl = getPropertyValue("loginUrl");
+            String env = getPropertyValue("env");
+            return loginUrl.replaceAll("#env",env);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            return null ;
+
+        }
+    }
+    public static String  getHomeLoginUrl(){
+
+        try {
+            String homeUrl = getPropertyValue("homeUrl");
+            String env = getPropertyValue("env");
+            return homeUrl.replaceAll("#env",env);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            return null ;
+
+        }
+    }
 
 }

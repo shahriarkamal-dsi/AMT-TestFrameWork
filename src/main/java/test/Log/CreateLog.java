@@ -4,7 +4,6 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
-import jdk.internal.dynalink.beans.StaticClass;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
