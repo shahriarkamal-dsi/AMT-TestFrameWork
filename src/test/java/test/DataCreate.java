@@ -9,6 +9,7 @@ import test.driver.DriverFactory;
 import test.keywordScripts.UIBase;
 import test.keywordScripts.UIText;
 
+import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -24,13 +25,7 @@ public class DataCreate {
     @Test (priority = 1)
     public static void login(){
         driver = DriverFactory.createDriver("chrome", false);
-        UIBase uiBase = new UIBase(driver) ;
-        UIText uiText = new UIText(driver) ;
-        uiBase.navigateToAPage("https://qa4.testamt.com/");
-        uiText.SetText("Common.Login.txtUserName","saimaalam01");
-        uiText.SetText("Common.Login.txtPassword","amtDirect01!");
-        uiText.SetText("Common.Login.txtClientID","201483");
-        uiBase.Click("Common.Login.btnLogIn");
+        new UtilKeywordScript(driver).login("https://qa4.testamt.com/","saimaalam01","amtDirect01!","201483");
 
     }
     @Test (priority = 2)

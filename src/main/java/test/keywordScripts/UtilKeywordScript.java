@@ -50,7 +50,7 @@ public class UtilKeywordScript {
                         }
                     }
                     webDriver.switchTo().window(winNames[0]);
-                    String homeUrl = PropertyConfig.getPropertyValue("homeUrl");
+                    String homeUrl = PropertyConfig.getHomeLoginUrl();
                     if(!webDriver.getCurrentUrl().equals(homeUrl)) {
                         webDriver.navigate().to(homeUrl);
                     }
