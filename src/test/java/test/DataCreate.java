@@ -36,7 +36,7 @@ public class DataCreate {
     @Test (priority = 2)
     public void createProperty(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("property")) {
-            ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+            ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
             List<Map> propertyRecords = readExcel.read("Property");
 
             PropertyCreate propertyCreate = new PropertyCreate(driver);
@@ -51,7 +51,7 @@ public class DataCreate {
     @Test (priority = 3)
     public void createLease(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("lease")) {
-            ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+            ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
             List<Map> leaseRecords = readExcel.read("Lease");
             LeaseCreate leaseCreate = new LeaseCreate(driver);
             for (Map leaseRecord : leaseRecords) {

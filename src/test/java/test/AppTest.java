@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import sun.rmi.runtime.Log;
 import test.Log.LogMessage;
 import test.beforeTest.LeaseCreate;
 import test.beforeTest.PropertyCreate;
