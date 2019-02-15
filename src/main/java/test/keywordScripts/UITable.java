@@ -299,6 +299,7 @@ public class UITable extends  UtilKeywordScript{
              rowIndex = testData.split(",")[1] ;
             columnValue = testData.split(",")[2] ;
             Map<String, WebElement> row = getSingleRowfromTable(objectLocatorData,null,null,Integer.valueOf(rowIndex));
+            System.out.println(row);
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
             for (String key : row.keySet()) {
@@ -306,7 +307,45 @@ public class UITable extends  UtilKeywordScript{
                 if(columnName.equals(clName)){
                     WebElement element = row.get(key) ;
                     if(element.isEnabled()) {
-                        element.sendKeys(columnValue);
+                        //element.click();
+                       // UtilKeywordScript.delay(3);
+                        element.findElement(By.tagName("input")).sendKeys(columnValue);
+                        return new LogMessage(true,"enter text data");
+                    } else {
+                        return new LogMessage(false," text field disabled");
+                    }
+                }
+            }
+            return new LogMessage(true, "proper cell is not present.");
+
+        } catch ( Exception ex ) {
+            return new LogMessage(false, "exception occured " + ex.getMessage());
+        }
+    }
+
+
+    public LogMessage ClickCellData(String objectLocatorData, String testData) {
+        try {
+            String columnName = "" ;
+            String columnValue = "" ;
+            String rowIndex =  "" ;
+            if(!validateTestData(testData,3))
+                return new LogMessage(false, "test data not valid");
+            columnName = testData.split(",")[0] ;
+            rowIndex = testData.split(",")[1] ;
+            columnValue = testData.split(",")[2] ;
+            Map<String, WebElement> row = getSingleRowfromTable(objectLocatorData,null,null,Integer.valueOf(rowIndex));
+            System.out.println(row);
+            if(null == row || row.isEmpty())
+                return new LogMessage(false, "no table data");
+            for (String key : row.keySet()) {
+                String clName = key.split(",")[1];
+                if(columnName.equals(clName)){
+                    WebElement element = row.get(key) ;
+                    if(element.isEnabled()) {
+                        element.click();
+                        // UtilKeywordScript.delay(3);
+                       // element.sendKeys(columnValue);
                         return new LogMessage(true,"enter text data");
                     } else {
                         return new LogMessage(false," text field disabled");
