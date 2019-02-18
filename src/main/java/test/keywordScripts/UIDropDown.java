@@ -71,6 +71,32 @@ public class UIDropDown {
             return new LogMessage(false, "exception occured: " + ex.getMessage()) ;
         }
     }
+    public LogMessage searchAndSelectItem(String objectLocatorData,String dropDownObjectLocatorData,String testData) {
+        try {
+            WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if (null == dropDownElement)
+                return new LogMessage(false," drop down element is not found.");
+
+            // JavascriptExecutor js = (JavascriptExecutor) webDriver;
+            //  js.executeScript("arguments[0].scrollIntoView();", dropDownElement);
+            UtilKeywordScript.delay(3);
+            // if(dropDownElement.getTagName().equals("input"))
+            //   dropDownElement.sendKeys(testData);
+            //  else
+            dropDownElement.sendKeys(testData);
+            UtilKeywordScript.delay(3);
+            List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[text() = '" + testData + "']"));
+            if (null == dropDownDataElements || dropDownDataElements.isEmpty())
+                return new LogMessage(false," drop down list element is not found.");
+            dropDownDataElements.get(dropDownDataElements.size()-1).click();
+            //UIBase uiBase = new UIBase(webDriver);
+            // uiBase.Click(dropDownDataElement);
+            return new LogMessage(true, "drop down item is selected") ;
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occured: " + ex.getMessage()) ;
+        }
+    }
 
 
 
