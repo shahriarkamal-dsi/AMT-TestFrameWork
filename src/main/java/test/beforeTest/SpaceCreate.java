@@ -61,7 +61,7 @@ public class SpaceCreate {
             uiBase.WaitingForPageLoad();
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
-
+            UtilKeywordScript.delay(3);
             uiBase.Click(objectLocatorPrefix + "btnClose");
             UtilKeywordScript.delay(5);
 
