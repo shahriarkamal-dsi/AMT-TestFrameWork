@@ -6,10 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
-import test.keywordScripts.UIDropDown;
-import test.keywordScripts.UIMenu;
-import test.keywordScripts.UITable;
-import test.keywordScripts.UtilKeywordScript;
+import test.keywordScripts.*;
 
 import java.util.Map;
 
@@ -23,18 +20,15 @@ public class AccountCreateJeMapping {
 
     public void createAccount(Map data) {
         try {
-
-
-            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
-
+            UIBase uibase = new UIBase(webDriver);
             UIMenu uiMenu = new UIMenu(webDriver);
 
             uiMenu.SelectMenu("Common.Homepage.pgAMTHome" , "Accounting,Accounting Setup") ;
-            WaitingForPageLoad();
+            uibase.WaitingForPageLoad();
            // WaitingForPageLoad();
             UtilKeywordScript.delay(3);
             uiMenu.SelectMenu("","Account Numbers");
-            WaitingForPageLoad();
+            uibase.WaitingForPageLoad();
             UtilKeywordScript.delay(10);
             webDriver.findElement(By.linkText("Add New")).click();
             UITable uiTable = new UITable(webDriver);
@@ -47,7 +41,7 @@ public class AccountCreateJeMapping {
             uiTable.EnterCellData("Common.GlobalSearch.accountTable","*Description,0,test");
             UtilKeywordScript.delay(2);
             webDriver.findElement(By.linkText("Update")).click();
-            WaitingForPageLoad();
+            uibase.WaitingForPageLoad();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -58,12 +52,12 @@ public class AccountCreateJeMapping {
     public void  createJEMappping(Map data) {
         try {
 
-
+            UIBase uibase = new UIBase(webDriver);
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
 
             UIMenu uiMenu = new UIMenu(webDriver);
             uiMenu.SelectMenu("","JE Mapping");
-            WaitingForPageLoad();
+            uibase.WaitingForPageLoad();
             UtilKeywordScript.delay(10);
             webDriver.findElement(By.linkText("Add New")).click();
             UtilKeywordScript.delay(3);
@@ -78,7 +72,7 @@ public class AccountCreateJeMapping {
             System.out.print(lm.getLogMessage());
             UtilKeywordScript.delay(1);
             uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable","Expense Credit,0,test,button");
-            WaitingForPageLoad();
+            uibase.WaitingForPageLoad();
             UtilKeywordScript.delay(2);
             uiTable.filterTableByColumn("Common.GlobalSearch.jMappingAccountTable","Account Number,101");
             UtilKeywordScript.delay(4);
@@ -91,23 +85,14 @@ public class AccountCreateJeMapping {
             System.out.print(lm.getLogMessage());
             UtilKeywordScript.delay(1);
             uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable","FASB/IASB - Expense Debit - Financing,0,test,button");
-            WaitingForPageLoad();
+            uibase.WaitingForPageLoad();
             UtilKeywordScript.delay(2);
             uiTable.filterTableByColumn("Common.GlobalSearch.jMappingAccountTable","Account Number,101");
             UtilKeywordScript.delay(4);
-            uiTable.ClickCellInTable("Common.GlobalSearch.jMappingAccountTable","Account Number,101");        //FASB/IASB - Expense Debit - Financing
-
-
-  /*
-            uiTable.EnterCellData("Common.GlobalSearch.accountTable","*Account Number,0,test");
-            UtilKeywordScript.delay(2);
-            uiTable.ClickCellData("Common.GlobalSearch.accountTable","*Description,0,test");
-            UtilKeywordScript.delay(1);
-            uiTable.EnterCellData("Common.GlobalSearch.accountTable","*Description,0,test");
+            uiTable.ClickCellInTable("Common.GlobalSearch.jMappingAccountTable","Account Number,101");
             UtilKeywordScript.delay(2);
             webDriver.findElement(By.linkText("Update")).click();
-            WaitingForPageLoad();
-*/
+            uibase.WaitingForSuccessfullPopup();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -115,16 +100,6 @@ public class AccountCreateJeMapping {
     }
 
 
-    public LogMessage WaitingForPageLoad(){
-        try{
-            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
-            return new LogMessage(true,"Page load successfully");
-        }catch (Exception e){
-            e.printStackTrace();
-            return new LogMessage(false, "Exception occurred during loading page");
-        }
-    }
+
 
 }
