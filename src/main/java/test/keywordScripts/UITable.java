@@ -390,7 +390,7 @@ public class UITable extends  UtilKeywordScript{
                 for(WebElement element : headers) {
                     if(element.getText().equals(columnName)) {
                         UIBase uiBase = new UIBase(webDriver);
-                        uiBase.Click(element.findElement(By.xpath("//*[@class='k-icon k-filter']")));
+                        uiBase.Click(element.findElement(By.linkText("")));
                        // element.findElement(By.xpath("//*[@class='k-icon k-filter']")).click();
                         UtilKeywordScript.delay(1);
                         webDriver.findElement(By.xpath("//input[@class='k-textbox']")).sendKeys(columnValue);   //button[text()='Filter']

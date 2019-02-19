@@ -32,6 +32,7 @@ public class AccountCreateJeMapping {
             uiMenu.SelectMenu("Common.Homepage.pgAMTHome" , "Accounting,Accounting Setup") ;
             WaitingForPageLoad();
            // WaitingForPageLoad();
+            UtilKeywordScript.delay(3);
             uiMenu.SelectMenu("","Account Numbers");
             WaitingForPageLoad();
             UtilKeywordScript.delay(10);
@@ -79,9 +80,22 @@ public class AccountCreateJeMapping {
             uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable","Expense Credit,0,test,button");
             WaitingForPageLoad();
             UtilKeywordScript.delay(2);
-            //uiTable.filterTableByColumn("Common.GlobalSearch.jMappingAccountTable","Account Number,101");
+            uiTable.filterTableByColumn("Common.GlobalSearch.jMappingAccountTable","Account Number,101");
             UtilKeywordScript.delay(4);
-            uiTable.ClickCellInTable("Common.GlobalSearch.jMappingAccountTable","Account Number,101");
+            uiTable.ClickCellInTable("Common.GlobalSearch.jMappingAccountTable","Account Number,101");        //FASB/IASB - Expense Debit - Financing
+
+
+            UtilKeywordScript.delay(2);
+
+             lm =   uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable","FASB/IASB - Expense Debit - Financing,0,test");
+            System.out.print(lm.getLogMessage());
+            UtilKeywordScript.delay(1);
+            uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable","FASB/IASB - Expense Debit - Financing,0,test,button");
+            WaitingForPageLoad();
+            UtilKeywordScript.delay(2);
+            uiTable.filterTableByColumn("Common.GlobalSearch.jMappingAccountTable","Account Number,101");
+            UtilKeywordScript.delay(4);
+            uiTable.ClickCellInTable("Common.GlobalSearch.jMappingAccountTable","Account Number,101");        //FASB/IASB - Expense Debit - Financing
 
 
   /*
