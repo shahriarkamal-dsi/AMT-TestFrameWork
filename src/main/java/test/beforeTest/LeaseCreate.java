@@ -73,6 +73,54 @@ public class LeaseCreate {
 
     }
 
+    public LogMessage addRecurringPayment(Map data){
+        try{
+            String  objectLocatorPrefix = "Common.RecurringPayment." ;
+            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
+
+            UILink uiLink = new UILink(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
+            UIText uiText = new UIText(webDriver);
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+
+            LeaseCreate leaseCreate = new LeaseCreate(webDriver);
+            leaseCreate.searchLease(data);
+            UtilKeywordScript.delay(5);
+
+            uiLink.clickLink("","Add New");
+            UtilKeywordScript.delay(5);
+            UtilKeywordScript.switchLastTab(webDriver);
+            webDriver.manage().window().maximize();
+            UtilKeywordScript.delay(5);
+
+            UIDropDown uiDropDown = new UIDropDown(webDriver);
+            uiDropDown.SelectItem(objectLocatorPrefix + "chargeType",(String)data.get("ChargeType"));
+
+            uiDropDown.SelectItem(objectLocatorPrefix + "frequency",(String)data.get("Frequency"));
+            uiDropDown.SelectItem(objectLocatorPrefix + "escalationType",(String)data.get("EscalationType"));
+            uiDropDown.SelectItem(objectLocatorPrefix + "leaseTermYear",(String)data.get("LeaseTermYear"));
+            uiDropDown.SelectItem(objectLocatorPrefix + "leaseTermDefined",(String)data.get("LeaseTermDefined"));
+
+            uiBase.Click(objectLocatorPrefix + "btnSave");
+
+            uiBase.WaitingForPageLoad();
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Rental Activity")));
+
+            UtilKeywordScript.delay(5);
+
+            utilKeywordScript.redirectHomePage();
+
+            return new LogMessage(true,"Recurrent payment add successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, "Exception occurred " + e.getMessage());
+        }
+    }
+
     public LogMessage searchLease(Map data){
 
         try{
