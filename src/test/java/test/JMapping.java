@@ -3,15 +3,12 @@ package test;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import test.beforeTest.AccountCreateJeMapping;
 import test.driver.DriverFactory;
-import test.keywordScripts.UIBase;
-import test.keywordScripts.UIMenu;
-import test.keywordScripts.UIText;
+import test.keywordScripts.UtilKeywordScript;
+import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,25 +18,24 @@ public class JMapping {
 
     @BeforeClass
     public static void login() {
-     //   ClassLoader classLoader = getClass().getClassLoader();
-      //  ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
-       // List<Map> records = readExcel.read("Property");
         webDriver = DriverFactory.createDriver("chrome", false);
-        UIBase uiBase = new UIBase(webDriver) ;
-        UIText uiText = new UIText(webDriver) ;
-        uiBase.navigateToAPage("https://qa4.testamt.com/");
-        uiText.SetText("Common.Login.txtUserName","saimaalam01");
-        uiText.SetText("Common.Login.txtPassword","amtDirect01!");
-        uiText.SetText("Common.Login.txtClientID","201483");
-        uiBase.Click("Common.Login.btnLogIn");
+        new UtilKeywordScript(webDriver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
+
     }
 
     @Test
     public void createAccount() {
         try {
+            long start = System.currentTimeMillis();
+            ClassLoader classLoader = getClass().getClassLoader();
+            ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/AccountCreateJmapping.xlsx").getPath());
+            List<Map> accountRecords = readExcel.read("createAccount");
+            List<Map> jMappingRecords= readExcel.read("JMapping");
             AccountCreateJeMapping accountCreateJeMapping = new AccountCreateJeMapping(webDriver) ;
-            accountCreateJeMapping.createAccount(new HashMap());
-            accountCreateJeMapping.createJEMappping(new HashMap());
+            accountCreateJeMapping.createAccounts(accountRecords, (String) jMappingRecords.get(0).get("chartOfAccount"));
+            accountCreateJeMapping.createJEMappping(accountRecords,jMappingRecords.get(0));
+            long end = System.currentTimeMillis();
+            System.out.println((end-start)/1000);
 
 
         }catch ( Exception ex) {
