@@ -14,7 +14,7 @@ import org.apache.poi.ss.usermodel.Row;
 public class ReadExcel {
 
     private String filePath ;
-
+    private int columnLength;
 
     public ReadExcel(String path){
         this.filePath = path ;
@@ -48,9 +48,15 @@ public class ReadExcel {
                     if(!cell.toString().isEmpty())
                             isEmptyCell = false;
                     if(firstRow){
+                        if(cell.toString().isEmpty())
+                        {
+                            this.columnLength=index;
+                            break;
+                        }
                         columnNames[index++]=cell.toString() ;
+                        this.columnLength=index;
                     } else {
-                        if(index < columnNames.length) {
+                        if(index < this.columnLength) {
                             record.put(columnNames[cell.getColumnIndex()],cell.getStringCellValue().trim() );
                             index++;
                         }

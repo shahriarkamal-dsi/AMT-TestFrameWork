@@ -93,7 +93,7 @@ public class AppTest
     }
 
     @Test
-    public void createSpace(){
+    public void spaceCreate(){
 
         ClassLoader classLoader = getClass().getClassLoader();
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
@@ -108,6 +108,22 @@ public class AppTest
         }
         UtilKeywordScript.closeAllPages(driver);
 
+    }
+
+    @Test
+    public void recurringPaymentsAdd(){
+        ClassLoader classLoader = getClass().getClassLoader();
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
+        List<Map> records = readExcel.read("RecurringPayment");
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
+        utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
+        LeaseCreate leaseCreate = new LeaseCreate(driver);
+        for(Map record : records){
+            LogMessage logMessage = leaseCreate.addRecurringPayment(record);
+            assertTrue(logMessage.isPassed());
+        }
+        //UtilKeywordScript.closeAllPages(driver);
     }
 
 }

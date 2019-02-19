@@ -5,6 +5,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
+import test.objectLocator.ObjectLocatorDataStorage;
+import test.objectLocator.WebObjectSearch;
+import test.utility.PropertyConfig;
 
 import java.util.*;
 
@@ -25,6 +28,7 @@ public class LeaseCreate {
         try {
             String  objectlocatorPrefix = "Common.Lease.";
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
+            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocatorPrefix + "propertyList");
 
             UIMenu menu = new UIMenu(webDriver);
             UIBase uiBase = new UIBase(webDriver);
@@ -36,7 +40,7 @@ public class LeaseCreate {
             webDriver.manage().window().maximize();
             UtilKeywordScript.delay(3);
             UIDropDown uiDropDown = new UIDropDown(webDriver);
-            uiDropDown.SelectItem(objectlocatorPrefix + "propertyList",(String)data.get("propertyName"));
+            uiDropDown.searchAndSelectItem(objectlocatorPrefix + "propertyName",(String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR),(String)data.get("propertyName"));
 
             uiBase.WaitingForPageLoad();
 

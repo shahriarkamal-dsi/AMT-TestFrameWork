@@ -39,6 +39,9 @@ public class JMapping {
         try {
             AccountCreateJeMapping accountCreateJeMapping = new AccountCreateJeMapping(webDriver) ;
             accountCreateJeMapping.createAccount(new HashMap());
+            accountCreateJeMapping.createJEMappping(new HashMap());
+
+
         }catch ( Exception ex) {
             ex.printStackTrace();
         }

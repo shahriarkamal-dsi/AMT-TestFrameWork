@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import test.Log.LogMessage;
 import test.beforeTest.LeaseCreate;
 import test.beforeTest.PropertyCreate;
+import test.beforeTest.SpaceCreate;
 import test.driver.DriverFactory;
 import test.keywordScripts.UIBase;
 import test.keywordScripts.UIText;
@@ -25,7 +26,7 @@ public class DataCreate {
     @Test (priority = 1)
     public static void login(){
         driver = DriverFactory.createDriver("chrome", false);
-        new UtilKeywordScript(driver).login("https://qa4.testamt.com/","saimaalam01","amtDirect01!","201483");
+        new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
 
     }
     @Test (priority = 2)
@@ -53,6 +54,21 @@ public class DataCreate {
                 if (null == leaseRecord.get(PropertyConfig.EXECUTION_FLAG) || leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
                 LogMessage logMessage = leaseCreate.createLease(leaseRecord);
+                assertTrue(logMessage.isPassed());
+            }
+        }
+
+    }
+    @Test (priority = 4)
+    public void createSpace(){
+        if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("space")) {
+            ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
+            List<Map> spaceRecords = readExcel.read("Space");
+            SpaceCreate spaceCreate = new SpaceCreate(driver);
+            for (Map spaceRecord : spaceRecords) {
+                if (null == spaceRecord.get(PropertyConfig.EXECUTION_FLAG) || spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
+                    continue;
+                LogMessage logMessage = spaceCreate.createSpace(spaceRecord);
                 assertTrue(logMessage.isPassed());
             }
         }
