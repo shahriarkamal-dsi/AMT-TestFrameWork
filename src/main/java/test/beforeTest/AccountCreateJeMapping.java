@@ -101,6 +101,8 @@ public class AccountCreateJeMapping {
             UtilKeywordScript.delay(1);
             dropDown.SelectItem("Common.GlobalSearch.paymentType",(String) JMappingData.get("Payment Type"));
             for(Map accountData: accountDatas) {
+                if (null == accountData.get(PropertyConfig.EXECUTION_FLAG) || accountData.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !accountData.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
+                    continue;
                 LogMessage lm = uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable", accountData.get("Description")+",0,test");
                 UtilKeywordScript.delay(1);
                 uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable", accountData.get("Description")+",0,test,button");

@@ -3,17 +3,12 @@ package test;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import test.beforeTest.AccountCreateJeMapping;
 import test.driver.DriverFactory;
-import test.keywordScripts.UIBase;
-import test.keywordScripts.UIMenu;
-import test.keywordScripts.UIText;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +28,7 @@ public class JMapping {
         try {
             long start = System.currentTimeMillis();
             ClassLoader classLoader = getClass().getClassLoader();
-            ReadExcel readExcel = new ReadExcel(classLoader.getResource("accountCreateJmapping/AccountCreateJmapping.xlsx").getPath());
+            ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/AccountCreateJmapping.xlsx").getPath());
             List<Map> accountRecords = readExcel.read("createAccount");
             List<Map> jMappingRecords= readExcel.read("JMapping");
             AccountCreateJeMapping accountCreateJeMapping = new AccountCreateJeMapping(webDriver) ;
