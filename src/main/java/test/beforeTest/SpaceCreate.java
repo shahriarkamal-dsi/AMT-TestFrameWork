@@ -41,7 +41,7 @@ public class SpaceCreate {
             leaseCreate.searchLease(data);
             UtilKeywordScript.delay(5);
 
-            uiLink.clickLink("","Add New Suite");
+            uiLink.ClickLink("","Add New Suite");
 
             UtilKeywordScript.delay(5);
             UtilKeywordScript.switchLastTab(webDriver);
