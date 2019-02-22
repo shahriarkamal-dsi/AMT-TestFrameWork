@@ -1,7 +1,5 @@
 package test.beforeTest;
 
-import freemarker.ext.beans.HashAdapter;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,10 +25,11 @@ public class AccountCreateJeMapping {
     public void createAccount(Map data) {
         try {
 
-
+            UIBase uiBase = new UIBase(webDriver);
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
             UtilKeywordScript.delay(3);
-            webDriver.findElement(By.linkText("Add New")).click();
+            uiBase.Click(webDriver.findElement(By.linkText("Add New")));
+           // webDriver.findElement(By.linkText("Add New")).click();
             UtilKeywordScript.delay(2);
             UITable uiTable = new UITable(webDriver);
             uiTable.ClickCellData("Common.GlobalSearch.accountTable","*Account Number,0,"+(String)data.get("Account Number"));
