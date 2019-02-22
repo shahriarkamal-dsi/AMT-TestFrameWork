@@ -91,6 +91,13 @@ public class AccountCreateJeMapping {
 
             uiDropDown.SelectItem("Common.GlobalSearch.leaseTypes", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("Lease Types"));
             uibase.WaitingForPageLoad();
+            objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.jMappingchartOfAccountList");
+            uiDropDown.SelectItem("Common.GlobalSearch.jMappingchartOfAccountList", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("chartOfAccount"));
+            UtilKeywordScript.delay(02);
+            objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.jMappingMaintainCodeType");
+            uiDropDown.SelectItem("Common.GlobalSearch.jMappingMaintainCodeType", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("Maintain Code Type"));
+            UtilKeywordScript.delay(02);
+
             webDriver.findElement(By.linkText("Add New")).click();
             UtilKeywordScript.delay(3);
             UIDropDown dropDown = new UIDropDown(webDriver);

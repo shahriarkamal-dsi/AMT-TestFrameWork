@@ -95,6 +95,7 @@ public class ExecuteTests {
 
             Class<?> callingClass = Class.forName("test.keywordScripts." + className);
             Method callingMethod ;
+            System.out.println(numberOfParams);
             if(numberOfParams == 0)
                 callingMethod = callingClass.getDeclaredMethod(methodName);
             else if(numberOfParams == 1)
