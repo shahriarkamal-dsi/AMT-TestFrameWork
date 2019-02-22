@@ -164,7 +164,7 @@ public class UIBase {
 
     public LogMessage WaitingForPageLoad(){
         try{
-            WebDriverWait wait = new WebDriverWait(webDriver, 2*60);
+            WebDriverWait wait = new WebDriverWait(webDriver, 20);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
             return new LogMessage(true,"Page load successfully");
@@ -177,7 +177,7 @@ public class UIBase {
 
     public LogMessage WaitingForSuccessfullPopup(){
         try{
-            WebDriverWait wait = new WebDriverWait(webDriver, 2*60);
+            WebDriverWait wait = new WebDriverWait(webDriver, 20);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             return new LogMessage(true,"Page load successfully");

@@ -81,7 +81,7 @@ public class UITable extends  UtilKeywordScript{
   d. return perticular columnName-columnVale cell and whole row
   e. row index start with 0
    */
-    private Map getSingleRowfromTable(String objectLocatorData,String columnName,String columnValue, Integer rowIndex ) {
+    public Map getSingleRowfromTable(String objectLocatorData,String columnName,String columnValue, Integer rowIndex ) {
         try {
             List<Map> tableData = new ArrayList<Map>();
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
