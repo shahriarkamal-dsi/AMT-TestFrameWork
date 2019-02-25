@@ -12,6 +12,8 @@ import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -144,6 +146,8 @@ public class UIBase {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if(null == element)
                 return  new LogMessage(false, "element is not found");
+            WebDriverWait wait = new WebDriverWait(webDriver, 1*60);
+            wait.until(ExpectedConditions.visibilityOf(element));
             String logMessage = element.isDisplayed() == true ? "element is displayed " : "element is not displayed" ;
             return new LogMessage( element.isDisplayed(),logMessage);
         } catch ( Exception ex) {
@@ -160,7 +164,7 @@ public class UIBase {
 
     public LogMessage WaitingForPageLoad(){
         try{
-            WebDriverWait wait = new WebDriverWait(webDriver, 2*60);
+            WebDriverWait wait = new WebDriverWait(webDriver, 20);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
             return new LogMessage(true,"Page load successfully");
@@ -173,7 +177,7 @@ public class UIBase {
 
     public LogMessage WaitingForSuccessfullPopup(){
         try{
-            WebDriverWait wait = new WebDriverWait(webDriver, 2*60);
+            WebDriverWait wait = new WebDriverWait(webDriver, 20);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             return new LogMessage(true,"Page load successfully");

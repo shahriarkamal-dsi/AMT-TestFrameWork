@@ -2,12 +2,13 @@ package test.beforeTest;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.utility.PropertyConfig;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +23,11 @@ public class AccountCreateJeMapping {
     public void createAccount(Map data) {
         try {
 
-
+            UIBase uiBase = new UIBase(webDriver);
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
             UtilKeywordScript.delay(3);
-            webDriver.findElement(By.linkText("Add New")).click();
+            uiBase.Click(webDriver.findElement(By.linkText("Add New")));
+           // webDriver.findElement(By.linkText("Add New")).click();
             UtilKeywordScript.delay(2);
             UITable uiTable = new UITable(webDriver);
             uiTable.ClickCellData("Common.GlobalSearch.accountTable","*Account Number,0,"+(String)data.get("Account Number"));
@@ -78,17 +80,29 @@ public class AccountCreateJeMapping {
         try {
 
             UIBase uibase = new UIBase(webDriver);
+            UIMenu uiMenu = new UIMenu(webDriver);
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
 
-            UIMenu uiMenu = new UIMenu(webDriver);
+           // uiMenu.SelectMenu("Common.Homepage.pgAMTHome" , "Accounting,Accounting Setup") ;
+           // uibase.WaitingForPageLoad();
+           // UtilKeywordScript.delay(3);
+
+           // UIMenu uiMenu = new UIMenu(webDriver);
             uiMenu.SelectMenu("","JE Mapping");
             uibase.WaitingForPageLoad();
             UtilKeywordScript.delay(05);
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.leaseTypes");
-
+            UtilKeywordScript.delay(2);
             uiDropDown.SelectItem("Common.GlobalSearch.leaseTypes", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("Lease Types"));
-            uibase.WaitingForPageLoad();
+           // uibase.WaitingForPageLoad();
+            objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.jMappingchartOfAccountList");
+            uiDropDown.SelectItem("Common.GlobalSearch.jMappingchartOfAccountList", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("chartOfAccount"));
+            UtilKeywordScript.delay(02);
+            objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.jMappingMaintainCodeType");
+            uiDropDown.SelectItem("Common.GlobalSearch.jMappingMaintainCodeType", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("Maintain Code Type"));
+            UtilKeywordScript.delay(02);
+
             webDriver.findElement(By.linkText("Add New")).click();
             UtilKeywordScript.delay(3);
             UIDropDown dropDown = new UIDropDown(webDriver);
@@ -98,11 +112,25 @@ public class AccountCreateJeMapping {
             uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable","*Payment Type,0,test");
             UtilKeywordScript.delay(1);
             dropDown.SelectItem("Common.GlobalSearch.paymentType",(String) JMappingData.get("Payment Type"));
+
+            Map accountRecord = new HashMap<String,Map>() ;
+            for(Map accountData : accountDatas  ) {
+                accountRecord.put(accountData.get("Description"),accountData);
+            }
+            updateJMappingSecquentially("Common.GlobalSearch.jeMappingTable",accountRecord);
+            /*
             for(Map accountData: accountDatas) {
                 if (null == accountData.get(PropertyConfig.EXECUTION_FLAG) || accountData.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !accountData.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
+
                 LogMessage lm = uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable", accountData.get("Description")+",0,test");
+                if(!lm.isPassed()) {
+                    System.out.println(accountData.get("Description"));
+                    System.out.println(lm.getLogMessage());
+                    continue;
+                }
                 UtilKeywordScript.delay(1);
+
                 uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable", accountData.get("Description")+",0,test,button");
                 uibase.WaitingForPageLoad();
                 UtilKeywordScript.delay(2);
@@ -110,7 +138,7 @@ public class AccountCreateJeMapping {
                 UtilKeywordScript.delay(4);
                 uiTable.ClickCellInTable("Common.GlobalSearch.jMappingAccountTable", "Account Number,"+accountData.get("Account Number"));        //FASB/IASB - Expense Debit - Financing
                 UtilKeywordScript.delay(2);
-            }
+            } */
             webDriver.findElement(By.linkText("Update")).click();
             uibase.WaitingForSuccessfullPopup();
         } catch (Exception ex) {
@@ -118,6 +146,41 @@ public class AccountCreateJeMapping {
         }
 
     }
+
+
+    private void updateJMappingSecquentially(String objectLocatorData,Map accountData) {
+        try {
+            UITable uiTable = new UITable(webDriver);
+            UIBase uibase = new UIBase(webDriver);
+            Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocatorData, null, null, Integer.valueOf(0));
+            //System.out.println(row);
+            if (null == row || row.isEmpty())
+                return;
+            for (String key : row.keySet()) {
+                if (key.split(",").length < 2) continue;
+                String clName = key.split(",")[1];
+                if (!accountData.containsKey(clName))
+                    continue;
+                WebElement element = row.get(key);
+                element.click();
+                UtilKeywordScript.delay(1);
+                element.findElement(By.tagName("button")).click();
+                uibase.WaitingForPageLoad();
+                UtilKeywordScript.delay(2);
+                Map account = (Map) accountData.get(clName);
+                uiTable.filterTableByColumn("Common.GlobalSearch.jMappingAccountTable", "Account Number," + account.get("Account Number"));
+                UtilKeywordScript.delay(4);
+                uiTable.ClickCellInTable("Common.GlobalSearch.jMappingAccountTable", "Account Number," + account.get("Account Number"));        //FASB/IASB - Expense Debit - Financing
+                UtilKeywordScript.delay(2);
+
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
 
 
 

@@ -6,6 +6,8 @@ import test.Log.CreateLog;
 import test.coreModule.*;
 
 import test.Log.EmailSend;
+import test.driver.DriverFactory;
+import test.keywordScripts.UIBase;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
 import test.Log.LogMessage;
@@ -119,8 +121,12 @@ public class UnitTesting {
     public void testingEmailSent() {
         EmailSend.sendLogReport();
     }
-
-
+    @Test
+    public void visibilityCheck(){
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        UIBase uiBase = new UIBase(driver);
+        uiBase.VerifyPageLoadedTrue("Common.Homepage.search");
+    }
 }
 
 
