@@ -75,12 +75,12 @@ public class DataCreate {
     public void createRecurrentPayment(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("recurringpayment")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
-            List<Map> spaceRecords = readExcel.read("RecurringPayment");
+            List<Map> rpRecords = readExcel.read("RecurringPayment");
             LeaseCreate leaseCreate = new LeaseCreate(driver);
-            for (Map spaceRecord : spaceRecords) {
-                if (null == spaceRecord.get(PropertyConfig.EXECUTION_FLAG) || spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
+            for (Map rpRecord : rpRecords) {
+                if (null == rpRecord.get(PropertyConfig.EXECUTION_FLAG) || rpRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !rpRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                LogMessage logMessage = leaseCreate.addRecurringPayment(spaceRecord);
+                LogMessage logMessage = leaseCreate.addRecurringPayment(rpRecord);
                 assertTrue(logMessage.isPassed());
             }
         }

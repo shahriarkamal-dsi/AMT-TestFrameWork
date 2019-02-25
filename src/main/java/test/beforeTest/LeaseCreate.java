@@ -84,7 +84,7 @@ public class LeaseCreate {
 
             searchLease(data);
 
-            uiLink.clickLink("","Add New Suite");
+            uiLink.ClickLink("","Add New Suite");
 
             UtilKeywordScript.delay(5);
             UtilKeywordScript.switchLastTab(webDriver);
@@ -129,7 +129,7 @@ public class LeaseCreate {
 
             searchLease(data);
 
-            uiLink.clickLink("","Add New");
+            uiLink.ClickLink("","Add New");
             UtilKeywordScript.delay(5);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
@@ -148,7 +148,7 @@ public class LeaseCreate {
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Rental Activity")));
 
-            uiLink.clickLink("","Add Rental Activity");
+            uiLink.ClickLink("","Add Rental Activity");
             UtilKeywordScript.delay(3);
 
             uiTable.ClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
