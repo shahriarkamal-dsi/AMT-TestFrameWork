@@ -12,38 +12,65 @@ import java.util.Map;
 public class TestData {
 
 
-    public static Map<String,List> PropertyData = new HashMap<String,List>();
-    public static Map<String,List> LeaseData = new HashMap<String,List>();
-    public static Map<String,List> SpaceData = new HashMap<String,List>();
-    public static Map<String,List> RecurData = new HashMap<String,List>();
+    private TestData testData = new TestData() ;
 
-   /* public static void fetchAndStoreTestData(String sheetName) {
+    private TestData() {
+        keepData();
+    }
+
+    public TestData getInstance() throws Exception {
+        if(null == testData)
+            throw new Exception("test data is not initialized properly");
+        return testData;
+    }
+
+    public LogMessage runPrequisites(String testCaseId) {
+        try {
+                return  new LogMessage(true,"ok");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return  new LogMessage(false,"not ok");
+        }
+    }
+
+    private Map<String,List> PropertyData = new HashMap<String,List>();
+    private Map<String,List> LeaseData = new HashMap<String,List>();
+    private Map<String,List> SpaceData = new HashMap<String,List>();
+    private Map<String,List> RecurData = new HashMap<String,List>();
+    private String[] sheets = new String[]{"Property","Lease","Space" , "Recur"};
+
+   private  void fetchAndStoreTestData(String sheetName) {
 
         ClassLoader classLoader = TestData.class.getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
         List<Map> data = readExcel.read(sheetName);
-        Map<String,List> sotreData = getDataObject(sheetName);
+        Map<String,List> dataList = getDataObject(sheetName);
+        if(null == dataList)
+            return;
         for(Map item: data) {
-            if(PropertyData.containsKey(item.get(PropertyConfig.TC_ID))) {
-                PropertyData.get(items.get(PropertyConfig.TC_ID)).add(property);
+            if(dataList.containsKey(item.get(PropertyConfig.TC_ID))) {
+                dataList.get(dataList.get(PropertyConfig.TC_ID)).add(item);
            } else {
                 List<Map> record = new ArrayList<Map>() ;
-                record.add(
-
-                ) ;
-                PropertyData.put((String) item.get(PropertyConfig.TC_ID),items);
+                record.add(item);
+                dataList.put((String) item.get(PropertyConfig.TC_ID),record);
             }
         }
     }
 
-    public static void createLeaseData() {
-        ClassLoader classLoader = TestData.class.getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/PropertyCreate.xlsx").getPath());
-        //PropertyData = readExcel.read("Lease");
-    }
 
+   private void keepData() {
+       try {
+           for(String sheet: sheets) {
+               fetchAndStoreTestData(sheet);
+           }
+       } catch (Exception ex) {
+           testData = null;
+           ex.printStackTrace();
+       }
+   }
 
-    private static Map<String,List> getDataObject(String sheetName) {
+    private  Map<String,List> getDataObject(String sheetName) {
        switch(sheetName) {
            case "Property": return PropertyData ;
            case "Lease": return LeaseData ;
@@ -52,16 +79,4 @@ public class TestData {
            default: return null ;
        }
     }
-
-
-    public static LogMessage createApplicationData(String testCaseNumber) {
-        try {
-
-        } catch (Exception ex) {
-
-        }
-    }
-    */
-
-
 }
