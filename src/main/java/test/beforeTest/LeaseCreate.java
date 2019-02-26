@@ -14,7 +14,9 @@ import java.util.*;
 public class LeaseCreate {
 
     private WebDriver webDriver;
-
+    private String  objectlocatorPrefix;
+    private UIBase uiBase;
+    private String mainWindow;
     public LeaseCreate(WebDriver driver){
         this.webDriver = driver;
     }
@@ -23,23 +25,44 @@ public class LeaseCreate {
 
     }
 
-    public LogMessage createLease(Map data){
-
-        try {
-            String  objectlocatorPrefix = "Common.Lease.";
-            String[] dropdownFields = new String[] {"leaseStatus","leaseType","billingType" , "contractTerm" } ;
-
-            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocatorPrefix + "propertyList");
-
-            UIMenu menu = new UIMenu(webDriver);
-            UIBase uiBase = new UIBase(webDriver);
-            UIText uiText = new UIText(webDriver);
+    public LogMessage createMultipleLeases(List<Map> datas)
+    {
+        try{
             UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
-
+            objectlocatorPrefix = "Common.Lease.";
+            UIMenu menu = new UIMenu(webDriver);
             menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract");
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
             UtilKeywordScript.delay(3);
+            for(int i=0; i < datas.size();i++)
+            {
+                if(i!=0){
+                    uiBase.Click(objectlocatorPrefix + "addNewButton");
+                    uiBase.WaitingForPageLoad();
+                }
+                createLease(datas.get(i));
+
+            }
+            utilKeywordScript.redirectHomePage();
+            UtilKeywordScript.delay(3);
+            return new LogMessage(true,"Leases create successfully");
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false, "Exception Occurred " + ex.getMessage());
+        }
+
+    }
+
+    public LogMessage createLease(Map data){
+
+        try {
+            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
+            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocatorPrefix + "propertyList");
+            uiBase = new UIBase(webDriver);
+            UIText uiText = new UIText(webDriver);
+
+
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             uiDropDown.searchAndSelectItem(objectlocatorPrefix + "propertyName",(String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR),(String)data.get("propertyName"));
 
@@ -48,22 +71,26 @@ public class LeaseCreate {
             uiText.SetText(objectlocatorPrefix +"dbaName",(String)data.get("dbaName"));
             uiText.SetText(objectlocatorPrefix +"leaseCode",(String)data.get("leaseCode"));
 
-            for (String element : dropdownFields){
-                uiDropDown.SelectItem(objectlocatorPrefix + element,(String)data.get(element));
-            }
+            uiDropDown.SelectItem(objectlocatorPrefix+"leaseStatus",(String)data.get("leaseStatus"));
+            uiDropDown.SelectItem(objectlocatorPrefix+"leaseType",(String)data.get("leaseType"));
+            uiDropDown.SelectItem(objectlocatorPrefix + "billingType",(String)data.get("billingType"));
+
             uiText.SetText(objectlocatorPrefix +"beginDate",(String)data.get("beginDate"));
             UtilKeywordScript.delay(2);
             uiText.SetText(objectlocatorPrefix +"expirationDate",(String)data.get("expirationDate"));
 
+            uiDropDown.SelectItem(objectlocatorPrefix + "contractTerm", (String)data.get("contractTerm"));
             UtilKeywordScript.delay(6);
 
             uiBase.Click(objectlocatorPrefix + "saveButton");
 
             uiBase.WaitingForPageLoad();
-            uiBase.WaitingForSuccessfullPopup();
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
+
             UtilKeywordScript.delay( 5);
-            utilKeywordScript.redirectHomePage();
-            UtilKeywordScript.delay(3);
+
 
             return new LogMessage(true,"Lease create successfully");
         }catch (Exception ex){
@@ -73,19 +100,39 @@ public class LeaseCreate {
 
     }
 
+    public LogMessage createMultipleSpaces(List<Map> datas)
+    {
+        try{
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+            LeaseCreate leaseCreate = new LeaseCreate(webDriver);
+            uiBase = new UIBase(webDriver);
+            leaseCreate.searchLease(datas.get(0));
+            UtilKeywordScript.delay(5);
+            mainWindow = webDriver.getWindowHandle();
+            for(Map data: datas)
+            {
+                createSpace(data);
+            }
+
+            utilKeywordScript.redirectHomePage();
+            return new LogMessage(true,"Spaces create successfully!");
+        }catch(Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Exception occurred " + e.getMessage());
+        }
+    }
     public LogMessage createSpace(Map data){
         try{
-            String  objectLocatorPrefix = "Common.Space.";
+            String  objectLocatorPrefix = "Common.Space." ;
+            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
 
             UILink uiLink = new UILink(webDriver);
-            UIBase uiBase = new UIBase(webDriver);
+
             UIText uiText = new UIText(webDriver);
-            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+            mainWindow = webDriver.getWindowHandle();
 
-            searchLease(data);
-
+            UtilKeywordScript.delay(5);
             uiLink.ClickLink("","Add New Suite");
-
             UtilKeywordScript.delay(5);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
@@ -106,9 +153,18 @@ public class LeaseCreate {
             UtilKeywordScript.delay(3);
             uiBase.Click(objectLocatorPrefix + "btnClose");
             UtilKeywordScript.delay(5);
+            Set<String> set =webDriver.getWindowHandles();
+            Iterator<String> itr= set.iterator();
+            while(itr.hasNext()){
+                String childWindow=itr.next();
+                if(!mainWindow.equals(childWindow)){
+                    webDriver.switchTo().window(childWindow);
+                    System.out.println(webDriver.switchTo().window(childWindow).getTitle());
+                    webDriver.close();
+                }
 
-            utilKeywordScript.redirectHomePage();
-
+            }
+            webDriver.switchTo().window(mainWindow);
             return new LogMessage(true,"Space create successfully!");
         }catch (Exception e){
             e.printStackTrace();
