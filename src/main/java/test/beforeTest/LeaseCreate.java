@@ -27,7 +27,8 @@ public class LeaseCreate {
 
         try {
             String  objectlocatorPrefix = "Common.Lease.";
-            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
+            String[] dropdownFields = new String[] {"leaseStatus","leaseType","billingType" , "contractTerm" } ;
+
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocatorPrefix + "propertyList");
 
             UIMenu menu = new UIMenu(webDriver);
@@ -47,24 +48,19 @@ public class LeaseCreate {
             uiText.SetText(objectlocatorPrefix +"dbaName",(String)data.get("dbaName"));
             uiText.SetText(objectlocatorPrefix +"leaseCode",(String)data.get("leaseCode"));
 
-            uiDropDown.SelectItem(objectlocatorPrefix+"leaseStatus",(String)data.get("leaseStatus"));
-            uiDropDown.SelectItem(objectlocatorPrefix+"leaseType",(String)data.get("leaseType"));
-            uiDropDown.SelectItem(objectlocatorPrefix + "billingType",(String)data.get("billingType"));
-
+            for (String element : dropdownFields){
+                uiDropDown.SelectItem(objectlocatorPrefix + element,(String)data.get(element));
+            }
             uiText.SetText(objectlocatorPrefix +"beginDate",(String)data.get("beginDate"));
             UtilKeywordScript.delay(2);
             uiText.SetText(objectlocatorPrefix +"expirationDate",(String)data.get("expirationDate"));
 
-            uiDropDown.SelectItem(objectlocatorPrefix + "contractTerm", (String)data.get("contractTerm"));
             UtilKeywordScript.delay(6);
 
             uiBase.Click(objectlocatorPrefix + "saveButton");
 
             uiBase.WaitingForPageLoad();
-
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
-
+            uiBase.WaitingForSuccessfullPopup();
             UtilKeywordScript.delay( 5);
             utilKeywordScript.redirectHomePage();
             UtilKeywordScript.delay(3);
@@ -75,6 +71,120 @@ public class LeaseCreate {
             return new LogMessage(false, "Exception Occurred " + ex.getMessage());
         }
 
+    }
+
+    public LogMessage createSpace(Map data){
+        try{
+            String  objectLocatorPrefix = "Common.Space.";
+
+            UILink uiLink = new UILink(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
+            UIText uiText = new UIText(webDriver);
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+
+            searchLease(data);
+
+            uiLink.ClickLink("","Add New Suite");
+
+            UtilKeywordScript.delay(5);
+            UtilKeywordScript.switchLastTab(webDriver);
+            webDriver.manage().window().maximize();
+
+            UtilKeywordScript.delay(5);
+
+            uiText.SetText(objectLocatorPrefix +"space",(String)data.get("Space"));
+            uiText.SetText(objectLocatorPrefix +"floor",(String)data.get("Floor"));
+
+            List<WebElement>  linkedItems  = WebObjectSearch.getWebElements(webDriver, objectLocatorPrefix + "linked");
+            uiBase.Click(linkedItems.get(0));
+            UtilKeywordScript.delay(5);
+
+            uiBase.Click(objectLocatorPrefix + "btnSave");
+
+            uiBase.WaitingForPageLoad();
+            uiBase.WaitingForSuccessfullPopup();
+            UtilKeywordScript.delay(3);
+            uiBase.Click(objectLocatorPrefix + "btnClose");
+            UtilKeywordScript.delay(5);
+
+            utilKeywordScript.redirectHomePage();
+
+            return new LogMessage(true,"Space create successfully!");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Exception occurred " + e.getMessage());
+        }
+    }
+
+    public LogMessage addRecurringPayment(Map data){
+        try{
+            String  objectLocatorPrefix = "Common.RecurringPayment." ;
+            String[] dropdownFields = new String[] {"chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" } ;
+            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
+
+            UILink uiLink = new UILink(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
+            UITable uiTable = new UITable(webDriver);
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+
+            searchLease(data);
+
+            uiLink.ClickLink("","Add New");
+            UtilKeywordScript.delay(5);
+            UtilKeywordScript.switchLastTab(webDriver);
+            webDriver.manage().window().maximize();
+            UtilKeywordScript.delay(5);
+
+            UIDropDown uiDropDown = new UIDropDown(webDriver);
+            for (String element : dropdownFields){
+                uiDropDown.SelectItem(objectLocatorPrefix + element,(String)data.get(element));
+
+            }
+
+            uiBase.Click(objectLocatorPrefix + "btnSave");
+
+            uiBase.WaitingForPageLoad();
+            uiBase.WaitingForSuccessfullPopup();
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Rental Activity")));
+
+            uiLink.ClickLink("","Add Rental Activity");
+            UtilKeywordScript.delay(3);
+
+            uiTable.ClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
+            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0,"+ (String)data.get("effDate"));
+
+            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("effDate"));
+            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("effDate"));
+
+            uiTable.ClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
+            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
+
+            uiTable.ClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "Annual,0,0");
+
+            UtilKeywordScript.delay(3);
+
+            uiBase.Click(objectLocatorPrefix + "saveRentalActivity");
+
+            uiBase.WaitingForPageLoad();
+            uiBase.WaitingForSuccessfullPopup();
+
+            uiBase.Click(objectLocatorPrefix + "btnSave");
+
+            uiBase.WaitingForPageLoad();
+            uiBase.WaitingForSuccessfullPopup();
+
+            UtilKeywordScript.delay(3);
+
+            uiBase.Click(objectLocatorPrefix + "btnClose");
+
+            utilKeywordScript.redirectHomePage();
+
+            return new LogMessage(true,"Recurrent payment add successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, "Exception occurred " + e.getMessage());
+        }
     }
 
     public LogMessage searchLease(Map data){

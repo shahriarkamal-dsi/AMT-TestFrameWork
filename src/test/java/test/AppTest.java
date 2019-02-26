@@ -1,25 +1,18 @@
 package test;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import test.Log.LogMessage;
 import test.beforeTest.LeaseCreate;
 import test.beforeTest.PropertyCreate;
-import test.beforeTest.SpaceCreate;
-import test.coreModule.ExecuteTests;
-import test.coreModule.MainController;
 import test.driver.DriverFactory;
-import test.keywordScripts.UIBase;
-import test.keywordScripts.UIText;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.ReadExcel;
 
-import java.io.FileInputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for simple App.
@@ -93,7 +86,7 @@ public class AppTest
     }
 
     @Test
-    public void createSpace(){
+    public void spaceCreate(){
 
         ClassLoader classLoader = getClass().getClassLoader();
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
@@ -101,13 +94,29 @@ public class AppTest
         WebDriver driver = DriverFactory.createDriver("chrome", false);
         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
         utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
-        SpaceCreate spaceCreate = new SpaceCreate(driver);
+        LeaseCreate leaseCreate = new LeaseCreate(driver);
         for(Map record : records){
-            LogMessage logMessage =  spaceCreate.createSpace(record);
+            LogMessage logMessage =  leaseCreate.createSpace(record);
             assertTrue(logMessage.isPassed());
         }
         UtilKeywordScript.closeAllPages(driver);
 
+    }
+
+    @Test
+    public void recurringPaymentsAdd(){
+        ClassLoader classLoader = getClass().getClassLoader();
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
+        List<Map> records = readExcel.read("RecurringPayment");
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
+        utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
+        LeaseCreate leaseCreate = new LeaseCreate(driver);
+        for(Map record : records){
+            LogMessage logMessage = leaseCreate.addRecurringPayment(record);
+            assertTrue(logMessage.isPassed());
+        }
+        UtilKeywordScript.closeAllPages(driver);
     }
 
 }

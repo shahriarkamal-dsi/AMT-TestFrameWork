@@ -53,6 +53,7 @@ public class UnitTesting {
     public void objectLocatorStorageTesting(){
         ObjectLocatorDataStorage objectLocatorDataStorage = new ObjectLocatorDataStorage();
         try {
+            System.out.println(objectLocatorDataStorage.getObjectLocator("Common.RecurringPayment.chargeType"));
             long start = System.currentTimeMillis();
             Map record = objectLocatorDataStorage.getObjectLocator("Common.Login.txtUserName");
             long finish = System.currentTimeMillis();
