@@ -57,7 +57,7 @@ public class MainController {
         TestPlan testPlan = createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule testModule : modules){
-            System.out.println(testModule.getModuleName());
+           // System.out.println(testModule.getModuleName());
             List<TestSuite>  testSuites = testModule.getAllTestSuits();
             for(TestSuite testSuite : testSuites){
                 ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("modules/" + testModule.getModuleName() + ".xlsx").getPath());

@@ -50,14 +50,9 @@ public class UIDropDown {
             WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if (null == dropDownElement)
                 return new LogMessage(false," drop down element is not found.");
-
-           // JavascriptExecutor js = (JavascriptExecutor) webDriver;
-          //  js.executeScript("arguments[0].scrollIntoView();", dropDownElement);
             UtilKeywordScript.delay(3);
-           // if(dropDownElement.getTagName().equals("input"))
-             //   dropDownElement.sendKeys(testData);
-          //  else
-                dropDownElement.click();
+
+            dropDownElement.click();
             UtilKeywordScript.delay(3);
             List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[text() = '" + testData + "']"));
             if (null == dropDownDataElements || dropDownDataElements.isEmpty())

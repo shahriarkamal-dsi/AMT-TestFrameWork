@@ -18,6 +18,7 @@ public class UITextNode {
 
     public LogMessage ClickTextNode(String objectLocator, String testData) {
         try {
+            //System.out.println("obloc"+objectLocator);
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if (null == rootElement)
                 return new LogMessage(false," element is not found.");

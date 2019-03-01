@@ -9,6 +9,8 @@ import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,42 +48,65 @@ public class DataCreate {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
             List<Map> leaseRecords = readExcel.read("Lease");
             LeaseCreate leaseCreate = new LeaseCreate(driver);
+            List<Map> leaseDatas=new ArrayList<>();
             for (Map leaseRecord : leaseRecords) {
                 if (null == leaseRecord.get(PropertyConfig.EXECUTION_FLAG) || leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                LogMessage logMessage = leaseCreate.createLease(leaseRecord);
-                assertTrue(logMessage.isPassed());
+                leaseDatas.add(leaseRecord);
             }
+            LogMessage logMessage = leaseCreate.createMultipleLeases(leaseDatas);
+            assertTrue(logMessage.isPassed());
         }
 
     }
     @Test (priority = 4)
-    public void createSpace(){
-        if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("space")) {
+    public void createSpace() {
+        if (PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("space")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
             List<Map> spaceRecords = readExcel.read("Space");
             LeaseCreate leaseCreate = new LeaseCreate(driver);
+            Map<String, List<Map>> spacesList = new HashMap<>();
             for (Map spaceRecord : spaceRecords) {
                 if (null == spaceRecord.get(PropertyConfig.EXECUTION_FLAG) || spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                LogMessage logMessage = leaseCreate.createSpace(spaceRecord);
-                assertTrue(logMessage.isPassed());
+                if (!spacesList.containsKey(spaceRecord.get("LeaseName"))) {
+                    List<Map> record = new ArrayList<Map>();
+                    record.add(spaceRecord);
+                    spacesList.put((String) spaceRecord.get("LeaseName"), record);
+                } else {
+                    spacesList.get(spaceRecord.get("LeaseName")).add(spaceRecord);
+                }
+
+            }
+            for (String key : spacesList.keySet()) {
+                leaseCreate.createMultipleSpaces(spacesList.get(key));
             }
         }
-
     }
 
     @Test (priority = 5)
     public void createRecurrentPayment(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("recurringpayment")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
-            List<Map> rpRecords = readExcel.read("RecurringPayment");
+            List<Map> spaceRecords = readExcel.read("RecurringPayment");
             LeaseCreate leaseCreate = new LeaseCreate(driver);
-            for (Map rpRecord : rpRecords) {
-                if (null == rpRecord.get(PropertyConfig.EXECUTION_FLAG) || rpRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !rpRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
+            Map<String, List<Map>> spacesList = new HashMap<>();
+
+            for (Map spaceRecord : spaceRecords) {
+                if (null == spaceRecord.get(PropertyConfig.EXECUTION_FLAG) || spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                LogMessage logMessage = leaseCreate.addRecurringPayment(rpRecord);
-                assertTrue(logMessage.isPassed());
+                if (!spacesList.containsKey(spaceRecord.get("LeaseName"))) {
+                    List<Map> record = new ArrayList<Map>();
+                    record.add(spaceRecord);
+                    spacesList.put((String) spaceRecord.get("LeaseName"), record);
+                } else {
+                    spacesList.get(spaceRecord.get("LeaseName")).add(spaceRecord);
+                }
+
+            }
+            //System.out.println(spacesList);
+            for (String key : spacesList.keySet()) {
+                leaseCreate.addMultipleRecurringPayments(spacesList.get(key));
             }
         }
 

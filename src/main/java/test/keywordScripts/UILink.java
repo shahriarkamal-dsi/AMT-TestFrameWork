@@ -20,26 +20,18 @@ public class UILink {
 
     }
 
-    public LogMessage ClickLink(String Objreferance, String Linkname){
+    public LogMessage ClickLink(String objectLocatorData, String Linkname){
         try{
-
-            WebElement webElement = webDriver.findElement(By.linkText(Linkname));
-          //  System.out.println(webElement);
-            try
-            {
-                webElement.click();
-                Thread.sleep(2000);
-            } catch(Exception ex) {
-                ex.printStackTrace();
-                JavascriptExecutor executor = (JavascriptExecutor) webDriver;
-                executor.executeScript("arguments[0].click();",webElement);
-                Thread.sleep(2000);
-                //((JavascriptExecutor)webDriver).executeScript("window.scrollTo(0,"+webElement.getLocation().x+")");
-                //webElement.click();
-                //Actions actions = new Actions(webDriver);
-                //actions.moveToElement(webElement).click().build().perform();
-
+            UIBase uiBase= new UIBase(webDriver);
+            WebElement webElement;
+            if(null!=objectLocatorData && null!=WebObjectSearch.getWebElement(webDriver,objectLocatorData) ) {
+                webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+                webElement = webElement.findElement(By.linkText(Linkname));
             }
+            else{
+                webElement = webDriver.findElement(By.linkText(Linkname));
+            }
+            uiBase.Click(webElement);
             return new LogMessage(true,"web element is clicked");
         }catch (Exception e){
             e.printStackTrace();

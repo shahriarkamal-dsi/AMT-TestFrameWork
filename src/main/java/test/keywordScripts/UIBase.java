@@ -70,13 +70,20 @@ public class UIBase {
 
     public LogMessage VerifyPageLoadedTrue(String objectlocator) {
         try {
+            UtilKeywordScript.switchLastTab(webDriver);
+
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocator);
             String objectData =  (String) objectLocatorData.get(PropertyConfig.OBJECT_LOCATORS);
-            if(webDriver.getCurrentUrl().contains(objectData)) {
+            String[] splittedObjectData= objectData.split("(\\*)|(\\s+)");
+            String matchString="(.*)";
+            for(String split:splittedObjectData){
+                matchString=matchString+split+"(.*)";
+            }
+            if(webDriver.getCurrentUrl().matches(matchString)) {
                 return new LogMessage(true,"page is loaded successfully");
             } else {
                 webDriver.manage().timeouts().implicitlyWait(PropertyConfig.WAIT_TIME_SECONDS, TimeUnit.SECONDS) ;
-                if(webDriver.getCurrentUrl().contains(objectData))
+                if(webDriver.getCurrentUrl().matches(matchString))
                     return new LogMessage(true,"page is loaded successfully");
                  else
                     return new LogMessage(false,"page is not loaded");
@@ -118,6 +125,7 @@ public class UIBase {
 
     public LogMessage Delay(String delayTime) {
         try {
+            //System.out.println("DelayTime"+delayTime);
             Thread.sleep(Integer.valueOf(delayTime).intValue()*1000);
             //if(null != webDriver)
               //  webDriver.manage().timeouts().implicitlyWait(Integer.valueOf("10"), TimeUnit.SECONDS) ;
@@ -177,7 +185,7 @@ public class UIBase {
 
     public LogMessage WaitingForSuccessfullPopup(){
         try{
-            WebDriverWait wait = new WebDriverWait(webDriver, 20);
+            WebDriverWait wait = new WebDriverWait(webDriver, 60);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             return new LogMessage(true,"Page load successfully");
