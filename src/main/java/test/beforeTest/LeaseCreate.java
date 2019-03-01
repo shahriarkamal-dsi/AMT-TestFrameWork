@@ -129,9 +129,8 @@ public class LeaseCreate {
             UILink uiLink = new UILink(webDriver);
 
             UIText uiText = new UIText(webDriver);
-            mainWindow = webDriver.getWindowHandle();
 
-            UtilKeywordScript.delay(5);
+            UtilKeywordScript.delay(1);
             uiLink.ClickLink("","Add New Suite");
             UtilKeywordScript.delay(5);
             UtilKeywordScript.switchLastTab(webDriver);
@@ -152,7 +151,7 @@ public class LeaseCreate {
             uiBase.WaitingForSuccessfullPopup();
             UtilKeywordScript.delay(3);
             uiBase.Click(objectLocatorPrefix + "btnClose");
-            UtilKeywordScript.delay(5);
+            UtilKeywordScript.delay(2);
             Set<String> set =webDriver.getWindowHandles();
             Iterator<String> itr= set.iterator();
             while(itr.hasNext()){
@@ -171,11 +170,31 @@ public class LeaseCreate {
             return new LogMessage(false,"Exception occurred " + e.getMessage());
         }
     }
+    public LogMessage addMultipleRecurringPayments(List<Map> datas){
+     try{
+         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+         LeaseCreate leaseCreate = new LeaseCreate(webDriver);
+         uiBase = new UIBase(webDriver);
+         searchLease(datas.get(0));
+         UtilKeywordScript.delay(5);
+         mainWindow = webDriver.getWindowHandle();
+         for(Map data: datas)
+         {
+             System.out.println(data);
+             addRecurringPayment(data);
+         }
 
+         utilKeywordScript.redirectHomePage();
+        return new LogMessage(true,"Recurrent payments add successfully");
+    }catch (Exception e){
+        e.printStackTrace();
+        return new LogMessage(false, "Exception occurred " + e.getMessage());
+    }
+    }
     public LogMessage addRecurringPayment(Map data){
         try{
             String  objectLocatorPrefix = "Common.RecurringPayment." ;
-            String[] dropdownFields = new String[] {"chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" } ;
+            String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" } ;
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
 
             UILink uiLink = new UILink(webDriver);
@@ -183,9 +202,10 @@ public class LeaseCreate {
             UITable uiTable = new UITable(webDriver);
             UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
 
-            searchLease(data);
+            //searchLease(data);
 
             uiLink.ClickLink("","Add New");
+            System.out.println("Done");
             UtilKeywordScript.delay(5);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
@@ -193,13 +213,14 @@ public class LeaseCreate {
 
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             for (String element : dropdownFields){
+                UtilKeywordScript.delay(1);
                 uiDropDown.SelectItem(objectLocatorPrefix + element,(String)data.get(element));
 
             }
 
             uiBase.Click(objectLocatorPrefix + "btnSave");
 
-            uiBase.WaitingForPageLoad();
+            //uiBase.WaitingForPageLoad();
             uiBase.WaitingForSuccessfullPopup();
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Rental Activity")));
@@ -207,35 +228,45 @@ public class LeaseCreate {
             uiLink.ClickLink("","Add Rental Activity");
             UtilKeywordScript.delay(3);
 
-            uiTable.ClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
+            uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0,"+ (String)data.get("effDate"));
 
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("effDate"));
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("effDate"));
 
-            uiTable.ClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
+            uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
 
-            uiTable.ClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "Annual,0,0");
+            uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "Annual,0,0");
 
             UtilKeywordScript.delay(3);
 
             uiBase.Click(objectLocatorPrefix + "saveRentalActivity");
 
-            uiBase.WaitingForPageLoad();
+            //uiBase.WaitingForPageLoad();
             uiBase.WaitingForSuccessfullPopup();
 
             uiBase.Click(objectLocatorPrefix + "btnSave");
 
-            uiBase.WaitingForPageLoad();
+            //uiBase.WaitingForPageLoad();
             uiBase.WaitingForSuccessfullPopup();
 
             UtilKeywordScript.delay(3);
 
             uiBase.Click(objectLocatorPrefix + "btnClose");
+            UtilKeywordScript.delay(2);
+            Set<String> set =webDriver.getWindowHandles();
+            Iterator<String> itr= set.iterator();
+            while(itr.hasNext()){
+                String childWindow=itr.next();
+                if(!mainWindow.equals(childWindow)){
+                    webDriver.switchTo().window(childWindow);
+                    System.out.println(webDriver.switchTo().window(childWindow).getTitle());
+                    webDriver.close();
+                }
 
-            utilKeywordScript.redirectHomePage();
-
+            }
+            webDriver.switchTo().window(mainWindow);
             return new LogMessage(true,"Recurrent payment add successfully");
         }catch (Exception e){
             e.printStackTrace();

@@ -2,6 +2,7 @@ package test;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
+import test.coreModule.MainController;
 import test.driver.DriverFactory;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
@@ -18,6 +19,8 @@ public class TestCaseCreate {
     }
     @Test(priority = 2)
     public static void runTestCase(){
+        MainController mainController= new MainController(driver);
+        mainController.createAndExecute();
 
     }
 }

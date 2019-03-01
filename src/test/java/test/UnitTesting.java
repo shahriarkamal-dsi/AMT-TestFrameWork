@@ -127,6 +127,20 @@ public class UnitTesting {
         UIBase uiBase = new UIBase(driver);
         uiBase.VerifyPageLoadedTrue("Common.Homepage.search");
     }
+    @Test
+    public void testSplit(){
+        String data = "https://qa2.testamt.com/portfolioInsight/Lease/RecurringChargeDetailNew?lease_id=173143&EntityValue=546072&suite_index_id=178622&currency_to=";
+        String objectData="https://*testamt.com*RecurringCharge*";
+        String[] splittedObjectData= objectData.split("(\\*)|(\\s+)");
+        String matchString="(.*)";
+        for(String split:splittedObjectData){
+            matchString=matchString+split+"(.*)";
+        }
+        if(data.matches(matchString)){
+            System.out.println("hi");
+        }
+        System.out.println(matchString);
+    }
 }
 
 

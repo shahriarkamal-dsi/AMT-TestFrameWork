@@ -88,13 +88,25 @@ public class DataCreate {
     public void createRecurrentPayment(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("recurringpayment")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
-            List<Map> rpRecords = readExcel.read("RecurringPayment");
+            List<Map> spaceRecords = readExcel.read("RecurringPayment");
             LeaseCreate leaseCreate = new LeaseCreate(driver);
-            for (Map rpRecord : rpRecords) {
-                if (null == rpRecord.get(PropertyConfig.EXECUTION_FLAG) || rpRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !rpRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
+            Map<String, List<Map>> spacesList = new HashMap<>();
+
+            for (Map spaceRecord : spaceRecords) {
+                if (null == spaceRecord.get(PropertyConfig.EXECUTION_FLAG) || spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                LogMessage logMessage = leaseCreate.addRecurringPayment(rpRecord);
-                assertTrue(logMessage.isPassed());
+                if (!spacesList.containsKey(spaceRecord.get("LeaseName"))) {
+                    List<Map> record = new ArrayList<Map>();
+                    record.add(spaceRecord);
+                    spacesList.put((String) spaceRecord.get("LeaseName"), record);
+                } else {
+                    spacesList.get(spaceRecord.get("LeaseName")).add(spaceRecord);
+                }
+
+            }
+            //System.out.println(spacesList);
+            for (String key : spacesList.keySet()) {
+                leaseCreate.addMultipleRecurringPayments(spacesList.get(key));
             }
         }
 
