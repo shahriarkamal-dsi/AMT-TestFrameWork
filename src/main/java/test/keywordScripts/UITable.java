@@ -110,7 +110,7 @@ public class UITable extends  UtilKeywordScript{
                 List<WebElement> bodyCells = row.findElements(By.tagName("td"));
                 int index = 0;
                 for(WebElement bodyCell : bodyCells) {
-                    System.out.println("Column Name"+headCells.get(index).getText() + "Value"+bodyCell.getText());
+                    //System.out.println("Column Name"+headCells.get(index).getText() + "Value"+bodyCell.getText());
                     if(null  != columnName && null != columnValue ) {
                         if(columnName.equals(headCells.get(index).getText())) {
 
@@ -321,13 +321,13 @@ public class UITable extends  UtilKeywordScript{
                 if(key.split(",").length<2)
                     continue;
                 String clName = key.split(",")[1];
-                System.out.println(clName);
+                //System.out.println(clName);
                 if(columnName.equals(clName)){
                     WebElement element = row.get(key) ;
                     String text = element.getText();
                     if(columnValue.equals(element.getText())) {
                         WebElement elm = element.findElement(By.linkText(columnValue));
-                        System.out.println(elm);
+                        //System.out.println(elm);
                         elm.click();
                         return new LogMessage(true, "element is clicked");
                     }
