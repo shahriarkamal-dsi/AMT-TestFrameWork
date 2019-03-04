@@ -26,7 +26,7 @@ public class PropertyConfig {
     public static Integer CREATED = 1 ;
     public static Integer TESTED = 2 ;
     public static Integer WAIT_TIME_SECONDS = 3 ;
-    public static Integer SEARCH_FOR_ELEMET =5;
+    public static Integer NUMBER_OF_ITERATIONS =5;
 
 
 

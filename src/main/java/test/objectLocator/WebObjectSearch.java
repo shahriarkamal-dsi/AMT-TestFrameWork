@@ -14,12 +14,12 @@ public class WebObjectSearch {
             String objectSearchType = ( (String)objectLocator.get(PropertyConfig.OBJECT_SEARCH_KEY)).toUpperCase();
             WebObjectSearchType webObjectSearchType = WebObjectSearchType.valueOf(objectSearchType);
             List<WebElement> webElements =  webObjectSearchType.findElement(driver,(String) objectLocator.get(PropertyConfig.OBJECT_LOCATORS));
-            int n=0;
-            while(n<PropertyConfig.SEARCH_FOR_ELEMET) {
+            int count=0;
+            while(count<PropertyConfig.NUMBER_OF_ITERATIONS) {
                 if (null == webElements || webElements.isEmpty()) {
                     UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
                     webElements = webObjectSearchType.findElement(driver, (String) objectLocator.get(PropertyConfig.OBJECT_LOCATORS));
-                    n++;
+                    count++;
                 }
                 else
                     return webElements;
