@@ -82,12 +82,7 @@ public class UIBase {
             if(webDriver.getCurrentUrl().matches(matchString)) {
                 return new LogMessage(true,"page is loaded successfully");
             } else {
-                webDriver.manage().timeouts().implicitlyWait(PropertyConfig.WAIT_TIME_SECONDS, TimeUnit.SECONDS) ;
-                if(webDriver.getCurrentUrl().matches(matchString))
-                    return new LogMessage(true,"page is loaded successfully");
-                 else
-                    return new LogMessage(false,"page is not loaded");
-
+                return new LogMessage(false,"page is not loaded");
             }
         } catch (Exception ex) {
             return new LogMessage(false,"exception occured:- " + ex.getMessage());
@@ -98,10 +93,10 @@ public class UIBase {
             action = action.toUpperCase();
             boolean clikced = false ;
             if(action.equals("CLICK")) {
-                Actions act = new Actions(webDriver);
+                //Actions act = new Actions(webDriver);
                // act.click(element).perform();
-                act.doubleClick(element).perform();
-               // element.click();
+                //act.doubleClick(element).perform();
+                element.click();
                 clikced = true ;
             } else if(action.equals("DBLCLICK") || action.equals("DOUBLECLICK") || action.equals("DOUBLE CLICK") ) {
                 Actions act = new Actions(webDriver);

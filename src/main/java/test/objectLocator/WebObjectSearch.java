@@ -2,6 +2,7 @@ package test.objectLocator;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 
 import java.util.List;
@@ -13,7 +14,21 @@ public class WebObjectSearch {
             String objectSearchType = ( (String)objectLocator.get(PropertyConfig.OBJECT_SEARCH_KEY)).toUpperCase();
             WebObjectSearchType webObjectSearchType = WebObjectSearchType.valueOf(objectSearchType);
             List<WebElement> webElements =  webObjectSearchType.findElement(driver,(String) objectLocator.get(PropertyConfig.OBJECT_LOCATORS));
-            return webElements;
+            int count=0;
+            while(count<PropertyConfig.NUMBER_OF_ITERATIONS) {
+                if (null == webElements || webElements.isEmpty()) {
+                    UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                    webElements = webObjectSearchType.findElement(driver, (String) objectLocator.get(PropertyConfig.OBJECT_LOCATORS));
+                    count++;
+                }
+                else
+                    return webElements;
+            }
+
+             if(null == webElements || webElements.isEmpty())
+                 return null;
+             else
+                return webElements;
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new Exception("webElements not founding");

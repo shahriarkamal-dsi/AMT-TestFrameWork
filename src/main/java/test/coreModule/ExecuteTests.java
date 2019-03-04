@@ -3,6 +3,7 @@ package test.coreModule;
 import org.openqa.selenium.WebDriver;
 import test.Log.CreateLog;
 import test.Log.LogMessage;
+import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -53,9 +54,9 @@ public class ExecuteTests {
     public List<LogMessage> executeTest(TestCase testCase) {
         ClassLoader classLoader = getClass().getClassLoader();
         long start = System.currentTimeMillis();
-        boolean passed = true ;
         List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
         List<TestStep> testSteps = testCase.getAllTestSteps();
+        testCase.setPassed(true);
         for(TestStep testStep : testSteps) {
             ArrayList<Object> objects = new ArrayList<Object>();
             // objects.add(webDriver);
@@ -80,12 +81,15 @@ public class ExecuteTests {
                 objects.add(testData);
                 numberOfParams++;
             }
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
             LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
-            passed = logMessage.isPassed();
+          //  UtilKeywordScript.delay(5);
             logMessage.setLogMessage(testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage() );
             logMessages.add(logMessage);
+            if(!logMessage.isPassed())
+                testCase.setPassed(false);
         }
-        testCase.setPassed(passed);
+
         return logMessages;
 
     }
