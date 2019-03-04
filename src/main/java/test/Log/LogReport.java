@@ -19,7 +19,13 @@ public class LogReport {
     }
 
     public void addTestcaseLogreport(TestCase testCase, List<LogMessage> logmessages ) {
-        CreateLog createLog  = (testCase.isPassed()) ? PassedLogReport : FailedLogReport ;
+        CreateLog createLog = null;
+        if(testCase.isPassed() || !testCase.isPassed())
+        {
+            createLog = PassedLogReport;
+        }
+        if(!testCase.isPassed())
+            createLog = FailedLogReport;
         String logName = testCase.getTestCaseNumber() + "--" + testCase.getTestCaseName() ;
         createLog.createLogger(logName );
         for(LogMessage logMessage : logmessages) {
