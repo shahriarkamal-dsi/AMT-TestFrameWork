@@ -6,6 +6,7 @@ import test.Log.EmailSend;
 import test.Log.LogMessage;
 import test.Log.LogReport;
 import test.beforeTest.TestData;
+import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -91,6 +92,7 @@ public class MainController {
                    }
                    List<LogMessage> logMessages = executeTests.executeTest(testCase);
                    LogReport.getInstance().addTestcaseLogreport(testCase, logMessages);
+                   new UtilKeywordScript(webDriver).redirectHomePage();
                }
                closeAlltabs(webDriver);
            }

@@ -340,6 +340,39 @@ public class UITable extends  UtilKeywordScript{
         }
     }
 
+    public LogMessage VerifyCellDataTrue(String objectLocatorData, String testData){
+        try {
+            String columnName = "" ;
+            String columnValue = "" ;
+            String rowIndex = "";
+            if(!validateTestData(testData,3))
+                return  new LogMessage(false, "test data invalid");
+            String[] data = testData.split(",");
+            columnName = data[0] ;
+            rowIndex = data[1];
+            columnValue = data[2] ;
+            Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,null,null,Integer.parseInt(rowIndex));
+            if(null == row || row.isEmpty())
+                return new LogMessage(false, "no table data");
+            for (String key : row.keySet()) {
+                if(key.split(",").length<2)
+                    continue;
+                String clName = key.split(",")[1];
+                if(columnName.equals(clName)){
+                    WebElement element = row.get(key) ;
+                    String text = element.getText();
+                    if(columnValue.equals(text)) {
+                        return new LogMessage(true, "Cell data verified");
+                    }
+                }
+            }
+            return new LogMessage(true, "proper cell is not present.");
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false,"exception occured: " + ex.getMessage());
+        }
+    }
+
     public LogMessage EnterCellData(String objectLocatorData, String testData) {
         try {
              String columnName = "" ;
