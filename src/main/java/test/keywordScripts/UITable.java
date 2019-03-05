@@ -345,13 +345,13 @@ public class UITable extends  UtilKeywordScript{
             String columnName = "" ;
             String columnValue = "" ;
             String rowIndex = "";
-            if(!validateTestData(testData,2))
+            if(!validateTestData(testData,3))
                 return  new LogMessage(false, "test data invalid");
             String[] data = testData.split(",");
             columnName = data[0] ;
             rowIndex = data[1];
             columnValue = data[2] ;
-            Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
+            Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,null,null,Integer.parseInt(rowIndex));
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
             for (String key : row.keySet()) {
