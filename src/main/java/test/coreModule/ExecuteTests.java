@@ -3,6 +3,7 @@ package test.coreModule;
 import org.openqa.selenium.WebDriver;
 import test.Log.CreateLog;
 import test.Log.LogMessage;
+import test.keywordScripts.UIBase;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
@@ -52,6 +53,7 @@ public class ExecuteTests {
 
     }
     public List<LogMessage> executeTest(TestCase testCase) {
+        UIBase uiBase = new UIBase(webDriver);
         ClassLoader classLoader = getClass().getClassLoader();
         long start = System.currentTimeMillis();
         List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
@@ -64,7 +66,9 @@ public class ExecuteTests {
             String objectLocators = testStep.getObjectLocator();
             String testData = testStep.getTestData();
             Boolean executionFlag = testStep.isExecutionFlagOn();
+            Boolean pageRefresh = testStep.isRefreshPageOn();
             Boolean critical = testStep.isCritical();
+
             int numberOfParams = 0;
 
             if (! executionFlag) {
@@ -88,6 +92,10 @@ public class ExecuteTests {
             logMessages.add(logMessage);
             if(!logMessage.isPassed())
                 testCase.setPassed(false);
+
+            if (pageRefresh){
+                uiBase.WaitingForPageLoad();
+            }
         }
 
         return logMessages;

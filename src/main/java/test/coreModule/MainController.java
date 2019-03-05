@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import test.Log.EmailSend;
 import test.Log.LogMessage;
 import test.Log.LogReport;
+import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -82,6 +83,7 @@ public class MainController {
            for(TestCase testCase : testCases){
                List<LogMessage> logMessages =  executeTests.executeTest(testCase);
                LogReport.getInstance().addTestcaseLogreport(testCase,logMessages);
+               new UtilKeywordScript(webDriver).redirectHomePage();
            }
             closeAlltabs(webDriver);
         }

@@ -73,4 +73,12 @@ public class TestStep {
             return false;
         }
     }
+
+    public boolean isRefreshPageOn(){
+        try{
+            return  step.get(PropertyConfig.PAGE_REFRESH).toString().toLowerCase().equals("yes") ? true : false;
+        }catch (Exception e){
+            return false;
+        }
+    }
 }

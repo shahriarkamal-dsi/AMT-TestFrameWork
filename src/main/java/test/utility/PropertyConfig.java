@@ -14,6 +14,7 @@ public class PropertyConfig {
     public static String ACTION = "Action" ;
     public static String TEST_DATA = "TestData" ;
     public static String EXECUTION_FLAG = "ExecutionFlag" ;
+    public static String PAGE_REFRESH = "PageRefresh";
     public static String TCID= "TCID" ;
     public static String TC_ID= "TC_ID" ;
     public static String TEST_CASE_NAME= "TestCaseName" ;
