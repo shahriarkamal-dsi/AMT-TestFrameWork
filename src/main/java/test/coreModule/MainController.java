@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import test.Log.EmailSend;
 import test.Log.LogMessage;
 import test.Log.LogReport;
+import test.beforeTest.TestData;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
@@ -77,13 +78,26 @@ public class MainController {
         }
 
         public void executeTestesInTestSuite(TestSuite testSuite){
-           List<TestCase> testCases = testSuite.getAllTestCases();
-           ExecuteTests executeTests = new ExecuteTests(webDriver);
-           for(TestCase testCase : testCases){
-               List<LogMessage> logMessages =  executeTests.executeTest(testCase);
-               LogReport.getInstance().addTestcaseLogreport(testCase,logMessages);
+           try {
+               List<TestCase> testCases = testSuite.getAllTestCases();
+               ExecuteTests executeTests = new ExecuteTests(webDriver);
+               for (TestCase testCase : testCases) {
+                   TestData testData = TestData.getInstance();
+                   testData.setDriver(webDriver);
+                   LogMessage logMessage = testData.runPrequisites(testCase.getTestCaseNumber());
+                   if(!logMessage.isPassed()) {
+                       System.out.println("Prerequisite not done");
+                       return;
+                   }
+                   List<LogMessage> logMessages = executeTests.executeTest(testCase);
+                   LogReport.getInstance().addTestcaseLogreport(testCase, logMessages);
+               }
+               closeAlltabs(webDriver);
            }
-            closeAlltabs(webDriver);
+           catch(Exception e)
+           {
+               e.printStackTrace();
+           }
         }
 
     public  void closeAlltabs(WebDriver webDriver) {
