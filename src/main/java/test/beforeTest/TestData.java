@@ -34,16 +34,16 @@ public class TestData {
                 for(Map propertyRecord: propertyRecords){
                     LogMessage logMessage = propertyCreate.createProperty(propertyRecord);
                     if(!logMessage.isPassed())
-                        return  new LogMessage(false,"Prerequisite not completed");
+                        return  new LogMessage(false,"Prerequisite not fulfilled");
                 }
             }
             if(LeaseData.containsKey(testCaseId))
             {
                 List<Map> leaseRecords=LeaseData.get(testCaseId);
                 LeaseCreate leaseCreate = new LeaseCreate(driver);
-                LogMessage logMessage = leaseCreate.createMultipleLeases(leaseRecords);
-                if(!logMessage.isPassed())
-                    return  new LogMessage(false,"Prerequisite not completed");
+                List<LogMessage> logMessages = leaseCreate.createMultipleLeases(leaseRecords);
+                if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false)))
+                    return  new LogMessage(false,"Prerequisite not fulfilled");
             }
             if(SpaceData.containsKey(testCaseId))
             {
@@ -61,9 +61,9 @@ public class TestData {
 
                 }
                 for (String key : spacesList.keySet()) {
-                    LogMessage logMessage = leaseCreate.createMultipleSpaces(spacesList.get(key));
-                    if(!logMessage.isPassed())
-                        return  new LogMessage(false,"Prerequisite not completed");
+                    List<LogMessage> logMessages = leaseCreate.createMultipleSpaces(spacesList.get(key));
+                    if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false)))
+                        return  new LogMessage(false,"Prerequisite not fulfilled");
                 }
             }
             if(RecurData.containsKey(testCaseId))
@@ -84,13 +84,13 @@ public class TestData {
                 }
                 //System.out.println(spacesList);
                 for (String key : recurList.keySet()) {
-                    LogMessage logMessage = leaseCreate.addMultipleRecurringPayments(recurList.get(key));
-                    if(!logMessage.isPassed())
-                        return  new LogMessage(false,"Prerequisite not completed");
+                    List<LogMessage> logMessages = leaseCreate.addMultipleRecurringPayments(recurList.get(key));
+                    if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false)))
+                        return  new LogMessage(false,"Prerequisite not fulfilled");
                 }
             }
 
-            return  new LogMessage(true,"Prerequisite Completed");
+            return  new LogMessage(true,"Prerequisite fulfilled");
         } catch (Exception ex) {
             ex.printStackTrace();
             return  new LogMessage(false,"Exception in prerequisite");
@@ -111,7 +111,6 @@ public class TestData {
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
         List<Map> data = readExcel.read(sheetName);
         Map<String,List> dataList = getDataObject(sheetName);
-        System.out.println(sheetName);
         if(null == dataList)
             return;
         for(Map item: data) {

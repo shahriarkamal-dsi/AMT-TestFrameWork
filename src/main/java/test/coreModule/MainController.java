@@ -87,7 +87,7 @@ public class MainController {
                    testData.setDriver(webDriver);
                    LogMessage logMessage = testData.runPrequisites(testCase.getTestCaseNumber());
                    if(!logMessage.isPassed()) {
-                       System.out.println("Prerequisite not done");
+                       System.out.println("Prerequisite not fulfilled");
                        return;
                    }
                    List<LogMessage> logMessages = executeTests.executeTest(testCase);
