@@ -64,7 +64,7 @@ public class CreateLog {
 
             ExtentTest objExistLogger = storeAllLogger.get(key);
             if(skipped)
-                objExistLogger.log(Status.SKIP, message);
+                objExistLogger.log(Status.SKIP, message+"(Skipped)");
             else if (status){
                 objExistLogger.log(Status.PASS, message);
             }

@@ -1,13 +1,14 @@
 package test;
-
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import test.Log.CreateLog;
+import test.beforeTest.TestData;
 import test.coreModule.*;
 
 import test.Log.EmailSend;
 import test.driver.DriverFactory;
 import test.keywordScripts.UIBase;
+import test.keywordScripts.UtilKeywordScript;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
 import test.Log.LogMessage;
@@ -15,6 +16,7 @@ import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -141,6 +143,17 @@ public class UnitTesting {
         }
         System.out.println(matchString);
     }
+    @Test
+    public void testTestData() throws Exception {
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
+        TestData testData = TestData.getInstance();
+        testData.setDriver(driver);
+        LogMessage logMessage=testData.runPrequisites("1");
+        System.out.println(logMessage.getLogMessage());
+
+    }
+
 }
 
 

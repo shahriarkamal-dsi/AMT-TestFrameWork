@@ -72,7 +72,7 @@ public class ExecuteTests {
             int numberOfParams = 0;
 
             if (! executionFlag) {
-                LogMessage logMessage = new LogMessage(true,testStep.getTestStepDescription() + " --" + testStep.getFieldName());
+                LogMessage logMessage = new LogMessage(true,testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "(Skipped)");
                 //logMessage.setSkippedTrue();
                 logMessages.add(logMessage)  ;
                 continue;
@@ -90,8 +90,11 @@ public class ExecuteTests {
           //  UtilKeywordScript.delay(5);
             logMessage.setLogMessage(testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage() );
             logMessages.add(logMessage);
-            if(!logMessage.isPassed())
+            if(!logMessage.isPassed()) {
                 testCase.setPassed(false);
+                if(critical)
+                    break;
+            }
 
             if (pageRefresh){
                 uiBase.WaitingForPageLoad();

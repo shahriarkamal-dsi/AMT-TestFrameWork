@@ -24,9 +24,13 @@ public class UILink {
         try{
             UIBase uiBase= new UIBase(webDriver);
             WebElement webElement;
-            if(null!=objectLocatorData && null!=WebObjectSearch.getWebElement(webDriver,objectLocatorData) ) {
-                webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
-                webElement = webElement.findElement(By.linkText(Linkname));
+            if(!objectLocatorData.isEmpty() && null!=objectLocatorData ) {
+                if(null!=WebObjectSearch.getWebElement(webDriver,objectLocatorData)) {
+                    webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+                    webElement = webElement.findElement(By.linkText(Linkname));
+                }
+                else
+                    return new LogMessage(false,"Elements not found");
             }
             else{
                 webElement = webDriver.findElement(By.linkText(Linkname));
@@ -35,7 +39,7 @@ public class UILink {
             return new LogMessage(true,"web element is clicked");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false,"Exception occure");
+            return new LogMessage(false,"Exception occured");
         }
     }
 

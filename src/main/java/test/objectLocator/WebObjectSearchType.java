@@ -17,7 +17,8 @@ public enum WebObjectSearchType implements WebObject {
         @Override
         public List<WebElement> findElement(WebDriver driver, String searchKey) {
             WebDriverWait wait = new WebDriverWait(driver, 20* PropertyConfig.WAIT_TIME_SECONDS);
-            List <WebElement> elements= wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.id(searchKey)));
+            List <WebElement> elements= driver.findElements(By.id(searchKey));
+            //List <WebElement> elements= wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.id(searchKey)));
             return elements;
         }
     },
@@ -48,7 +49,8 @@ public enum WebObjectSearchType implements WebObject {
         @Override
         public List<WebElement> findElement(WebDriver driver, String searchKey) {
             WebDriverWait wait = new WebDriverWait(driver, 20* PropertyConfig.WAIT_TIME_SECONDS);
-            List <WebElement> elements=wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(searchKey)));
+            //List <WebElement> elements=wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(searchKey)));
+            List <WebElement> elements= driver.findElements(By.xpath(searchKey));
             return elements;
 
         }
