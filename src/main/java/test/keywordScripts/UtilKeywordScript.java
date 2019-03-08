@@ -126,4 +126,26 @@ public class UtilKeywordScript {
         }
 
     }
+
+    public LogMessage globalSearch(String name, String selectOption){
+        try{
+            String  objectLocatorPrefix = "Common.GlobalSearch.";
+            UIText uiText = new UIText(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
+            UIDropDown uiDropDown = new UIDropDown(webDriver);
+
+            uiBase.Click(objectLocatorPrefix + "search");
+            uiText.SetText(objectLocatorPrefix +"txtSearch",name);
+            uiDropDown.SelectItem(objectLocatorPrefix + "searchOption", selectOption);
+            uiBase.Click(objectLocatorPrefix + "btnSearch");
+
+            UtilKeywordScript.delay(10);
+            UtilKeywordScript.switchLastTab(webDriver);
+
+            return new LogMessage(true, "Search complete");
+
+        }catch (Exception e){
+            return new LogMessage(false, "Exception occur " + e.getMessage());
+        }
+    }
 }

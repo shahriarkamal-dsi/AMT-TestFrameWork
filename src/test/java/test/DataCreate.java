@@ -27,7 +27,7 @@ public class DataCreate {
         new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
 
     }
-    /*@Test (priority = 2)
+    @Test (priority = 2)
     public void createProperty(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("property")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
@@ -37,11 +37,12 @@ public class DataCreate {
             for (Map propertyRecord : propertyRecords) {
                 if (null == propertyRecord.get(PropertyConfig.EXECUTION_FLAG) || propertyRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !propertyRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                LogMessage logMessage = propertyCreate.createProperty(propertyRecord);
-                assertTrue(logMessage.isPassed());
+                //LogMessage logMessage = propertyCreate.createProperty(propertyRecord);
+                //assertTrue(logMessage.isPassed());
+                propertyCreate.isPropertyExist(propertyRecord);
             }
         }
-    }*/
+    }
     @Test (priority = 2)
     public void createLease(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("lease")) {
@@ -52,10 +53,11 @@ public class DataCreate {
             for (Map leaseRecord : leaseRecords) {
                 if (null == leaseRecord.get(PropertyConfig.EXECUTION_FLAG) || leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                leaseDatas.add(leaseRecord);
+                //leaseDatas.add(leaseRecord);
+                leaseCreate.isLeaseExistWithinProperty(leaseRecord);
             }
-            List<LogMessage> logMessages = leaseCreate.createMultipleLeases(leaseDatas);
-            assertTrue(logMessages.stream().allMatch(o -> o.isPassed().equals(true)));
+            //List<LogMessage> logMessages = leaseCreate.createMultipleLeases(leaseDatas);
+            //assertTrue(logMessages.stream().allMatch(o -> o.isPassed().equals(true)));
         }
 
     }
