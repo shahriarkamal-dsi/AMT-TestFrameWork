@@ -1,8 +1,10 @@
 package test.beforeTest;
 
+import com.sun.prism.shader.Solid_TextureYV12_AlphaTest_Loader;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import sun.rmi.runtime.Log;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.ObjectLocatorDataStorage;
@@ -304,6 +306,73 @@ public class LeaseCreate {
             return new LogMessage(false, " Exception occurred " + e.getMessage());
         }
 
+    }
+
+    public LogMessage isLeaseExistWithinProperty(Map data){
+        try{
+            String  objectLocatorPrefix = "Common.Property.";
+            String columnName = "Property Name";
+            String columnValue = (String)data.get("propertyName");
+            UITable uiTable  = new UITable(webDriver);
+            UILink uiLink = new UILink(webDriver);
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+
+
+            LogMessage searchLog = utilKeywordScript.globalSearch((String)data.get("propertyCode"),"Property");
+
+            if (searchLog.isPassed()){
+                Map<String, WebElement> propertyRow = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
+                if(null == propertyRow || propertyRow.isEmpty()){
+                    return new LogMessage(false, "Property not found");
+                }
+                for (String key : propertyRow.keySet()) {
+                    if(key.split(",").length<2)
+                        continue;
+                    String clName = key.split(",")[1];
+                    if(columnName.equals(clName)){
+                        System.out.println("1");
+                        WebElement element = propertyRow.get(key) ;
+                        String text = element.getText();
+                        if(columnValue.equals(text)) {
+                            System.out.println("if: ");
+                            WebElement elm = element.findElement(By.linkText(columnValue));
+                            elm.click();
+                        }
+                        else {
+                            return new LogMessage(false, "Property name not matching");
+
+                        }
+                    }
+                }
+            }else {
+                return new LogMessage(false,"Exception occur in global  search");
+            }
+
+            UtilKeywordScript.delay(10);
+            webDriver.close();
+            UtilKeywordScript.switchLastTab(webDriver);
+            UtilKeywordScript.delay(10);
+            LogMessage clickLinkLog = uiLink.ClickLink(null,"Expand All");
+            if (clickLinkLog.isPassed()){
+                UtilKeywordScript.delay(2);
+
+                Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbLease", "DBA Name",(String)data.get("dbaName"),null);
+                if(null == row || row.isEmpty()){
+                    return new LogMessage(false, "Lease not exist");
+                }
+                else{
+                    return new LogMessage(true, "Lease already exist");
+                }
+            }else {
+                return new LogMessage(false, "exception occur during expanding property information");
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, "Exception occur" + e.getMessage());
+
+        }
     }
 
 }

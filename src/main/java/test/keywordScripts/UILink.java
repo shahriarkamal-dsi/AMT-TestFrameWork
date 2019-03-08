@@ -24,7 +24,7 @@ public class UILink {
         try{
             UIBase uiBase= new UIBase(webDriver);
             WebElement webElement;
-            if(!objectLocatorData.isEmpty() && null!=objectLocatorData ) {
+            if(null!=objectLocatorData && !objectLocatorData.isEmpty() ) {
                 if(null!=WebObjectSearch.getWebElement(webDriver,objectLocatorData)) {
                     webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
                     webElement = webElement.findElement(By.linkText(Linkname));
