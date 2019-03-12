@@ -25,16 +25,21 @@ public class TestData {
         return testData;
     }
 
-    public LogMessage runPrequisites(String testCaseId) {
+    public List<LogMessage> runPrequisites(String testCaseId) {
+        List<LogMessage> logMessageList =new ArrayList<>();
         try {
             //System.out.println(SpaceData);
+            logMessageList.add(new LogMessage(true,"Starting prerequisite data creation"));
             if(PropertyData.containsKey(testCaseId)){
                 List<Map> propertyRecords=PropertyData.get(testCaseId);
                 PropertyCreate propertyCreate = new PropertyCreate(driver);
                 for(Map propertyRecord: propertyRecords){
                     LogMessage logMessage = propertyCreate.createProperty(propertyRecord);
-                    if(!logMessage.isPassed())
-                        return  new LogMessage(false,"Prerequisite not fulfilled");
+                    logMessageList.add(logMessage);
+                    if(!logMessage.isPassed()) {
+                        logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
+                        return logMessageList;
+                    }
                 }
             }
             if(LeaseData.containsKey(testCaseId))
@@ -42,8 +47,11 @@ public class TestData {
                 List<Map> leaseRecords=LeaseData.get(testCaseId);
                 LeaseCreate leaseCreate = new LeaseCreate(driver);
                 List<LogMessage> logMessages = leaseCreate.createMultipleLeases(leaseRecords);
-                if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false)))
-                    return  new LogMessage(false,"Prerequisite not fulfilled");
+                logMessageList.addAll(logMessages);
+                if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))) {
+                    logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
+                    return logMessageList;
+                }
             }
             if(SpaceData.containsKey(testCaseId))
             {
@@ -62,8 +70,11 @@ public class TestData {
                 }
                 for (String key : spacesList.keySet()) {
                     List<LogMessage> logMessages = leaseCreate.createMultipleSpaces(spacesList.get(key));
-                    if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false)))
-                        return  new LogMessage(false,"Prerequisite not fulfilled");
+                    logMessageList.addAll(logMessages);
+                    if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))) {
+                        logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
+                        return logMessageList;
+                    }
                 }
             }
             if(RecurData.containsKey(testCaseId))
@@ -85,15 +96,19 @@ public class TestData {
                 //System.out.println(spacesList);
                 for (String key : recurList.keySet()) {
                     List<LogMessage> logMessages = leaseCreate.addMultipleRecurringPayments(recurList.get(key));
-                    if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false)))
-                        return  new LogMessage(false,"Prerequisite not fulfilled");
+                    logMessageList.addAll(logMessages);
+                    if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))){
+                        logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
+                        return logMessageList;
+                    }
                 }
             }
 
-            return  new LogMessage(true,"Prerequisite fulfilled");
+            return  logMessageList;
         } catch (Exception ex) {
             ex.printStackTrace();
-            return  new LogMessage(false,"Exception in prerequisite");
+            logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
+            return logMessageList;
         }
     }
     public void setDriver(WebDriver driver){this.driver=driver; }

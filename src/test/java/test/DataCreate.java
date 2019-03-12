@@ -27,7 +27,7 @@ public class DataCreate {
         new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
 
     }
-    /*@Test (priority = 2)
+    @Test (priority = 2)
     public void createProperty(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("property")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
@@ -41,8 +41,8 @@ public class DataCreate {
                 assertTrue(logMessage.isPassed());
             }
         }
-    }*/
-    @Test (priority = 2)
+    }
+    @Test (priority = 3)
     public void createLease(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("lease")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
@@ -59,7 +59,7 @@ public class DataCreate {
         }
 
     }
-    @Test (priority = 3)
+    @Test (priority = 4)
     public void createSpace() {
         if (PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("space")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
@@ -84,7 +84,7 @@ public class DataCreate {
         }
     }
 
-    @Test (priority = 4)
+    @Test (priority = 5)
     public void createRecurrentPayment(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("recurringpayment")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());

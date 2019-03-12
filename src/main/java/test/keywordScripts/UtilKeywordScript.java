@@ -1,6 +1,8 @@
 package test.keywordScripts;
 
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.objectLocator.WebObject;
@@ -46,6 +48,9 @@ public class UtilKeywordScript {
                     if(winNames.length > 1) {
                         for(i = winNames.length; i > 1; i--) {
                             webDriver.switchTo().window(winNames[i - 1]);
+                            if (isAlertPresent()) {
+                                webDriver.switchTo().alert().dismiss();
+                            }
                             webDriver.close();
                         }
                     }
@@ -56,6 +61,7 @@ public class UtilKeywordScript {
                     }
                     return new LogMessage(true , "redirect home page successsfully");
         } catch ( Exception ex) {
+                ex.printStackTrace();
               return new LogMessage(false , "exception occured: " + ex.getMessage());
         }
     }
@@ -99,6 +105,17 @@ public class UtilKeywordScript {
         } catch ( Exception ex) {
             ex.printStackTrace();
         }
+    }
+    public boolean isAlertPresent(){
+        boolean foundAlert = false;
+        WebDriverWait wait = new WebDriverWait(webDriver, 0);
+        try {
+            wait.until(ExpectedConditions.alertIsPresent());
+            foundAlert = true;
+        } catch (TimeoutException e) {
+            foundAlert = false;
+        }
+        return foundAlert;
     }
 
     public static void delay(int time) {

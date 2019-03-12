@@ -7,9 +7,6 @@ import test.objectLocator.WebObjectSearch;
 
 import java.util.Map;
 
-import static test.objectLocator.ObjectLocatorDataStorage.getObjectLocator;
-import static test.objectLocator.WebObjectSearch.searchWebObject;
-
 public class UIText {
     private WebDriver webDriver;
     public UIText(){
@@ -25,6 +22,9 @@ public class UIText {
             if(null == userWeb )
                 return new LogMessage(false,"webElement is not founding");
             userWeb.clear();
+            UtilKeywordScript.delay(1);
+            userWeb.click();
+            UtilKeywordScript.delay(3);
             userWeb.sendKeys(textData);
             return new LogMessage(true,"text is set up");
         } catch(Exception ex){

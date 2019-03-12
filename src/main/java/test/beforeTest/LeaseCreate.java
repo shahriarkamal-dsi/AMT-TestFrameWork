@@ -2,6 +2,7 @@ package test.beforeTest;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
@@ -27,12 +28,12 @@ public class LeaseCreate {
 
     public List<LogMessage> createMultipleLeases(List<Map> datas)
     {
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         List<LogMessage> logMessageList = new ArrayList<>();
         try{
-            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
             objectlocatorPrefix = "Common.Lease.";
             UIMenu menu = new UIMenu(webDriver);
-            menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,DEFAULT,Real Estate Contract");
+            menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Lease,"+datas.get(0).get("codeType")+","+datas.get(0).get("contractType"));
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
             UtilKeywordScript.delay(3);
@@ -51,7 +52,8 @@ public class LeaseCreate {
             return logMessageList;
         }catch (Exception ex){
             ex.printStackTrace();
-            logMessageList.add(new LogMessage(false, "Exception occurred " + ex.getMessage()));
+            utilKeywordScript.redirectHomePage();
+            logMessageList.add(new LogMessage(false, "Exception occurred while creating multiple leases" + ex.getMessage()));
             return logMessageList;
         }
 
@@ -61,6 +63,8 @@ public class LeaseCreate {
 
         try {
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
+            String[] dropDownFields = new String[] {"leaseStatus","leaseType","billingType","leaseGroup1"};
+            String[] textFields = new String[] {"dbaName","leaseCode","beginDate","expirationDate"};
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocatorPrefix + "propertyList");
             uiBase = new UIBase(webDriver);
             UIText uiText = new UIText(webDriver);
@@ -71,19 +75,23 @@ public class LeaseCreate {
 
             uiBase.WaitingForPageLoad();
 
-            uiText.SetText(objectlocatorPrefix +"dbaName",(String)data.get("dbaName"));
-            uiText.SetText(objectlocatorPrefix +"leaseCode",(String)data.get("leaseCode"));
-
-            uiDropDown.SelectItem(objectlocatorPrefix+"leaseStatus",(String)data.get("leaseStatus"));
-            uiDropDown.SelectItem(objectlocatorPrefix+"leaseType",(String)data.get("leaseType"));
-            uiDropDown.SelectItem(objectlocatorPrefix + "billingType",(String)data.get("billingType"));
-
-            uiText.SetText(objectlocatorPrefix +"beginDate",(String)data.get("beginDate"));
-            UtilKeywordScript.delay(2);
-            uiText.SetText(objectlocatorPrefix +"expirationDate",(String)data.get("expirationDate"));
-            UtilKeywordScript.delay(2);
-            uiDropDown.SelectItem(objectlocatorPrefix + "contractTerm", (String)data.get("contractTerm"));
-            UtilKeywordScript.delay(6);
+            for(String elementName: textFields) {
+                uiText.SetText(objectlocatorPrefix + elementName, (String) data.get(elementName));
+                UtilKeywordScript.delay(5);
+            }
+            String objectLocatorName="";
+            for(String elementName : dropDownFields) {
+                for (Object key : data.keySet()) {
+                    String temp = (String) key;
+                    if (temp.contains(elementName)) {
+                        objectLocatorName=elementName;
+                        elementName = temp;
+                        break;
+                    }
+                }
+                uiDropDown.SelectItem(objectlocatorPrefix + objectLocatorName, (String)data.get(elementName));
+                UtilKeywordScript.delay(5);
+            }
 
             uiBase.Click(objectlocatorPrefix + "saveButton");
 
@@ -92,12 +100,13 @@ public class LeaseCreate {
             LogMessage lm = uiBase.WaitingForSuccessfullPopup();
 
             UtilKeywordScript.delay( 5);
-
-
-            return new LogMessage(lm.isPassed(),"Lease create successfully");
+            if(lm.isPassed())
+                return new LogMessage(lm.isPassed(),"Lease "+data.get("dbaName") +" is created successfully under "+data.get("propertyName"));
+            else
+                return new LogMessage(lm.isPassed(),"Lease "+data.get("dbaName") +" is not created under "+data.get("propertyName"));
         }catch (Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false, "Exception Occurred " + ex.getMessage());
+            return new LogMessage(false, "Lease "+data.get("dbaName") +" is not created under "+data.get("propertyName"));
         }
 
     }
@@ -105,8 +114,8 @@ public class LeaseCreate {
     public List<LogMessage> createMultipleSpaces(List<Map> datas)
     {
         List<LogMessage> logMessageList = new ArrayList<>();
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
-            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
             LeaseCreate leaseCreate = new LeaseCreate(webDriver);
             uiBase = new UIBase(webDriver);
             leaseCreate.searchLease(datas.get(0));
@@ -117,12 +126,12 @@ public class LeaseCreate {
                 LogMessage lm=createSpace(data);
                 logMessageList.add(lm);
             }
-
             utilKeywordScript.redirectHomePage();
             return logMessageList;
         }catch(Exception e){
             e.printStackTrace();
-            logMessageList.add(new LogMessage(false, "Exception occurred " + e.getMessage()));
+            utilKeywordScript.redirectHomePage();
+            logMessageList.add(new LogMessage(false, "Exception occurred while creating multiple spaces" + e.getMessage()));
             return logMessageList;
         }
     }
@@ -136,7 +145,7 @@ public class LeaseCreate {
             UIText uiText = new UIText(webDriver);
 
             UtilKeywordScript.delay(1);
-            uiLink.ClickLink("","Add New Suite");
+            uiLink.ClickLink("","Add New Space");
             UtilKeywordScript.delay(5);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
@@ -168,17 +177,19 @@ public class LeaseCreate {
 
             }
             webDriver.switchTo().window(mainWindow);
-            return new LogMessage(lm.isPassed(),"Space create successfully!");
+            if(lm.isPassed())
+                return new LogMessage(lm.isPassed(),"Space "+data.get("Space") +" is created successfully under "+data.get("LeaseName"));
+            else
+                return new LogMessage(lm.isPassed(),"Space "+data.get("Space") +" is not created under "+data.get("LeaseName"));
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false,"Exception occurred " + e.getMessage());
+            return new LogMessage(false,"Space "+data.get("Space") +" is not created under "+data.get("LeaseName"));
         }
     }
     public List<LogMessage> addMultipleRecurringPayments(List<Map> datas){
          List<LogMessage> logMessageList = new ArrayList<>();
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
          try{
-             UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
-             LeaseCreate leaseCreate = new LeaseCreate(webDriver);
              uiBase = new UIBase(webDriver);
              searchLease(datas.get(0));
              UtilKeywordScript.delay(5);
@@ -188,12 +199,12 @@ public class LeaseCreate {
                  LogMessage lm=addRecurringPayment(data);
                  logMessageList.add(lm);
              }
-
              utilKeywordScript.redirectHomePage();
             return logMessageList;
         }catch (Exception e){
             e.printStackTrace();
-            logMessageList.add(new LogMessage(false, "Exception occurred " + e.getMessage()));
+             utilKeywordScript.redirectHomePage();
+            logMessageList.add(new LogMessage(false, "Exception occurred while creating multiple Recurring Payments" + e.getMessage()));
             return logMessageList;
         }
     }
@@ -206,9 +217,6 @@ public class LeaseCreate {
             UILink uiLink = new UILink(webDriver);
             UIBase uiBase = new UIBase(webDriver);
             UITable uiTable = new UITable(webDriver);
-            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
-
-            //searchLease(data);
 
             uiLink.ClickLink("","Add New");
             UtilKeywordScript.delay(5);
@@ -224,8 +232,6 @@ public class LeaseCreate {
             }
 
             uiBase.Click(objectLocatorPrefix + "btnSave");
-
-            //uiBase.WaitingForPageLoad();
             uiBase.WaitingForSuccessfullPopup();
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Rental Activity")));
@@ -271,10 +277,13 @@ public class LeaseCreate {
 
             }
             webDriver.switchTo().window(mainWindow);
-            return new LogMessage(lm.isPassed(),"Recurrent payment add successfully");
+            if(lm.isPassed())
+                return new LogMessage(lm.isPassed(),"Reccurring Payment of "+data.get("chargeType") +" is created successfully under "+data.get("spaceInfo"));
+            else
+                return new LogMessage(lm.isPassed(),"Reccurring Payment of "+data.get("chargeType") +" is not created under "+data.get("spaceInfo"));
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false, "Exception occurred " + e.getMessage());
+            return new LogMessage(false,"Reccurring Payment of "+data.get("chargeType") +" is not created under "+data.get("spaceInfo"));
         }
     }
 
