@@ -5,9 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import test.Log.LogMessage;
-import test.keywordScripts.UIBase;
-import test.keywordScripts.UIMenu;
-import test.keywordScripts.UtilKeywordScript;
+import test.keywordScripts.*;
 import test.objectLocator.WebObjectSearch;
 
 import java.util.List;
@@ -85,6 +83,27 @@ public class PropertyCreate {
         }
 
 
+    }
+
+    public LogMessage isPropertyExist(Map data){
+        try{
+            String  objectLocatorPrefix = "Common.Property.";
+            UITable uiTable  = new UITable(webDriver);
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+
+            utilKeywordScript.globalSearch((String)data.get("propertyCode"),"Property");
+
+            Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
+            if(null == row || row.isEmpty()){
+                return new LogMessage(false, "Property not found");
+            }
+            else{
+                return new LogMessage(false, "Property  found");
+            }
+        }catch (Exception e){
+            return new LogMessage(false, "Exception occur "+ e.getMessage());
+
+        }
     }
 
 }

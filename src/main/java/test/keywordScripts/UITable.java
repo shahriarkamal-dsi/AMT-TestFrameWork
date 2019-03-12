@@ -154,7 +154,14 @@ public class UITable extends  UtilKeywordScript{
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
             WebElement head = tables.get(0) ;
-            List<WebElement>  headCells = head.findElement(By.tagName("thead")).findElement(By.tagName("tr")).findElements(By.tagName("th"));
+            List<WebElement>  headCells = null;
+            //List<WebElement>  headCells = head.findElement(By.tagName("thead")).findElement(By.tagName("tr")).findElements(By.tagName("th"));
+            int headRows = head.findElement(By.tagName("thead")).findElements(By.tagName("tr")).size();
+            int i = 0;
+            while ((null == headCells || headCells.isEmpty()) && i < headRows){
+                headCells = head.findElement(By.tagName("thead")).findElements(By.tagName("tr")).get(i).findElements(By.tagName("th"));
+                i++;
+            }
             /*
             for(WebElement row : rows) {
                 List<WebElement> headCells = row.findElements(By.tagName("th"));
