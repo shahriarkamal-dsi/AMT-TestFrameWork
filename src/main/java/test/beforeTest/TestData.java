@@ -29,7 +29,8 @@ public class TestData {
         List<LogMessage> logMessageList =new ArrayList<>();
         try {
             //System.out.println(SpaceData);
-            logMessageList.add(new LogMessage(true,"Starting prerequisite data creation"));
+            if(PropertyData.containsKey(testCaseId) || LeaseData.containsKey(testCaseId) || SpaceData.containsKey(testCaseId) || RecurData.containsKey(testCaseId))
+                logMessageList.add(new LogMessage(true,"Starting prerequisite data creation"));
             if(PropertyData.containsKey(testCaseId)){
                 List<Map> propertyRecords=PropertyData.get(testCaseId);
                 PropertyCreate propertyCreate = new PropertyCreate(driver);
