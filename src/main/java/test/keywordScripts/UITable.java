@@ -361,48 +361,25 @@ public class UITable extends  UtilKeywordScript{
     public LogMessage VerifyCorrespondingColumnDataTrue(String objectLocatorData, String testData){
 
         try{
-            String columnName1 = "" ;
-            String columnValue1 = "" ;
-            String columnName2 = "" ;
-            String columnValue2 = "" ;
             if(!validateTestData(testData,4)){
                 return  new LogMessage(false, "test data invalid");
             }
             String[] data = testData.split(",");
-            columnName1 = data[0] ;
-            columnValue1 = data[1];
-            columnName2 = data[2];
-            columnValue2 = data[3] ;
+           final String columnName1 = Optional.ofNullable(data[0]).orElse("") ;
+           final String columnValue1 = Optional.ofNullable(data[0]).orElse("") ;
+          final  String columnName2 = Optional.ofNullable(data[0]).orElse("") ;
+           final String columnValue2 = Optional.ofNullable(data[0]).orElse("") ;
 
             List<Map> rows = getAllValuesfromTable(objectLocatorData);
-            if (null == rows && rows.isEmpty()){
-                return new LogMessage(false,"Mo table data found");
+            if (null == rows || rows.isEmpty()){
+                return new LogMessage(false,"no table data found");
             }
-            for(Map<String,WebElement> row : rows){
-                Set<String> keys = row.keySet();
-                for (String key1 : keys){
-                    if(key1.split(",").length<2 )
-                        continue;
-                    String clName1 = key1.split(",")[1];
-                    if(columnName1.equals(clName1)){
-                        WebElement element1 = row.get(key1);
-                        if(columnValue1.equals(element1.getText())) {
-                            for (String key2 : keys){
-                                if(key2.split(",").length<2)
-                                    continue;
-                                String clName2 = key2.split(",")[1];
-                                if (columnName2.equals(clName2)){
-                                    WebElement element2 = row.get(key2);
-                                    if (columnValue2.equals(element2.getText())){
-                                        return new LogMessage(true,"Corresponding column data verified");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return new LogMessage(false,"Proper cell is not present");
+
+            boolean isMatched =  rows.stream().anyMatch(row ->
+                    Optional.ofNullable(row.get(columnName1)).orElse("").equals(columnValue1) &&
+                    Optional.ofNullable(row.get(columnName2)).orElse("").equals(columnValue2)
+            ) ;
+            return  isMatched  ? new LogMessage(true,"Corresponding column data verified") :  new LogMessage(false,"Proper cell is not present");
         }catch (Exception e){
             e.printStackTrace();
             return new  LogMessage(false,"Exception occer " + e.getMessage());
