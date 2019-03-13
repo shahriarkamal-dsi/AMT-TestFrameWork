@@ -43,7 +43,7 @@ public class DataCreate {
             }
         }
     }
-    @Test (priority = 2)
+    @Test (priority = 3)
     public void createLease(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("lease")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
@@ -61,7 +61,7 @@ public class DataCreate {
         }
 
     }
-    @Test (priority = 3)
+    @Test (priority = 4)
     public void createSpace() {
         if (PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("space")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
@@ -86,7 +86,7 @@ public class DataCreate {
         }
     }
 
-    @Test (priority = 4)
+    @Test (priority = 5)
     public void createRecurrentPayment(){
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("recurringpayment")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());

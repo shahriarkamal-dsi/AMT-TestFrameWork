@@ -85,13 +85,14 @@ public class MainController {
                for (TestCase testCase : testCases) {
                    TestData testData = TestData.getInstance();
                    testData.setDriver(webDriver);
-                   LogMessage logMessage = testData.runPrequisites(testCase.getTestCaseNumber());
-                   if(!logMessage.isPassed()) {
-                       System.out.println("Prerequisite not fulfilled");
+                   List<LogMessage> logMessages = testData.runPrequisites(testCase.getTestCaseNumber());
+                   LogReport logReport = LogReport.getInstance();
+                   if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))) {
+                       logReport.addTestcaseLogreport(testCase, logMessages);
                        return;
                    }
-                   List<LogMessage> logMessages = executeTests.executeTest(testCase);
-                   LogReport.getInstance().addTestcaseLogreport(testCase, logMessages);
+                   logMessages.addAll(executeTests.executeTest(testCase));
+                   logReport.addTestcaseLogreport(testCase, logMessages);
                    new UtilKeywordScript(webDriver).redirectHomePage();
                }
                closeAlltabs(webDriver);
