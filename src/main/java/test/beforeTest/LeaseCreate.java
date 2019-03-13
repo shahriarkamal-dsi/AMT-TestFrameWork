@@ -302,10 +302,10 @@ public class LeaseCreate {
             UtilKeywordScript.delay(10);
             UtilKeywordScript.switchLastTab(webDriver);
             LogMessage logMessage =  uiTable.ClickLinkInTable(objectLocatorPrefix + "leasetable","DBA Name," + (String)data.get("LeaseName"));
-            UtilKeywordScript.delay(10);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
             webDriver.close();
             UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(10);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
 
             return new LogMessage(true, " Lease found successfully");
         }catch (Exception e){
@@ -318,67 +318,91 @@ public class LeaseCreate {
     public LogMessage isLeaseExistWithinProperty(Map data){
         try{
             String  objectLocatorPrefix = "Common.Property.";
-            String columnName = "Property Name";
-            String columnValue = (String)data.get("propertyName");
-            UITable uiTable  = new UITable(webDriver);
             UILink uiLink = new UILink(webDriver);
-            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+            PropertyCreate propertyCreate = new PropertyCreate(webDriver);
 
+            LogMessage navigationLog = propertyCreate.navigateToProperty(data);
+            if (!navigationLog.isPassed())
+                return new LogMessage(false, "Incomplete navigation");
 
-            LogMessage searchLog = utilKeywordScript.globalSearch((String)data.get("propertyCode"),"Property");
-
-            if (searchLog.isPassed()){
-                Map<String, WebElement> propertyRow = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
-                if(null == propertyRow || propertyRow.isEmpty()){
-                    return new LogMessage(false, "Property not found");
-                }
-                for (String key : propertyRow.keySet()) {
-                    if(key.split(",").length<2)
-                        continue;
-                    String clName = key.split(",")[1];
-                    if(columnName.equals(clName)){
-                        System.out.println("1");
-                        WebElement element = propertyRow.get(key) ;
-                        String text = element.getText();
-                        if(columnValue.equals(text)) {
-                            System.out.println("if: ");
-                            WebElement elm = element.findElement(By.linkText(columnValue));
-                            elm.click();
-                        }
-                        else {
-                            return new LogMessage(false, "Property name not matching");
-
-                        }
-                    }
-                }
-            }else {
-                return new LogMessage(false,"Exception occur in global  search");
-            }
-
-            UtilKeywordScript.delay(10);
-            webDriver.close();
-            UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(10);
             LogMessage clickLinkLog = uiLink.ClickLink(null,"Expand All");
-            if (clickLinkLog.isPassed()){
-                UtilKeywordScript.delay(2);
 
-                Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbLease", "DBA Name",(String)data.get("dbaName"),null);
-                if(null == row || row.isEmpty()){
-                    return new LogMessage(false, "Lease not exist");
-                }
-                else{
-                    return new LogMessage(true, "Lease already exist");
-                }
-            }else {
+            if (!clickLinkLog.isPassed())
                 return new LogMessage(false, "exception occur during expanding property information");
+
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+
+            UIPanel uiPanel = new UIPanel(webDriver);
+            LogMessage log = uiPanel.VerifyPanelContentTrue(objectLocatorPrefix +"tbLease", (String)data.get("dbaName"));
+            if (log.isPassed()){
+                return new LogMessage(true, "Lease already exist");
+            }else {
+                return new LogMessage(false, "Lease not exist");
             }
 
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, "Exception occur" + e.getMessage());
+        }
+    }
+
+    public LogMessage isSpaceExistWithinProperty(Map data){
+        try{
+            String  objectLocatorPrefix = "Common.Property.";
+            UIPanel uiPanel = new UIPanel(webDriver);
+            UILink uiLink = new UILink(webDriver);
+            PropertyCreate propertyCreate = new PropertyCreate(webDriver);
+
+            LogMessage navigationLog = propertyCreate.navigateToProperty(data);
+            if (!navigationLog.isPassed())
+                return new LogMessage(false, "Incomplete navigation");
+
+            LogMessage clickLinkLog = uiLink.ClickLink(null,"Expand All");
+
+            if (!clickLinkLog.isPassed())
+                return new LogMessage(false, "exception occur during expanding property information");
+
+            UtilKeywordScript.delay(2);
+            LogMessage log = uiPanel.VerifyPanelContentTrue(objectLocatorPrefix +"tbSpace", (String)data.get("Space"));
+            if (log.isPassed()){
+                return new LogMessage(true, "Space already exist");
+            }else {
+                return new LogMessage(false, "Space not exist");
+            }
 
         }catch (Exception e){
             e.printStackTrace();
             return new LogMessage(false, "Exception occur" + e.getMessage());
 
+        }
+    }
+
+    public LogMessage isRecurringPaymentExist(Map data){
+        try{
+            String  objectLocatorPrefix = "Common.Lease.";
+            String columnValue1 = (String)data.get("chargeType");
+            String columnValue2 = (String)data.get("spaceInfo");
+            UIBase uiBase = new UIBase(webDriver);
+
+            UITable uiTable  = new UITable(webDriver);
+
+            searchLease(data);
+
+            LogMessage log = uiBase.Click(objectLocatorPrefix + "link");
+
+            if (!log.isPassed())
+                return new LogMessage(false, "exception occur during expanding property information");
+
+            LogMessage logMessage = uiTable.VerifyCorrespondingColumnDataTrue(objectLocatorPrefix + "tbRPayment","Type,"+columnValue1.split("-")[0].trim() +",Space,"+columnValue2);
+
+            if (logMessage.isPassed()){
+                return new LogMessage(true,"Recurring Payment already exist");
+            }else{
+                return new LogMessage(false," Recurring Payment not exist");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Exception occur");
         }
     }
 
