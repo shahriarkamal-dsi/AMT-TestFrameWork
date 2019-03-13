@@ -6,10 +6,7 @@ import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class UITable extends  UtilKeywordScript{
@@ -86,6 +83,7 @@ public class UITable extends  UtilKeywordScript{
             List<Map> tableData = new ArrayList<Map>();
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
+
             boolean specialTable = false;
             if(tables.size() <2) {
                 return getSingleRowfromSingleTable(objectLocatorData,columnName,columnValue,rowIndex);
@@ -377,6 +375,57 @@ public class UITable extends  UtilKeywordScript{
         } catch(Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false,"exception occured: " + ex.getMessage());
+        }
+    }
+
+    public LogMessage VerifyCorrespondingColumnDataTrue(String objectLocatorData, String testData){
+
+        try{
+            String columnName1 = "" ;
+            String columnValue1 = "" ;
+            String columnName2 = "" ;
+            String columnValue2 = "" ;
+            if(!validateTestData(testData,4)){
+                return  new LogMessage(false, "test data invalid");
+            }
+            String[] data = testData.split(",");
+            columnName1 = data[0] ;
+            columnValue1 = data[1];
+            columnName2 = data[2];
+            columnValue2 = data[3] ;
+
+            List<Map> rows = getAllValuesfromTable(objectLocatorData);
+            if (null == rows && rows.isEmpty()){
+                return new LogMessage(false,"Mo table data found");
+            }
+            for(Map<String,WebElement> row : rows){
+                Set<String> keys = row.keySet();
+                for (String key1 : keys){
+                    if(key1.split(",").length<2 )
+                        continue;
+                    String clName1 = key1.split(",")[1];
+                    if(columnName1.equals(clName1)){
+                        WebElement element1 = row.get(key1);
+                        if(columnValue1.equals(element1.getText())) {
+                            for (String key2 : keys){
+                                if(key2.split(",").length<2)
+                                    continue;
+                                String clName2 = key2.split(",")[1];
+                                if (columnName2.equals(clName2)){
+                                    WebElement element2 = row.get(key2);
+                                    if (columnValue2.equals(element2.getText())){
+                                        return new LogMessage(true,"Corresponding column data verified");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return new LogMessage(false,"Proper cell is not present");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new  LogMessage(false,"Exception occer " + e.getMessage());
         }
     }
 

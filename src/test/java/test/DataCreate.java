@@ -37,9 +37,8 @@ public class DataCreate {
             for (Map propertyRecord : propertyRecords) {
                 if (null == propertyRecord.get(PropertyConfig.EXECUTION_FLAG) || propertyRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !propertyRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                //LogMessage logMessage = propertyCreate.createProperty(propertyRecord);
-                //assertTrue(logMessage.isPassed());
-                propertyCreate.isPropertyExist(propertyRecord);
+                LogMessage logMessage = propertyCreate.createProperty(propertyRecord);
+                assertTrue(logMessage.isPassed());
             }
         }
     }
@@ -53,11 +52,10 @@ public class DataCreate {
             for (Map leaseRecord : leaseRecords) {
                 if (null == leaseRecord.get(PropertyConfig.EXECUTION_FLAG) || leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                //leaseDatas.add(leaseRecord);
-                leaseCreate.isLeaseExistWithinProperty(leaseRecord);
+                leaseDatas.add(leaseRecord);
             }
-            //List<LogMessage> logMessages = leaseCreate.createMultipleLeases(leaseDatas);
-            //assertTrue(logMessages.stream().allMatch(o -> o.isPassed().equals(true)));
+            List<LogMessage> logMessages = leaseCreate.createMultipleLeases(leaseDatas);
+            assertTrue(logMessages.stream().allMatch(o -> o.isPassed().equals(true)));
         }
 
     }
