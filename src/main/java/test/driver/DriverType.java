@@ -24,7 +24,7 @@ public enum DriverType implements Driver {
     CHROME {
         @Override
         public WebDriver getDriver(DesiredCapabilities desiredCapabilities, Boolean headless) {
-            WebDriverManager.chromedriver().setup();
+            WebDriverManager.chromedriver().version("73.0.3683.68").setup();
             ChromeOptions options = new ChromeOptions();
             options.setHeadless(headless);
             WebDriver driver = new ChromeDriver(options);
