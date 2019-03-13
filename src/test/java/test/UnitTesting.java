@@ -8,6 +8,7 @@ import test.coreModule.*;
 import test.Log.EmailSend;
 import test.driver.DriverFactory;
 import test.keywordScripts.UIBase;
+import test.keywordScripts.UITree;
 import test.keywordScripts.UtilKeywordScript;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
@@ -17,6 +18,7 @@ import test.utility.ReadExcel;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -142,17 +144,30 @@ public class UnitTesting {
             System.out.println("hi");
         }
         System.out.println(matchString);
+        Map<String, Integer> hash_map = new HashMap<String, Integer>();
+
+        // Mapping int values to string keys
+        hash_map.put("Geeks", 10);
+        hash_map.put("4", 15);
+        hash_map.put("Geeks", 20);
+        hash_map.put("Welcomes", 25);
+        hash_map.put("You", 30);
+        //List<String> keys = (List<String>) hash_map.keySet();
+        for(String key: hash_map.keySet()){
+            if(key.contains("Ge"))
+                System.out.println("hi");
+        }
     }
     @Test
-    public void testTestData() throws Exception {
+    public void testUITree(){
         WebDriver driver = DriverFactory.createDriver("chrome", false);
         new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
-        TestData testData = TestData.getInstance();
-        testData.setDriver(driver);
-        LogMessage logMessage=testData.runPrequisites("1");
-        System.out.println(logMessage.getLogMessage());
+        UITree uiTree= new UITree(driver);
+        String obj="//*[@id='treeContainer']";
+        uiTree.AssetTreeMenuExpand(obj,"tree,taka");
 
     }
+
 
 }
 

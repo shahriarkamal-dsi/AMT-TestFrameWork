@@ -93,12 +93,12 @@ public class ExecuteTests {
             if(!logMessage.isPassed()) {
                 testCase.setPassed(false);
                 if(critical)
-                    break;
+                    return logMessages;
             }
 
-            if (pageRefresh){
+          if (pageRefresh){
                 uiBase.WaitingForPageLoad();
-            }
+          }
         }
 
         return logMessages;

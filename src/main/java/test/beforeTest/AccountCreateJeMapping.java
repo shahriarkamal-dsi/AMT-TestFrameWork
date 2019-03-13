@@ -118,7 +118,7 @@ public class AccountCreateJeMapping {
             for(Map accountData : accountDatas  ) {
                 if (null == accountData.get(PropertyConfig.EXECUTION_FLAG) || accountData.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !accountData.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                accountRecord.put(removeSpacesaAndNewline((String) accountData.get("Description")),accountData);
+                accountRecord.put((String) accountData.get("Description"),accountData);
             }
             updateJMappingSecquentially("Common.GlobalSearch.jeMappingTable",accountRecord);
             /*
@@ -164,7 +164,7 @@ public class AccountCreateJeMapping {
                 if (key.split(",").length < 2) continue;
                 String clName = key.split(",")[1];
 
-                if (!accountData.containsKey(removeSpacesaAndNewline(clName))) {
+                if (!accountData.containsKey(clName)) {
                     System.out.println("Not Found Column Name"+clName);
                     continue;
                 }
@@ -178,6 +178,7 @@ public class AccountCreateJeMapping {
                 uibase.WaitingForPageLoad();
                 UtilKeywordScript.delay(5);
                 Map account = (Map) accountData.get(clName);
+                System.out.println(account.get("Account Number"));
                 uiTable.filterTableByColumn("Common.GlobalSearch.jMappingAccountTable", "Account Number," + account.get("Account Number"));
                 UtilKeywordScript.delay(4);
                 uiTable.DoubleClickCellInTable("Common.GlobalSearch.jMappingAccountTable", "Account Number," + account.get("Account Number"));        //FASB/IASB - Expense Debit - Financing
