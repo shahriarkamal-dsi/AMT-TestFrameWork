@@ -165,4 +165,14 @@ public class UtilKeywordScript {
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
     }
+
+    public static String removeSpaceAndNewline(String inputString){
+        return inputString.replaceAll("\\s+","");
+    }
+
+    public static boolean  isEmpty(String inputString){
+        if(null == inputString ) return  true;
+        return removeSpaceAndNewline(inputString).isEmpty();
+    }
+
 }

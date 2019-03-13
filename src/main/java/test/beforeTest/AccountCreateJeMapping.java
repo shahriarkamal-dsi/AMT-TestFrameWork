@@ -11,6 +11,7 @@ import test.utility.PropertyConfig;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class AccountCreateJeMapping {
 
@@ -161,9 +162,7 @@ public class AccountCreateJeMapping {
             if (null == row || row.isEmpty())
                 return;
             for (String key : row.keySet()) {
-                if (key.split(",").length < 2) continue;
-                String clName = key.split(",")[1];
-
+                String clName = Optional.ofNullable(key).orElse("noValue");
                 if (!accountData.containsKey(clName)) {
                     System.out.println("Not Found Column Name"+clName);
                     continue;

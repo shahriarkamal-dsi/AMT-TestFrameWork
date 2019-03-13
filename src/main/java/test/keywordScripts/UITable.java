@@ -6,11 +6,12 @@ import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class UITable extends  UtilKeywordScript{
     private WebDriver webDriver;
@@ -31,7 +32,6 @@ public class UITable extends  UtilKeywordScript{
      */
     public List<Map> getAllValuesfromTable(String objectLocatorData) {
         try {
-            webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS) ;
             List<Map> tableData = new ArrayList<Map>();
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
@@ -42,27 +42,18 @@ public class UITable extends  UtilKeywordScript{
             WebElement body = tables.get(1) ;
             List<WebElement> rows = head.findElements(By.tagName("tr"));
             List<WebElement> headCells = rows.get(0).findElements(By.tagName("th"));
-            /*
-            for(WebElement row : rows) {
-                List<WebElement> headCells = row.findElements(By.tagName("th"));
-                for(WebElement headcell : headCells) {
-                }
-            }*/
+            rows = body.findElements(By.tagName("tr"));
+           tableData =  rows.stream().map(row -> {
+               AtomicInteger index = new AtomicInteger();
+               List<WebElement> bodyCells = row.findElements(By.tagName("td"));
+               Map data = bodyCells.stream().collect(Collectors.toMap( bodycell ->
+               {
+                   int count = index.getAndIncrement() ;
+                 return UtilKeywordScript.isEmpty(headCells.get(count).getText()) ? String.valueOf(count) :  headCells.get(count).getText() ;
+               }, bodycell -> bodycell));
+               return data;
+           }).collect(Collectors.toList());
 
-             rows = body.findElements(By.tagName("tr"));
-            for(WebElement row : rows) {
-                Map rowdata = new HashMap<String,WebElement>();
-                List<WebElement> bodyCells = row.findElements(By.tagName("td"));
-                int index = 0;
-                for(WebElement bodyCell : bodyCells) {
-                    String key =  String.valueOf(index) + "," + headCells.get(index).getText();
-                    rowdata.put(key,bodyCell);
-                    index++;
-                    //System.out.println(bodyCell.getText());
-                    //System.out.println(headcell.getAttribute("data-title"));
-                }
-                tableData.add(rowdata);
-            }
             return tableData;
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -81,6 +72,7 @@ public class UITable extends  UtilKeywordScript{
   d. return perticular columnName-columnVale cell and whole row
   e. row index start with 0
    */
+
     public Map getSingleRowfromTable(String objectLocatorData,String columnName,String columnValue, Integer rowIndex ) {
         try {
             List<Map> tableData = new ArrayList<Map>();
@@ -121,11 +113,13 @@ public class UITable extends  UtilKeywordScript{
                     }
                     String key = "";
                     if(specialTable) {
-                      //  String clmnName = bodyCell.getAttribute("title") == "" ? "na" : bodyCell.getAttribute("title") ;
-                        key = String.valueOf(index) + "," + bodyCell.getAttribute("title") ;
+                        //  String clmnName = bodyCell.getAttribute("title") == "" ? "na" : bodyCell.getAttribute("title") ;
+                     //   key = String.valueOf(index) + "," + bodyCell.getAttribute("title") ;
+                        key =  Optional.ofNullable(bodyCell.getAttribute("title")).orElse(String.valueOf(index));
                     }
-                     else
-                         key =  String.valueOf(index) + "," + headCells.get(index).getText();
+                    else
+                       // key =  String.valueOf(index) + "," + headCells.get(index).getText();
+                       key =  Optional.ofNullable(headCells.get(index).getText()).orElse(String.valueOf(index));
                     rowdata.put(key,bodyCell);
                     index++;
 
@@ -145,6 +139,7 @@ public class UITable extends  UtilKeywordScript{
             return new HashMap();
         }
     }
+
 
 
 
@@ -184,7 +179,9 @@ public class UITable extends  UtilKeywordScript{
                             }
                         }
                     }
-                    String key =  String.valueOf(index) + "," + headCells.get(index).getText();
+                   // String key =  String.valueOf(index) + "," + headCells.get(index).getText();
+                   String key =  Optional.ofNullable(headCells.get(index).getText()).orElse(String.valueOf(index));
+
                     rowdata.put(key,bodyCell);
                     index++;
 
@@ -227,7 +224,8 @@ public class UITable extends  UtilKeywordScript{
             List<WebElement> bodyCells = row.findElements(By.tagName("td"));
             int index = 0;
             for(WebElement bodyCell : bodyCells) {
-                String key =  String.valueOf(index) + "," + headCells.get(index).getText();
+              //  String key =  String.valueOf(index) + "," + headCells.get(index).getText();
+               String key =  Optional.ofNullable(headCells.get(index).getText()).orElse(String.valueOf(index));
                 rowdata.put(key,bodyCell);
                 index++;
             }
@@ -250,24 +248,19 @@ public class UITable extends  UtilKeywordScript{
             columnName = data[0] ;
             columnValue = data[1] ;
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
+
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
-                for (String key : row.keySet()) {
-                    if(key.split(",").length<2)
-                        continue;
-                     String clName = key.split(",")[1];
-                     if(columnName.equals(clName)){
-                         WebElement element = row.get(key) ;
-                         String text = element.getText();
-                         if(columnValue.equals(element.getText())) {
-                             UIBase uibase = new UIBase(webDriver);
+            if(!row.containsKey(columnName))
+                return new LogMessage(false, "column name not present");
 
-                             //element.click();
-                             uibase.ClickDbClickRClick(element,"DBLCLICK");
-                             return new LogMessage(true, "element is clicked");
-                         }
-                     }
-                }
+            WebElement element = row.get(columnName) ;
+            String text = element.getText();
+            if(columnValue.equals(element.getText())) {
+                UIBase uibase = new UIBase(webDriver);
+                uibase.ClickDbClickRClick(element,"DBLCLICK");
+                return new LogMessage(true, "element is double clicked");
+            }
             return new LogMessage(true, "proper cell is not present.");
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -283,26 +276,20 @@ public class UITable extends  UtilKeywordScript{
             String[] data = testData.split(",");
             columnName = data[0] ;
             columnValue = data[1] ;
+            List<Map> records = getAllValuesfromTable(objectLocatorData) ;
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
-            for (String key : row.keySet()) {
-                if(key.split(",").length<2)
-                    continue;
-                String clName = key.split(",")[1];
-                if(columnName.equals(clName)){
-                    WebElement element = row.get(key) ;
-                    String text = element.getText();
-                    if(columnValue.equals(element.getText())) {
-                        UIBase uibase = new UIBase(webDriver);
-
-                        element.click();
-                        //uibase.ClickDbClickRClick(element,"DBLCLICK");
-                        return new LogMessage(true, "element is clicked");
-                    }
-                }
+            if(!row.containsKey(columnName))
+                return new LogMessage(false, "column name not present");
+            WebElement element = row.get(columnName) ;
+            String text = element.getText();
+            if(columnValue.equals(element.getText())) {
+                element.click();
+                return new LogMessage(true, "element is clicked");
             }
             return new LogMessage(true, "proper cell is not present.");
+
         } catch(Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false,"exception occured: " + ex.getMessage());
@@ -324,23 +311,17 @@ public class UITable extends  UtilKeywordScript{
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
-            for (String key : row.keySet()) {
-                if(key.split(",").length<2)
-                    continue;
-                String clName = key.split(",")[1];
-                //System.out.println(clName);
-                if(columnName.equals(clName)){
-                    WebElement element = row.get(key) ;
-                    String text = element.getText();
-                    if(columnValue.equals(element.getText())) {
-                        WebElement elm = element.findElement(By.linkText(columnValue));
-                        //System.out.println(elm);
-                        elm.click();
-                        return new LogMessage(true, "element is clicked");
-                    }
-                }
+            if(!row.containsKey(columnName))
+                return new LogMessage(false, "column name not present");
+            WebElement element = row.get(columnName) ;
+            String text = element.getText();
+            if(columnValue.equals(element.getText())) {
+                WebElement elm = element.findElement(By.linkText(columnValue));
+                elm.click();
+                return new LogMessage(true, " link element is clicked");
             }
             return new LogMessage(true, "proper cell is not present.");
+
         } catch(Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false,"exception occured: " + ex.getMessage());
@@ -361,17 +342,13 @@ public class UITable extends  UtilKeywordScript{
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,null,null,Integer.parseInt(rowIndex));
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
-            for (String key : row.keySet()) {
-                if(key.split(",").length<2)
-                    continue;
-                String clName = key.split(",")[1];
-                if(columnName.equals(clName)){
-                    WebElement element = row.get(key) ;
-                    String text = element.getText();
-                    if(columnValue.equals(text)) {
-                        return new LogMessage(true, "Cell data verified");
-                    }
-                }
+            if(!row.containsKey(columnName))
+                return new LogMessage(false, "column name not present");
+
+            WebElement element = row.get(columnName) ;
+            String text = element.getText();
+            if(columnValue.equals(element.getText())) {
+                return new LogMessage(true, "proper cell is  present");
             }
             return new LogMessage(true, "proper cell is not present.");
         } catch(Exception ex) {
@@ -394,22 +371,18 @@ public class UITable extends  UtilKeywordScript{
             //System.out.println(row);
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
-            for (String key : row.keySet()) {
-                String clName = key.split(",")[1];
-                if(columnName.equals(clName)){
-                    WebElement element = row.get(key) ;
-                    if(element.isEnabled()) {
-                        //element.click();
-                       // UtilKeywordScript.delay(3);
-                        element.findElement(By.tagName("input")).sendKeys(columnValue);
-                        return new LogMessage(true,"enter text data");
-                    } else {
-                        return new LogMessage(false," text field disabled");
-                    }
-                }
-            }
-            return new LogMessage(true, "proper cell is not present.");
+            if(!row.containsKey(columnName))
+                return new LogMessage(false, "column name not present");
 
+            WebElement element = row.get(columnName) ;
+            if(element.isEnabled()) {
+                //element.click();
+                // UtilKeywordScript.delay(3);
+                element.findElement(By.tagName("input")).sendKeys(columnValue);
+                return new LogMessage(true,"enter text data");
+            } else {
+                return new LogMessage(false," text field disabled");
+            }
         } catch ( Exception ex ) {
             return new LogMessage(false, "exception occured " + ex.getMessage());
         }
@@ -434,25 +407,19 @@ public class UITable extends  UtilKeywordScript{
             //System.out.println(row);
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
-            for (String key : row.keySet()) {
-                if(key.split(",").length <2) continue;
-                String clName = key.split(",")[1];
-                if(columnName.equals(clName)){
-                    WebElement element = row.get(key) ;
-                    if(element.isEnabled()) {
-                        if(inputTag != "")
-                            element.findElement(By.tagName(inputTag)).click();
-                        else
-                            element.click();
-                        // UtilKeywordScript.delay(3);
-                       // element.sendKeys(columnValue);
-                        return new LogMessage(true,"click table data");
-                    } else {
-                        return new LogMessage(false," text field disabled");
-                    }
-                }
+            if(!row.containsKey(columnName))
+                return new LogMessage(false, "column name not present");
+
+            WebElement element = row.get(columnName) ;
+            if(element.isEnabled()) {
+                if(inputTag != "")
+                    element.findElement(By.tagName(inputTag)).click();
+                else
+                    element.click();
+                return new LogMessage(true,"click table data");
+            } else {
+                return new LogMessage(false," text field disabled");
             }
-            return new LogMessage(true, "proper cell is not present.");
 
         } catch ( Exception ex ) {
             ex.printStackTrace();
