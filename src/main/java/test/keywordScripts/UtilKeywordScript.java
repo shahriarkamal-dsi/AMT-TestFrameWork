@@ -139,7 +139,7 @@ public class UtilKeywordScript {
             uiDropDown.SelectItem(objectLocatorPrefix + "searchOption", selectOption);
             uiBase.Click(objectLocatorPrefix + "btnSearch");
 
-            UtilKeywordScript.delay(10);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
             UtilKeywordScript.switchLastTab(webDriver);
 
             return new LogMessage(true, "Search complete");
