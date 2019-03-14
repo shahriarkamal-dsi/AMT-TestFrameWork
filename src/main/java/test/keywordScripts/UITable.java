@@ -9,9 +9,7 @@ import test.objectLocator.WebObjectSearch;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class UITable extends  UtilKeywordScript{
     private WebDriver webDriver;
@@ -30,9 +28,9 @@ public class UITable extends  UtilKeywordScript{
     b. from calling method from  excel sheet, please use this method to get all table data, then code what need to be done,
     thats how any type table can be worked properly from excel sheet.
      */
-    public List<Map> getAllValuesfromTable(String objectLocatorData) {
+    public List<Map<String,WebElement>> getAllValuesfromTable(String objectLocatorData) {
         try {
-            List<Map> tableData = new ArrayList<Map>();
+            List<Map<String,WebElement>> tableData = new ArrayList<Map<String,WebElement>>();
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
             if(tables.size() <2) {
@@ -46,7 +44,7 @@ public class UITable extends  UtilKeywordScript{
            tableData =  rows.stream().map(row -> {
                AtomicInteger index = new AtomicInteger();
                List<WebElement> bodyCells = row.findElements(By.tagName("td"));
-               Map data = bodyCells.stream().collect(Collectors.toMap( bodycell ->
+               Map<String,WebElement> data = bodyCells.stream().collect(Collectors.toMap( bodycell ->
                {
                    int count = index.getAndIncrement() ;
                  return UtilKeywordScript.isEmpty(headCells.get(count).getText()) ? String.valueOf(count) :  headCells.get(count).getText() ;
@@ -204,10 +202,10 @@ public class UITable extends  UtilKeywordScript{
     }
 
 
-    private List<Map> getAllValuesfromSingleTable(String objectLocatorData ) {
+    private List<Map<String, WebElement>> getAllValuesfromSingleTable(String objectLocatorData ) {
         try {
         webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS) ;
-        List<Map> tableData = new ArrayList<Map>();
+        List<Map<String,WebElement>> tableData = new ArrayList<Map<String,WebElement>>();
         WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
         List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
         WebElement head = tables.get(0) ;
@@ -277,7 +275,6 @@ public class UITable extends  UtilKeywordScript{
             String[] data = testData.split(",");
             columnName = data[0] ;
             columnValue = data[1] ;
-            List<Map> records = getAllValuesfromTable(objectLocatorData) ;
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
             if(null == row || row.isEmpty())
                 return new LogMessage(false, "no table data");
@@ -370,14 +367,14 @@ public class UITable extends  UtilKeywordScript{
           final  String columnName2 = Optional.ofNullable(data[2]).orElse("") ;
            final String columnValue2 = Optional.ofNullable(data[3]).orElse("") ;
 
-            List<Map> rows = getAllValuesfromTable(objectLocatorData);
+            List<Map<String,WebElement>> rows = getAllValuesfromTable(objectLocatorData);
             if (null == rows || rows.isEmpty()){
                 return new LogMessage(false,"no table data found");
             }
 
             boolean isMatched =  rows.stream().anyMatch(row ->
-                    Optional.ofNullable(row.get(columnName1)).orElse("").equals(columnValue1) &&
-                    Optional.ofNullable(row.get(columnName2)).orElse("").equals(columnValue2)
+                    Optional.ofNullable(row.get(columnName1).getText()).orElse("").equals(columnValue1) &&
+                    Optional.ofNullable(row.get(columnName2).getText()).orElse("").equals(columnValue2)
             ) ;
             return  isMatched  ? new LogMessage(true,"Corresponding column data verified") :  new LogMessage(false,"Proper cell is not present");
         }catch (Exception e){
