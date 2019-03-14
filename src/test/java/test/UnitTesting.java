@@ -167,6 +167,12 @@ public class UnitTesting {
         uiTree.AssetTreeMenuExpand(obj,"tree,taka");
 
     }
+    @Test
+    public void Testdataupdate(){
+        WebDriver driver=DriverFactory.createDriver("chrome",false);
+        ExecuteTests executeTests=new ExecuteTests(driver);
+        System.out.println(executeTests.updateTestData("666677777","Property,$Lease_dbaName,$Property_propertyCode_0",null));
+    }
 
 
 }

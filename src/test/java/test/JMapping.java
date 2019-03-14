@@ -19,6 +19,7 @@ public class JMapping {
     @BeforeClass
     public static void login() {
         webDriver = DriverFactory.createDriver("chrome", false);
+        System.out.println(PropertyConfig.getPropertyValue("password"));
         new UtilKeywordScript(webDriver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
 
     }

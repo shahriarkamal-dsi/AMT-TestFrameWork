@@ -3,6 +3,7 @@ package test.coreModule;
 import org.openqa.selenium.WebDriver;
 import test.Log.CreateLog;
 import test.Log.LogMessage;
+import test.beforeTest.TestData;
 import test.keywordScripts.UIBase;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
@@ -64,7 +65,7 @@ public class ExecuteTests {
             // objects.add(webDriver);
             String actionName = testStep.getAction();
             String objectLocators = testStep.getObjectLocator();
-            String testData = testStep.getTestData();
+            String testData = updateTestData(testCase.getTestCaseNumber(),testStep.getTestData(),null);
             Boolean executionFlag = testStep.isExecutionFlagOn();
             Boolean pageRefresh = testStep.isRefreshPageOn();
             Boolean critical = testStep.isCritical();
@@ -125,6 +126,45 @@ public class ExecuteTests {
         } catch(Exception ex) {
                ex.printStackTrace();
                return  new LogMessage(false,"exception occured");
+        }
+    }
+    public String updateTestData(String testCaseId,String testData, Map<String,Map> map){
+        try{
+            String finalTestData="";
+            String[] splitTestDatas=testData.split(",");
+            TestData prerequisiteTestData = TestData.getInstance();
+            prerequisiteTestData.setDriver(webDriver);
+            if(splitTestDatas.length>0)
+            {
+                for(String splitTestData:splitTestDatas){
+                    if(splitTestData.charAt(0)=='$'){
+                        splitTestData=splitTestData.substring(1);
+                        String[] testDataDetails = splitTestData.split("_");
+                        List<Map> datas= prerequisiteTestData.getData(testDataDetails[0].toUpperCase(),testCaseId);
+                        System.out.println(datas);
+                        if(testDataDetails.length==2)
+                        {
+                            Map data= datas.get(0);
+                            finalTestData=finalTestData+ (String) data.get(testDataDetails[1]);
+
+                        }
+                        else if(testDataDetails.length==3)
+                        {
+                            Map data= datas.get(Integer.parseInt(testDataDetails[2]));
+                            finalTestData=finalTestData+ (String) data.get(testDataDetails[1]);
+                        }
+                    }
+                    else
+                        finalTestData=finalTestData+splitTestData;
+                    finalTestData=finalTestData+",";
+
+                }
+                finalTestData=finalTestData.replaceAll(",$", "");
+            }
+            return finalTestData;
+        }
+        catch (Exception ex){
+            return null;
         }
     }
 }

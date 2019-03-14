@@ -80,13 +80,13 @@ public class MainController {
 
         public void executeTestesInTestSuite(TestSuite testSuite){
            try {
+               LogReport logReport = LogReport.getInstance();
                List<TestCase> testCases = testSuite.getAllTestCases();
                ExecuteTests executeTests = new ExecuteTests(webDriver);
                for (TestCase testCase : testCases) {
                    TestData testData = TestData.getInstance();
                    testData.setDriver(webDriver);
                    List<LogMessage> logMessages = testData.runPrequisites(testCase.getTestCaseNumber());
-                   LogReport logReport = LogReport.getInstance();
                    if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))) {
                        logReport.addTestcaseLogreport(testCase, logMessages);
                        return;
