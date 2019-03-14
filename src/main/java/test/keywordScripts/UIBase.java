@@ -189,6 +189,20 @@ public class UIBase {
             return new LogMessage(false, "Exception occurred during loading page");
         }
     }
+    public LogMessage VerifyEnabledTrue(String objectLocatorData){
+        try{
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if(null == element)
+                return  new LogMessage(false, "Element is not found");
+            String logMessage = element.isEnabled() ? "Element is enabled " : "Element is not enabled" ;
+            return new LogMessage(element.isEnabled(), logMessage);
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new LogMessage(false, "Element is not clickable");
+        }
+    }
 
 
 }

@@ -65,7 +65,8 @@ public class ExecuteTests {
             // objects.add(webDriver);
             String actionName = testStep.getAction();
             String objectLocators = testStep.getObjectLocator();
-            String testData = updateTestData(testCase.getTestCaseNumber(),testStep.getTestData(),null);
+            testStep.setTestData(updateTestData(testCase.getTestCaseNumber(),testStep.getTestData(),null));
+            String testData = testStep.getTestData();
             Boolean executionFlag = testStep.isExecutionFlagOn();
             Boolean pageRefresh = testStep.isRefreshPageOn();
             Boolean critical = testStep.isCritical();
@@ -141,6 +142,7 @@ public class ExecuteTests {
                         splitTestData=splitTestData.substring(1);
                         String[] testDataDetails = splitTestData.split("_");
                         List<Map> datas= prerequisiteTestData.getData(testDataDetails[0].toUpperCase(),testCaseId);
+                        System.out.println(datas);
                         if(testDataDetails.length==2)
                         {
                             Map data= datas.get(0);
@@ -163,7 +165,7 @@ public class ExecuteTests {
             return finalTestData;
         }
         catch (Exception ex){
-            return null;
+            return testCaseId;
         }
     }
 }
