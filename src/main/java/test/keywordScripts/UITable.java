@@ -366,9 +366,9 @@ public class UITable extends  UtilKeywordScript{
             }
             String[] data = testData.split(",");
            final String columnName1 = Optional.ofNullable(data[0]).orElse("") ;
-           final String columnValue1 = Optional.ofNullable(data[0]).orElse("") ;
-          final  String columnName2 = Optional.ofNullable(data[0]).orElse("") ;
-           final String columnValue2 = Optional.ofNullable(data[0]).orElse("") ;
+           final String columnValue1 = Optional.ofNullable(data[1]).orElse("") ;
+          final  String columnName2 = Optional.ofNullable(data[2]).orElse("") ;
+           final String columnValue2 = Optional.ofNullable(data[3]).orElse("") ;
 
             List<Map> rows = getAllValuesfromTable(objectLocatorData);
             if (null == rows || rows.isEmpty()){
