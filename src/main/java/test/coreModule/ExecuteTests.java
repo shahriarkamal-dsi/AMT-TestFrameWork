@@ -142,7 +142,6 @@ public class ExecuteTests {
                         splitTestData=splitTestData.substring(1);
                         String[] testDataDetails = splitTestData.split("_");
                         List<Map> datas= prerequisiteTestData.getData(testDataDetails[0].toUpperCase(),testCaseId);
-                        System.out.println(datas);
                         if(testDataDetails.length==2)
                         {
                             Map data= datas.get(0);
@@ -165,7 +164,7 @@ public class ExecuteTests {
             return finalTestData;
         }
         catch (Exception ex){
-            return testCaseId;
+            return testData;
         }
     }
 }
