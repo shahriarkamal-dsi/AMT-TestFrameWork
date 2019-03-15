@@ -164,15 +164,30 @@ public class UnitTesting {
         uiTree.AssetTreeMenuExpand(obj,"tree,taka");
 
     }
+    @Test
+    public void Testdataupdate(){
+        WebDriver driver=DriverFactory.createDriver("chrome",false);
+        ExecuteTests executeTests=new ExecuteTests(driver);
+        System.out.println(executeTests.updateTestData("666677777","Property,$Lease_dbaName,$Property_propertyCode_0",null));
+    }
 
     @Test
-    public void TestgetPrequisiteTestCase() {
+    public void testgetPrequisiteTestCase() {
         TestPlan tp =  new MainController().createTestPlanAndModule() ;
         PreRequiste preRequiste = new PreRequiste() ;
         //make sure in excel correspoding test case  row is yes.
         Optional<TestCase> ts =   preRequiste.getPrequisiteTestCase("FASB", "5689132");
         assertTrue(ts.isPresent());
         assertTrue(ts.get().getTestCaseName().contains("FASB/IASB Lessee - Capitalization Threshold - Edit Revision - When IASB ROU Asset Capitalization Threshold is made less than the calculated ROU Asset, Lease Classification should not be Small Ticket Item"));
+
+    }
+
+    @Test
+    public void testJsontoMap(){
+        Optional<Map> map =  UtilKeywordScript.jsonStringToMap( "p:0,l:0,s:2") ;
+        Map m = map.get() ;
+        assertTrue(m.get("p").equals("0"));
+        assertTrue(m.get("s").equals("2"));
 
     }
 

@@ -3,6 +3,7 @@ package test.coreModule;
 import org.openqa.selenium.WebDriver;
 import test.Log.CreateLog;
 import test.Log.LogMessage;
+import test.beforeTest.TestData;
 import test.keywordScripts.UIBase;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
@@ -74,7 +75,7 @@ public class ExecuteTests {
                     logMessages.add( new LogMessage(false,"Prerequisite fullfiled")) ;
                 }
             } else {
-                logMessages.add(runSingleStep(testStep));
+                logMessages.add(runSingleStep(testStep,testCase));
                 if (!testStep.isPassed() && testStep.isCritical()) {
                     testCase.setPassed(false);
                     return logMessages;
@@ -86,12 +87,13 @@ public class ExecuteTests {
     }
 
 
-    public LogMessage runSingleStep(TestStep testStep) {
+    public LogMessage runSingleStep(TestStep testStep,TestCase testCase) {
         try {
             ArrayList<Object> objects = new ArrayList<Object>();
             // objects.add(webDriver);
             String actionName = testStep.getAction();
             String objectLocators = testStep.getObjectLocator();
+            testStep.setTestData(updateTestData(testCase.getTestCaseNumber(),testStep.getTestData(),testCase.getPreqData()));
             String testData = testStep.getTestData();
             Boolean executionFlag = testStep.isExecutionFlagOn();
             Boolean pageRefresh = testStep.isRefreshPageOn();
@@ -164,6 +166,7 @@ public class ExecuteTests {
            new UtilKeywordScript(webDriver).redirectHomePage() ;
            TestCase preqTCase = prerequiste.get() ;
            preqTCase.setTestCaseNumber(testCase.getTestCaseNumber());
+           preqTCase.setPreqData(UtilKeywordScript.jsonStringToMap(testStep.getTestData()));
            List<LogMessage> preqLogMessages =  executeTest(preqTCase) ;
             new UtilKeywordScript(webDriver).redirectHomePage() ;
             return preqLogMessages ;
@@ -177,7 +180,49 @@ public class ExecuteTests {
 
 
     private Boolean isItPrequisite(String action) {
-        if(action.equals(PropertyConfig.PREREQ_COMMAND)) return  true;
-        return  false ;
+        if (action.equals(PropertyConfig.PREREQ_COMMAND)) return true;
+        return false;
+    }
+
+    public String updateTestData(String testCaseId,String testData, Optional<Map> utilData){
+        try{
+            String finalTestData="";
+            String[] splitTestDatas=testData.split(",");
+            TestData prerequisiteTestData = TestData.getInstance();
+            prerequisiteTestData.setDriver(webDriver);
+            if(splitTestDatas.length>0)
+            {
+                for(String splitTestData:splitTestDatas){
+                    if(splitTestData.charAt(0)=='$'){
+                        splitTestData=splitTestData.substring(1);
+                        String[] testDataDetails = splitTestData.split("_");
+                        List<Map> datas= prerequisiteTestData.getData(testDataDetails[0].toUpperCase(),testCaseId);
+                        String indexValue = utilData.isPresent() ? Optional.ofNullable(data.get(testDataDetails[0])).orElse("") : "" ;
+                        if(indexValue != "")
+                            testDataDetails[2] = indexValue ;
+                        if(testDataDetails.length==2)
+                        {
+                            Map data= datas.get(0);
+                            finalTestData=finalTestData+ (String) data.get(testDataDetails[1]);
+
+                        }
+                        else if(testDataDetails.length==3)
+                        {
+                            Map data= datas.get(Integer.parseInt(testDataDetails[2]));
+                            finalTestData=finalTestData+ (String) data.get(testDataDetails[1]);
+                        }
+                    }
+                    else
+                        finalTestData=finalTestData+splitTestData;
+                    finalTestData=finalTestData+",";
+
+                }
+                finalTestData=finalTestData.replaceAll(",$", "");
+            }
+            return finalTestData;
+        }
+        catch (Exception ex){
+            return testData;
+        }
     }
 }

@@ -64,7 +64,9 @@ public class TestStep {
             return null;
         }
     }
-
+    public void setTestData(String testData){
+        step.put(PropertyConfig.TEST_DATA,testData);
+    }
     public boolean isCritical(){
         try {
             return  step.get(PropertyConfig.CRITICAL).toString().toLowerCase().equals("yes") ? true : false;

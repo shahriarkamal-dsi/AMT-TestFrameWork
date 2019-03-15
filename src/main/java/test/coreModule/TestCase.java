@@ -1,16 +1,15 @@
 package test.coreModule;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TestCase {
     private String testCaseNumber;
     private String testCaseName;
     private List<TestStep> testSteps ;
     private boolean passed ;
+
+    private Optional<Map> preqUtilData ;
 
     public TestCase(){
         testSteps = new ArrayList<TestStep>() ;
@@ -51,6 +50,14 @@ public class TestCase {
     }
     public void setPassed(Boolean val){
         passed = val ;
+    }
+
+    public void setPreqData(Optional<Map> data) {
+        this.preqUtilData = data ;
+    }
+
+    public Optional<Map> getPreqData() {
+        return this.preqUtilData ;
     }
 
 }
