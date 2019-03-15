@@ -141,7 +141,16 @@ public class TestData {
             }
         }
     }
+    public List<Map> getData(String datatype, String testCaseId){
+       switch(datatype){
+           case "PROPERTY": return PropertyData.get(testCaseId);
+           case  "LEASE": return LeaseData.get(testCaseId);
+           case "SPACE": return SpaceData.get(testCaseId);
+           case "RECURRINGPAYMENT": return RecurData.get(testCaseId);
+           default: return null;
 
+       }
+    }
 
    private void keepData() {
        try {

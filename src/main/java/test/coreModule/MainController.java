@@ -59,7 +59,6 @@ public class MainController {
         TestPlan testPlan = createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule testModule : modules){
-           // System.out.println(testModule.getModuleName());
             List<TestSuite>  testSuites = testModule.getAllTestSuits();
             for(TestSuite testSuite : testSuites){
                 ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("modules/" + testModule.getModuleName() + ".xlsx").getPath());
@@ -80,17 +79,17 @@ public class MainController {
 
         public void executeTestesInTestSuite(TestSuite testSuite){
            try {
+               LogReport logReport = LogReport.getInstance();
                List<TestCase> testCases = testSuite.getAllTestCases();
                ExecuteTests executeTests = new ExecuteTests(webDriver);
                for (TestCase testCase : testCases) {
-                   TestData testData = TestData.getInstance();
-                   testData.setDriver(webDriver);
-                   List<LogMessage> logMessages = testData.runPrequisites(testCase.getTestCaseNumber());
-                   LogReport logReport = LogReport.getInstance();
-                   if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))) {
+                   List<LogMessage> logMessages = createPrerequisiteData(testCase);
+                   if(!validateLogMessages(logMessages)) {
+                       logMessages.add(new LogMessage(false,"All Prerequisite data are not created"));
                        logReport.addTestcaseLogreport(testCase, logMessages);
                        return;
                    }
+                   logMessages.add(new LogMessage(false,"Prerequisite data creation done"));
                    logMessages.addAll(executeTests.executeTest(testCase));
                    logReport.addTestcaseLogreport(testCase, logMessages);
                    new UtilKeywordScript(webDriver).redirectHomePage();
@@ -156,6 +155,27 @@ public class MainController {
          file = new File("./Report/" + PropertyConfig.getPropertyValue("failedReprtName"));
         file.delete();
     }
+    private List<LogMessage> createPrerequisiteData(TestCase testCase)
+    {
+        List<LogMessage> logMessages = new ArrayList<>();
+        try
+        {
+            TestData testData = TestData.getInstance();
+            testData.setDriver(webDriver);
+            logMessages = testData.runPrequisites(testCase.getTestCaseNumber());
+            return logMessages;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logMessages.add(new LogMessage(false,"Prerequisite not handled"));
+            return logMessages;
+        }
 
 
     }
+    public static Boolean validateLogMessages(List<LogMessage> logMessages){
+        return logMessages.stream().noneMatch(o -> o.isPassed().equals(false));
+    }
+
+
+}
+
