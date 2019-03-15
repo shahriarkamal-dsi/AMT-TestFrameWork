@@ -197,7 +197,7 @@ public class ExecuteTests {
                         splitTestData=splitTestData.substring(1);
                         String[] testDataDetails = splitTestData.split("_");
                         List<Map> datas= prerequisiteTestData.getData(testDataDetails[0].toUpperCase(),testCaseId);
-                        String indexValue = utilData.isPresent() ? Optional.ofNullable(data.get(testDataDetails[0])).orElse("") : "" ;
+                        String indexValue = utilData.isPresent() ? Optional.ofNullable( (String) utilData.get().get(testDataDetails[0])).orElse("") : "" ;
                         if(indexValue != "")
                             testDataDetails[2] = indexValue ;
                         if(testDataDetails.length==2)
