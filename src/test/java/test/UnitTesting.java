@@ -17,10 +17,7 @@ import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -165,6 +162,17 @@ public class UnitTesting {
         UITree uiTree= new UITree(driver);
         String obj="//*[@id='treeContainer']";
         uiTree.AssetTreeMenuExpand(obj,"tree,taka");
+
+    }
+
+    @Test
+    public void TestgetPrequisiteTestCase() {
+        TestPlan tp =  new MainController().createTestPlanAndModule() ;
+        PreRequiste preRequiste = new PreRequiste() ;
+        //make sure in excel correspoding test case  row is yes.
+        Optional<TestCase> ts =   preRequiste.getPrequisiteTestCase("FASB", "5689132");
+        assertTrue(ts.isPresent());
+        assertTrue(ts.get().getTestCaseName().contains("FASB/IASB Lessee - Capitalization Threshold - Edit Revision - When IASB ROU Asset Capitalization Threshold is made less than the calculated ROU Asset, Lease Classification should not be Small Ticket Item"));
 
     }
 

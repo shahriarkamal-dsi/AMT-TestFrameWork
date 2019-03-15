@@ -42,6 +42,10 @@ public class TestCase {
         return  testSteps ;
     }
 
+    public void setTestSteps(List<TestStep> testSteps){
+        this.testSteps = new ArrayList<>(testSteps);
+    }
+
     public boolean isPassed() {
         return  passed;
     }

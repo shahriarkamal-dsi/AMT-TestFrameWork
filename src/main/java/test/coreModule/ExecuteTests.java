@@ -8,11 +8,13 @@ import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
+import javax.xml.ws.LogicalMessage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ExecuteTests {
 
@@ -60,6 +62,32 @@ public class ExecuteTests {
         List<TestStep> testSteps = testCase.getAllTestSteps();
         testCase.setPassed(true);
         for(TestStep testStep : testSteps) {
+            if(isItPrequisite(testStep.getAction())) {
+                logMessages.add( new LogMessage(true,"Prerequisite started : " + testStep.getTestStepDescription())) ;
+                List<LogMessage> preqLogMessages =  runPrequisite(testCase,testStep);
+                logMessages.addAll(preqLogMessages);
+                testCase.setPassed(preqLogMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
+                if(!testCase.isPassed()) {
+                    logMessages.add( new LogMessage(false,"Prerequisite not fullfiled : ")) ;
+                    return logMessages ;
+                } else {
+                    logMessages.add( new LogMessage(false,"Prerequisite fullfiled")) ;
+                }
+            } else {
+                logMessages.add(runSingleStep(testStep));
+                if (!testStep.isPassed() && testStep.isCritical()) {
+                    testCase.setPassed(false);
+                    return logMessages;
+                }
+            }
+        }
+        testCase.setPassed(logMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
+        return  logMessages ;
+    }
+
+
+    public LogMessage runSingleStep(TestStep testStep) {
+        try {
             ArrayList<Object> objects = new ArrayList<Object>();
             // objects.add(webDriver);
             String actionName = testStep.getAction();
@@ -72,10 +100,9 @@ public class ExecuteTests {
             int numberOfParams = 0;
 
             if (! executionFlag) {
-                LogMessage logMessage = new LogMessage(true,testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "(Skipped)");
+                testStep.setPassed(true);
+                return new LogMessage(true,testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "(Skipped)");
                 //logMessage.setSkippedTrue();
-                logMessages.add(logMessage)  ;
-                continue;
             }
             if(null != objectLocators && ! objectLocators.isEmpty()) {
                 objects.add(objectLocators);
@@ -87,21 +114,18 @@ public class ExecuteTests {
             }
             UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
             LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
-          //  UtilKeywordScript.delay(5);
             logMessage.setLogMessage(testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage() );
-            logMessages.add(logMessage);
-            if(!logMessage.isPassed()) {
-                testCase.setPassed(false);
-                if(critical)
-                    return logMessages;
+            testStep.setPassed(logMessage.isPassed());
+
+            if (pageRefresh){
+                new UIBase(webDriver).WaitingForPageLoad();
             }
-
-          if (pageRefresh){
-                uiBase.WaitingForPageLoad();
-          }
+            return  logMessage ;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            testStep.setPassed(false);
+            return new LogMessage(false, "exception occured running one test step " + ex.getMessage()) ;
         }
-
-        return logMessages;
 
     }
 
@@ -126,5 +150,34 @@ public class ExecuteTests {
                ex.printStackTrace();
                return  new LogMessage(false,"exception occured");
         }
+    }
+
+    public List<LogMessage> runPrequisite(TestCase testCase,TestStep testStep) {
+        try {
+           Optional<TestCase> prerequiste =  new PreRequiste().getPrequisiteTestCase(testStep.getFieldName().split(":")[0],testStep.getFieldName().split(":")[1]) ;
+           if(!prerequiste.isPresent()) {
+               return new ArrayList<LogMessage>()
+               {{
+                   add(new LogMessage(false,"no valid prequisite found for " + testStep.getFieldName()));
+               }};
+           }
+           new UtilKeywordScript(webDriver).redirectHomePage() ;
+           TestCase preqTCase = prerequiste.get() ;
+           preqTCase.setTestCaseNumber(testCase.getTestCaseNumber());
+           List<LogMessage> preqLogMessages =  executeTest(preqTCase) ;
+            new UtilKeywordScript(webDriver).redirectHomePage() ;
+            return preqLogMessages ;
+        } catch (Exception ex) {
+            return new ArrayList<LogMessage>()
+            {{
+                add(new LogMessage(false,"exception occured handling prerequiste " + ex.getMessage()));
+            }};
+        }
+    }
+
+
+    private Boolean isItPrequisite(String action) {
+        if(action.equals(PropertyConfig.PREREQ_COMMAND)) return  true;
+        return  false ;
     }
 }

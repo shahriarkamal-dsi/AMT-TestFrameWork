@@ -8,14 +8,19 @@ import java.util.List;
 import java.util.Optional;
 
 public class TestPlan {
+    private static TestPlan TEST_PLAN = new TestPlan() ;
     private String testPlanName ;
     private List<TestModule> testModules;
     private LocalDateTime creationTime  ;
 
-    public TestPlan() {
+    private TestPlan() {
         creationTime = LocalDateTime.now();
         testModules = new ArrayList<TestModule>();
     }
+
+   public static  TestPlan getInstance() {
+        return TEST_PLAN;
+   }
 
     public String  getTestPlanName(){
         return this.testPlanName;

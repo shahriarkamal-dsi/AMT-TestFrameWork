@@ -23,6 +23,7 @@ public class PropertyConfig {
     public static String FIELD_NAME = "FieldName" ;
     public static String CRITICAL = "Critical"  ;
     public static String SHEET_NAME = "SheetName"  ;
+    public static String  PREREQ_COMMAND = "@Prequisite" ;
     public static Integer INIT = 0 ;
     public static Integer CREATED = 1 ;
     public static Integer TESTED = 2 ;
