@@ -76,7 +76,9 @@ public class MainController {
                 ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("modules/" + moduleName + ".xlsx").getPath());
                 List<Map> records = readExcel.read(testSuite.getTestSuiteName());
                 for(Map record : records) {
-                    String testCaseNumber = (String) record.get(PropertyConfig.TC_ID);
+                    String testCaseNumber = Optional.ofNullable((String) record.get(PropertyConfig.TC_ID)).orElse("") ;
+                    if(testCaseNumber.isEmpty())
+                        continue;
                     testCaseNumber = testCaseNumber.split("\\.")[0];
                     TestCase testCase = testSuite.getTestCase(testCaseNumber);
                     if(null == testCase)

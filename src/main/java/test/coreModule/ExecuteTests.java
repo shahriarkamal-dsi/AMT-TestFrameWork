@@ -63,6 +63,13 @@ public class ExecuteTests {
         List<TestStep> testSteps = testCase.getAllTestSteps();
         testCase.setPassed(true);
         for(TestStep testStep : testSteps) {
+            //every step either create data or remove data or prequisite or normal step, if execultion flag is not set, it will not be executed
+            Boolean executionFlag = testStep.isExecutionFlagOn();
+            if (! executionFlag) {
+                testStep.setPassed(true);
+                logMessages.add(new LogMessage(true,testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "(Skipped)"));
+                continue;
+            }
             if(isItPrequisite(testStep.getAction())) {
                 logMessages.add( new LogMessage(true,"Prerequisite started : " + testStep.getTestStepDescription())) ;
                 List<LogMessage> preqLogMessages =  runPrequisite(testCase,testStep);
