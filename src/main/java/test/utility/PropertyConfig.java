@@ -23,11 +23,11 @@ public class PropertyConfig {
     public static String FIELD_NAME = "FieldName" ;
     public static String CRITICAL = "Critical"  ;
     public static String SHEET_NAME = "SheetName"  ;
-    public static String  PREREQ_COMMAND = "@PREQ" ;
+    public static String  PREREQ_COMMAND = "#PREQ" ;
     public static Integer INIT = 0 ;
     public static Integer CREATED = 1 ;
     public static Integer TESTED = 2 ;
-    public static Integer WAIT_TIME_SECONDS = 10 ;
+    public static Integer WAIT_TIME_SECONDS = 5 ;
     public static Integer NUMBER_OF_ITERATIONS =5;
 
 

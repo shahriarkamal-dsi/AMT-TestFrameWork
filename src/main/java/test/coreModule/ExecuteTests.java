@@ -72,7 +72,7 @@ public class ExecuteTests {
                     logMessages.add( new LogMessage(false,"Prerequisite not fullfiled : ")) ;
                     return logMessages ;
                 } else {
-                    logMessages.add( new LogMessage(false,"Prerequisite fullfiled")) ;
+                    logMessages.add( new LogMessage(true,"Prerequisite fullfiled")) ;
                 }
             } else {
                 logMessages.add(runSingleStep(testStep,testCase));
@@ -186,6 +186,8 @@ public class ExecuteTests {
 
     public String updateTestData(String testCaseId,String testData, Optional<Map> utilData){
         try{
+            if(Optional.ofNullable(testData).orElse("").equals(""))
+                return testData ;
             String finalTestData="";
             String[] splitTestDatas=testData.split(",");
             TestData prerequisiteTestData = TestData.getInstance();
@@ -193,12 +195,12 @@ public class ExecuteTests {
             if(splitTestDatas.length>0)
             {
                 for(String splitTestData:splitTestDatas){
-                    if(splitTestData.charAt(0)=='$'){
+                    if(splitTestData != "" && splitTestData.charAt(0)=='$'){
                         splitTestData=splitTestData.substring(1);
                         String[] testDataDetails = splitTestData.split("_");
                         List<Map> datas= prerequisiteTestData.getData(testDataDetails[0].toUpperCase(),testCaseId);
-                        String indexValue = utilData.isPresent() ? Optional.ofNullable( (String) utilData.get().get(testDataDetails[0])).orElse("") : "" ;
-                        if(indexValue != "")
+                       String indexValue = utilData.isPresent() ? Optional.ofNullable( (String) utilData.get().get(testDataDetails[0])).orElse("") : "" ;
+                       if(indexValue != "")
                             testDataDetails[2] = indexValue ;
                         if(testDataDetails.length==2)
                         {
@@ -222,6 +224,7 @@ public class ExecuteTests {
             return finalTestData;
         }
         catch (Exception ex){
+            ex.printStackTrace();
             return testData;
         }
     }

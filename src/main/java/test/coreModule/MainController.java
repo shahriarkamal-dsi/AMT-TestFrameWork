@@ -60,6 +60,8 @@ public class MainController {
         TestPlan testPlan = createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule testModule : modules){
+            if(testModule.getModuleName().equals("Preq"))
+                continue;
             List<TestSuite>  testSuites = testModule.getAllTestSuits();
             testSuites.stream().forEach(testSuite ->
             {
@@ -90,13 +92,16 @@ public class MainController {
                List<TestCase> testCases = testSuite.getAllTestCases();
                ExecuteTests executeTests = new ExecuteTests(webDriver);
                for (TestCase testCase : testCases) {
-                   List<LogMessage> logMessages = createPrerequisiteData(testCase);
+                   List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
+                   /*
+                  List<LogMessage> logMessages = createPrerequisiteData(testCase);
                    if(!validateLogMessages(logMessages)) {
                        logMessages.add(new LogMessage(false,"All Prerequisite data are not created"));
                        logReport.addTestcaseLogreport(testCase, logMessages);
                        return;
                    }
-                   logMessages.add(new LogMessage(false,"Prerequisite data creation done"));
+                   */
+                   logMessages.add(new LogMessage(true,"Prerequisite data creation done"));
                    logMessages.addAll(executeTests.executeTest(testCase));
                    logReport.addTestcaseLogreport(testCase, logMessages);
                    new UtilKeywordScript(webDriver).redirectHomePage();

@@ -9,7 +9,7 @@ public class TestCase {
     private List<TestStep> testSteps ;
     private boolean passed ;
 
-    private Optional<Map> preqUtilData ;
+    private Optional<Map> preqUtilData = Optional.empty() ;
 
     public TestCase(){
         testSteps = new ArrayList<TestStep>() ;
