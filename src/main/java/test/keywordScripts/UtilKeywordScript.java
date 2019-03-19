@@ -14,7 +14,7 @@ import java.util.logging.LoggingMXBean;
 
 public class UtilKeywordScript {
 
-    private WebDriver webDriver ;
+    private static WebDriver webDriver ;
 
     public UtilKeywordScript() {
 
@@ -34,7 +34,7 @@ public class UtilKeywordScript {
 
     }
 
-    public LogMessage redirectHomePage() {
+    public static LogMessage redirectHomePage() {
         try {
                     Set<String> windows = webDriver.getWindowHandles();
                     Iterator<String> iter = windows.iterator();
@@ -106,9 +106,9 @@ public class UtilKeywordScript {
             ex.printStackTrace();
         }
     }
-    public boolean isAlertPresent(){
+    public static boolean isAlertPresent(){
         boolean foundAlert = false;
-        WebDriverWait wait = new WebDriverWait(webDriver, 0);
+        WebDriverWait wait = new WebDriverWait(webDriver, 5);
         try {
             wait.until(ExpectedConditions.alertIsPresent());
             foundAlert = true;

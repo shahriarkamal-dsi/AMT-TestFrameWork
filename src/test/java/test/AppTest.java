@@ -3,8 +3,8 @@ package test;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import test.Log.LogMessage;
-import test.beforeTest.LeaseCreate;
-import test.beforeTest.PropertyCreate;
+import test.beforeTest.LeaseCreateAndSearch;
+import test.beforeTest.PropertyCreateAndSearch;
 import test.driver.DriverFactory;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.ReadExcel;
@@ -59,9 +59,9 @@ public class AppTest
         WebDriver driver = DriverFactory.createDriver("chrome", false);
         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
         utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
-        PropertyCreate propertyCreate = new PropertyCreate(driver);
+        PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(driver);
         for(Map record : records) {
-            propertyCreate.createProperty(record);
+            propertyCreateAndSearch.createProperty(record);
         }
         UtilKeywordScript.closeAllPages(driver);
 
@@ -76,47 +76,13 @@ public class AppTest
         WebDriver driver = DriverFactory.createDriver("chrome", false);
         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
         utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
-        LeaseCreate leaseCreate = new LeaseCreate(driver);
+        LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
         for(Map record : records){
-            LogMessage logMessage =  leaseCreate.createLease(record);
+            LogMessage logMessage =  leaseCreateAndSearch.createLease(record);
             assertTrue(logMessage.isPassed());
         }
         UtilKeywordScript.closeAllPages(driver);
 
-    }
-
-    @Test
-    public void spaceCreate(){
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
-        List<Map> records = readExcel.read("Space");
-        WebDriver driver = DriverFactory.createDriver("chrome", false);
-        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
-        utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
-        LeaseCreate leaseCreate = new LeaseCreate(driver);
-        for(Map record : records){
-            LogMessage logMessage =  leaseCreate.createSpace(record);
-            assertTrue(logMessage.isPassed());
-        }
-        UtilKeywordScript.closeAllPages(driver);
-
-    }
-
-    @Test
-    public void recurringPaymentsAdd(){
-        ClassLoader classLoader = getClass().getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
-        List<Map> records = readExcel.read("RecurringPayment");
-        WebDriver driver = DriverFactory.createDriver("chrome", false);
-        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
-        utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
-        LeaseCreate leaseCreate = new LeaseCreate(driver);
-        for(Map record : records){
-            LogMessage logMessage = leaseCreate.addRecurringPayment(record);
-            assertTrue(logMessage.isPassed());
-        }
-        UtilKeywordScript.closeAllPages(driver);
     }
 
 }
