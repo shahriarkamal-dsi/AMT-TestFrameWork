@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class MainController {
-        final ClassLoader CLASS_LOADER = getClass().getClassLoader();
+        final static ClassLoader CLASS_LOADER = MainController.class.getClassLoader();
         private WebDriver webDriver;
 
         public MainController(){
@@ -42,6 +42,7 @@ public class MainController {
                     TestSuite testSuite = module.getTestSuite(sheetName);
                     if(null ==  testSuite){
                         testSuite = new TestSuite(sheetName);
+                        testSuite.setState(PropertyConfig.INIT);
                         module.addTestSuite(testSuite);
                     }
                     TestCase testCase = new TestCase(testCaseID);
@@ -59,22 +60,32 @@ public class MainController {
         TestPlan testPlan = createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule testModule : modules){
+            if(testModule.getModuleName().equals("Preq"))
+                continue;
             List<TestSuite>  testSuites = testModule.getAllTestSuits();
-            for(TestSuite testSuite : testSuites){
-                ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("modules/" + testModule.getModuleName() + ".xlsx").getPath());
+            testSuites.stream().forEach(testSuite ->
+            {
+                readTestSuite(testSuite,testModule.getModuleName());
+                executeTestesInTestSuite(testSuite);
+            });
+        }
+        EmailSend.sendLogReport();
+        }
+
+        public static void readTestSuite(TestSuite testSuite,String moduleName) {
+                ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("modules/" + moduleName + ".xlsx").getPath());
                 List<Map> records = readExcel.read(testSuite.getTestSuiteName());
                 for(Map record : records) {
-                    String testCaseNumber = (String) record.get(PropertyConfig.TC_ID);
+                    String testCaseNumber = Optional.ofNullable((String) record.get(PropertyConfig.TC_ID)).orElse("") ;
+                    if(testCaseNumber.isEmpty())
+                        continue;
                     testCaseNumber = testCaseNumber.split("\\.")[0];
                     TestCase testCase = testSuite.getTestCase(testCaseNumber);
                     if(null == testCase)
                         continue;
                     testCase.addTestStep(new TestStep(record));
                 }
-                executeTestesInTestSuite(testSuite);
-                }
-            }
-        EmailSend.sendLogReport();
+            testSuite.setState(PropertyConfig.CREATED);
         }
 
         public void executeTestesInTestSuite(TestSuite testSuite){
@@ -83,13 +94,16 @@ public class MainController {
                List<TestCase> testCases = testSuite.getAllTestCases();
                ExecuteTests executeTests = new ExecuteTests(webDriver);
                for (TestCase testCase : testCases) {
-                   List<LogMessage> logMessages = createPrerequisiteData(testCase);
+                   List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
+                   /*
+                  List<LogMessage> logMessages = createPrerequisiteData(testCase);
                    if(!validateLogMessages(logMessages)) {
                        logMessages.add(new LogMessage(false,"All Prerequisite data are not created"));
                        logReport.addTestcaseLogreport(testCase, logMessages);
                        return;
                    }
-                   logMessages.add(new LogMessage(false,"Prerequisite data creation done"));
+                 */
+                   logMessages.add(new LogMessage(true,"Prerequisite data creation done"));
                    logMessages.addAll(executeTests.executeTest(testCase));
                    logReport.addTestcaseLogreport(testCase, logMessages);
                    new UtilKeywordScript(webDriver).redirectHomePage();
@@ -133,7 +147,7 @@ public class MainController {
         long start = System.currentTimeMillis();
         ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("testPlan/" + PropertyConfig.MODULE_CONTROLLER + ".xlsx").getPath());
         List<Map> records = readExcel.read(PropertyConfig.MODULE_CONTROLLER);
-        TestPlan testPlan = new TestPlan();
+        TestPlan testPlan = TestPlan.getInstance() ;
         testPlan.setTestPlanName(LocalDateTime.now().toString());
 
         for (Map map : records) {

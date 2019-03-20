@@ -11,6 +11,7 @@ public class TestSuite {
     private List<TestCase> testCases ;
     private Map<String,Integer> testCaseIndex;
     private Integer index = 0 ;
+    private Integer state ;
 
     public TestSuite(){
         testCases = new ArrayList<TestCase>() ;
@@ -47,6 +48,14 @@ public class TestSuite {
         if(testCaseIndex.containsKey(testCase.getTestCaseNumber())){
             testCases.set(testCaseIndex.get(testCase.getTestCaseNumber()),testCase);
         }
+    }
+
+    public Integer getState() {
+         return this.state ;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     public List<TestCase>  getAllTestCases(){

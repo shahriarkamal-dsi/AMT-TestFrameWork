@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
+import test.coreModule.TestPlan;
 import test.objectLocator.WebObjectSearch;
 
 import java.util.*;
@@ -501,6 +502,30 @@ public class UITable extends  UtilKeywordScript{
         } catch (Exception ex) {
             ex.printStackTrace();
             return new ArrayList<WebElement>();
+        }
+    }
+
+    public LogMessage StoreColumnValue(String objectLocatorData,String testData) {
+        try {
+            String varName ;
+            String columnName = "" ;
+            String rowIndex = "" ;
+            if(!validateTestData(testData,3))
+                return new LogMessage(false, "test data not valid");
+            varName = testData.split(",")[0] ;
+            columnName = testData.split(",")[1] ;
+            rowIndex = testData.split(",")[2] ;
+            Map<String, WebElement> row = getSingleRowfromTable(objectLocatorData,null,null,Integer.valueOf(rowIndex));
+            if(!row.containsKey(columnName))
+                return new LogMessage( false, "column name is not present") ;
+            String columnValue = row.get(columnName).getText() ;
+            TestPlan.getInstance().setStoreData(varName,columnValue);
+
+            return new LogMessage( true, "column value is stored") ;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage( false, "exception occured in StoreColumnValue  " + ex.getMessage()) ;
         }
     }
 
