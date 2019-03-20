@@ -2,8 +2,11 @@ package test.keywordScripts;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
+import test.utility.PropertyConfig;
 
 import java.util.Map;
 
@@ -24,7 +27,7 @@ public class UIText {
             userWeb.clear();
             UtilKeywordScript.delay(1);
             userWeb.click();
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(1);
             userWeb.sendKeys(textData);
             return new LogMessage(true,"text is set up");
         } catch(Exception ex){
@@ -32,8 +35,5 @@ public class UIText {
             return new LogMessage(false,"exception occured:- " + ex.getMessage());
         }
     }
-
-
-
 
 }
