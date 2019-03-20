@@ -5,12 +5,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
-import test.objectLocator.WebObject;
 import test.utility.PropertyConfig;
 
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.LoggingMXBean;
 
 public class UtilKeywordScript {
 
@@ -156,7 +154,7 @@ public class UtilKeywordScript {
             uiDropDown.SelectItem(objectLocatorPrefix + "searchOption", selectOption);
             uiBase.Click(objectLocatorPrefix + "btnSearch");
 
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
             UtilKeywordScript.switchLastTab(webDriver);
 
             return new LogMessage(true, "Search complete");

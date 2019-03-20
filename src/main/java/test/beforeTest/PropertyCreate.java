@@ -4,13 +4,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-import sun.rmi.runtime.Log;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
-import java.util.List;
 import java.util.Map;
 
 public class PropertyCreate {
@@ -100,7 +98,7 @@ public class PropertyCreate {
                 return new LogMessage(false, "Property not found");
             }
             else{
-                return new LogMessage(false, "Property  found");
+                return new LogMessage(true, "Property  found");
             }
         }catch (Exception e){
             return new LogMessage(false, "Exception occur "+ e.getMessage());
@@ -144,10 +142,10 @@ public class PropertyCreate {
             }
 
 
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
             webDriver.close();
             UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
             return new LogMessage(true, "Navigate to property complete");
         }catch (Exception e){
             return new LogMessage(false, "Exception occur " + e.getMessage());

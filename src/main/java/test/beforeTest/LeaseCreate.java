@@ -2,7 +2,6 @@ package test.beforeTest;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
@@ -302,10 +301,10 @@ public class LeaseCreate {
             UtilKeywordScript.delay(10);
             UtilKeywordScript.switchLastTab(webDriver);
             LogMessage logMessage =  uiTable.ClickLinkInTable(objectLocatorPrefix + "leasetable","DBA Name," + (String)data.get("LeaseName"));
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
             webDriver.close();
             UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
 
             return new LogMessage(true, " Lease found successfully");
         }catch (Exception e){
@@ -330,7 +329,7 @@ public class LeaseCreate {
             if (!clickLinkLog.isPassed())
                 return new LogMessage(false, "exception occur during expanding property information");
 
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
 
             UIPanel uiPanel = new UIPanel(webDriver);
             LogMessage log = uiPanel.VerifyPanelContentTrue(objectLocatorPrefix +"tbLease", (String)data.get("dbaName"));

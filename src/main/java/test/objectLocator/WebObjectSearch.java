@@ -17,7 +17,7 @@ public class WebObjectSearch {
             int count=0;
             while(count<PropertyConfig.NUMBER_OF_ITERATIONS) {
                 if (null == webElements || webElements.isEmpty()) {
-                    UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                    UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
                     webElements = webObjectSearchType.findElement(driver, (String) objectLocator.get(PropertyConfig.OBJECT_LOCATORS));
                     count++;
                 }
