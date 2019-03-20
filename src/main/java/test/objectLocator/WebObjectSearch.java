@@ -1,5 +1,6 @@
 package test.objectLocator;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.keywordScripts.UtilKeywordScript;
@@ -56,6 +57,21 @@ public class WebObjectSearch {
             else
                 return userelemnts.get(userelemnts.size()-1);
         } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    static public WebElement getChildWebElement(WebDriver webDriver,String parentObjectLocator,String childObjectLocator){
+        try{
+            Map parentObjectLocatorData = ObjectLocatorDataStorage.getObjectLocator(parentObjectLocator);
+            Map childObjectLocatorData = ObjectLocatorDataStorage.getObjectLocator(childObjectLocator);
+            List<WebElement> webElements=webDriver.findElements(By.xpath((String)parentObjectLocatorData.get(PropertyConfig.OBJECT_LOCATORS)+(String)childObjectLocatorData.get(PropertyConfig.OBJECT_LOCATORS)));
+            if(null == webElements || webElements.isEmpty())
+                return null;
+            else
+                return webElements.get(webElements.size()-1);
+
+        }catch (Exception e){
             e.printStackTrace();
             return null;
         }

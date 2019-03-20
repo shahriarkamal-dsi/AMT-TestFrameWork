@@ -142,6 +142,7 @@ public class TestData {
         }
     }
     public List<Map> getData(String datatype, String testCaseId){
+       datatype=datatype.toUpperCase();
        switch(datatype){
            case "PROPERTY": return PropertyData.get(testCaseId);
            case  "LEASE": return LeaseData.get(testCaseId);

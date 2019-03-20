@@ -6,6 +6,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.ObjectLocatorDataStorage;
+import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
 import java.util.*;
@@ -60,7 +61,6 @@ public class LeaseCreateAndSearch {
     public LogMessage createLease(Map data){
 
         try {
-            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
             String[] dropDownFields = new String[] {"leaseStatus","leaseType","billingType"};
             String[] textFields = new String[] {"dbaName","leaseCode","beginDate","expirationDate"};
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocatorPrefix + "propertyList");
@@ -123,7 +123,9 @@ public class LeaseCreateAndSearch {
 
             UtilKeywordScript.delay(10);
             UtilKeywordScript.switchLastTab(webDriver);
+            UtilKeywordScript.delay(10);
             LogMessage logMessage =  uiTable.ClickLinkInTable(objectLocatorPrefix + "leasetable","DBA Name," + (String)data.get("LeaseName"));
+            System.out.println(logMessage.getLogMessage());
             UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
             webDriver.close();
             UtilKeywordScript.switchLastTab(webDriver);
@@ -168,34 +170,6 @@ public class LeaseCreateAndSearch {
         }
     }
 
-
-
-
-    public LogMessage navigateToLeasePageFromHome(Map data){
-        try{
-            String  objectLocatorPrefix = "Common.Property.";
-            UILink uiLink = new UILink(webDriver);
-            PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(webDriver);
-
-            LogMessage navigationLog = propertyCreateAndSearch.navigateToProperty(data);
-            if (!navigationLog.isPassed())
-                return new LogMessage(false, "Cannot navigate to property page");
-
-            LogMessage clickLinkLog = uiLink.ClickLink(null,"Expand All");
-            if (!clickLinkLog.isPassed())
-                return new LogMessage(false, "exception occur during expanding property information");
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
-            LogMessage logMessage=navigateToLeasePageFromProperty((String) data.get("dbaName"));
-            if(logMessage.isPassed())
-                return new LogMessage(true, "Navigated to lease page");
-            else
-                return new LogMessage(false, "Lease does not exist");
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return new LogMessage(false, "Exception occur" + e.getMessage());
-        }
-    }
     public LogMessage navigateToLeasePageFromProperty(String leaseName){
         String  objectLocatorPrefix = "Common.Property.";
         UILink uiLink = new UILink(webDriver);
@@ -207,16 +181,17 @@ public class LeaseCreateAndSearch {
             return new LogMessage(false, "Lease does not exist");
         }
     }
-    public List<LogMessage> isLeaseandSpaceExists(List<Map> leaseList, List<Map> spaceList, List<Map> recurList){
+    public List<LogMessage> isLeaseSpaceRecurExistsWithinAProperty(List<Map> leaseList, List<Map> spaceList, List<Map> recurList){
         List<LogMessage> logMessages= new ArrayList<>();
         try{
             PropertyCreateAndSearch propertyCreateAndSearch=new PropertyCreateAndSearch(webDriver);
+            //property information is avaiable in lease information
             propertyCreateAndSearch.navigateToProperty(leaseList.get(0));
             String leaseObjectLocator="Common.Property.tbLease";
             String spaceObjectLocator="Common.Property.tbSpace";
             String recurObjectLocator="Common.Lease.tbRPayment";
             UILink uiLink=new UILink(webDriver);
-            LeaseCreateAndSearch leaseCreateAndSearch =new LeaseCreateAndSearch(webDriver);
+            UIPanel uiPanel = new UIPanel(webDriver);
             LogMessage clickLinkLog = uiLink.ClickLink(null,"Expand All");
 
             if (!clickLinkLog.isPassed()){
@@ -224,8 +199,6 @@ public class LeaseCreateAndSearch {
                 return logMessages;
             }
             UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
-
-            UIPanel uiPanel = new UIPanel(webDriver);
             for(Map lease:leaseList){
                 LogMessage logMessage=uiPanel.VerifyPanelContentTrue(leaseObjectLocator, (String) lease.get("dbaName"));
                 if(logMessage.isPassed()) {
@@ -247,8 +220,6 @@ public class LeaseCreateAndSearch {
             Map<String, List<Map>> allRecur = new HashMap<>();
 
             for (Map recur : recurList) {
-                if (null == recur.get(PropertyConfig.EXECUTION_FLAG) || recur.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !recur.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
-                    continue;
                 if (!allRecur.containsKey(recur.get("LeaseName"))) {
                     List<Map> record = new ArrayList<Map>();
                     record.add(recur);
@@ -259,28 +230,31 @@ public class LeaseCreateAndSearch {
 
             }
             for (String key : allRecur.keySet()) {
-                leaseCreateAndSearch.navigateToLeasePageFromProperty(key);
+                mainWindow=webDriver.getWindowHandle();
+                navigateToLeasePageFromProperty(key);
                 UtilKeywordScript.switchLastTab(webDriver);
-                UIBase uiBase=new UIBase(webDriver);
                 UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
                 LogMessage log = uiLink.ClickLink(null,"Expand All");
                 UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
                 if (!log.isPassed()) {
-                    logMessages.add(new LogMessage(false, "exception occur during expanding property information"));
+                    logMessages.add(new LogMessage(false, "exception occur during expanding lease information"));
                     return logMessages;
                 }
                 List<Map> recurUnderALease=allRecur.get(key);
                 for(Map recur:recurUnderALease){
-                    String chargetype=(String) recur.get("chargeType");
-                    LogMessage logMessageofCharge=uiPanel.VerifyPanelContentTrue(recurObjectLocator, chargetype.split("-")[0].trim());
-                    LogMessage logMessageofSpace=uiPanel.VerifyPanelContentTrue(recurObjectLocator, (String) recur.get("spaceInfo"));
-                    if(logMessageofCharge.isPassed() && logMessageofSpace.isPassed()) {
-                        logMessages.add(new LogMessage(true, "Recurring Payment with charge type " + recur.get("chargeType") + " found under lease named " + recur.get("LeaseName")));
-                    }
-                    else {
-                        logMessages.add(new LogMessage(false, "Recurring Payment with charge type " + recur.get("chargeType") + " was not found under lease named " + recur.get("LeaseName")));
-                    }
+                    logMessages.add(isRecurExistsWithinLease(recurObjectLocator,recur));
                 }
+                Set<String> set =webDriver.getWindowHandles();
+                Iterator<String> itr= set.iterator();
+                while(itr.hasNext()){
+                    String childWindow=itr.next();
+                    if(!mainWindow.equals(childWindow)){
+                        webDriver.switchTo().window(childWindow);
+                        webDriver.close();
+                    }
+
+                }
+                webDriver.switchTo().window(mainWindow);
 
             }
             return logMessages;
@@ -289,6 +263,60 @@ public class LeaseCreateAndSearch {
             return logMessages;
         }
     }
+ public LogMessage isRecurExistsWithinLease(String recurObjectLocator,Map recur){
+        try{
+            UIPanel uiPanel = new UIPanel(webDriver);
+            String chargetype=(String) recur.get("chargeType");
+            LogMessage logMessageofCharge=uiPanel.VerifyPanelContentTrue(recurObjectLocator, chargetype.split("-")[0].trim());
+            LogMessage logMessageofSpace=uiPanel.VerifyPanelContentTrue(recurObjectLocator, (String) recur.get("spaceInfo"));
+            if(logMessageofCharge.isPassed() && logMessageofSpace.isPassed()) {
+                return new LogMessage(true, "Recurring Payment with charge type " + recur.get("chargeType") + " found under lease named " + recur.get("LeaseName"));
+            }
+            else {
+                return new LogMessage(false, "Recurring Payment with charge type " + recur.get("chargeType") + " was not found under lease named " + recur.get("LeaseName"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, "Exception occured in Recurring Payment with charge type " + recur.get("chargeType") + " was not found under lease named " + recur.get("LeaseName")+e.getMessage());
+        }
+ }
+    public LogMessage deleteLease(String propertyName,String propertyCode, String dbaName){
+        UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+        try {
+            Map<String, String> data = new HashMap<>();
+            data.put("propertyName", propertyName);
+            data.put("propertyCode", propertyCode);
+            data.put("LeaseName", dbaName);
+            LogMessage logMessageSearch=searchLease(data);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UIBase uiBase=new UIBase(webDriver);
+            String objectLocatorData="Common.Lease.";
+            if(logMessageSearch.isPassed()) {
+                WebElement webElement = WebObjectSearch.getChildWebElement(webDriver,objectLocatorData + "header", objectLocatorData + "delete");
+                uiBase.Click(webElement);
+                while ( utilKeywordScript.isAlertPresent()) {
+                    webDriver.switchTo().alert().accept();
+                }
+                UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                if (uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome").isPassed()) {
+                    utilKeywordScript.redirectHomePage();
+                    return new LogMessage(true, "Lease is deleted");
+                }
+                else {
+                    utilKeywordScript.redirectHomePage();
+                    return new LogMessage(false, "Lease cannot be deleted");
+                }
 
+            }
+            else {
+                utilKeywordScript.redirectHomePage();
+                return new LogMessage(false, "Cannot navigate to lease page");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            utilKeywordScript.redirectHomePage();
+            return new LogMessage(false,"Exception occur in lease delete "+e.getMessage());
+        }
+    }
 
 }

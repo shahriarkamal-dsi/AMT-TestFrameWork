@@ -8,8 +8,6 @@ import test.keywordScripts.UIBase;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
-
-import javax.xml.ws.LogicalMessage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

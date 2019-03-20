@@ -6,6 +6,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.WebObjectSearch;
+import test.utility.PropertyConfig;
 
 import java.util.*;
 
@@ -43,8 +44,6 @@ public class SpaceCreateAndSearch {
     public LogMessage createSpace(Map data){
         try{
             String  objectLocatorPrefix = "Common.Space." ;
-            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
-
             UILink uiLink = new UILink(webDriver);
 
             UIText uiText = new UIText(webDriver);
@@ -119,6 +118,68 @@ public class SpaceCreateAndSearch {
             e.printStackTrace();
             return new LogMessage(false, "Exception occur" + e.getMessage());
 
+        }
+    }
+    public LogMessage navigateToSpacePageFromProperty(String spaceName){
+        String  objectLocatorPrefix = "Common.Property.";
+        UILink uiLink = new UILink(webDriver);
+        LogMessage log =uiLink.ClickLink(objectLocatorPrefix +"tbSpace", spaceName);
+        UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+        UtilKeywordScript.switchLastTab(webDriver);
+        if (log.isPassed()){
+            return new LogMessage(true, "Navigated to Space page");
+        }else {
+            return new LogMessage(false, "Space does not exist");
+        }
+    }
+    public List<LogMessage> deleteSpace(String propertyName,String propertyCode,List<String> spaceNames){
+        List<LogMessage> logMessages=new ArrayList<>();
+        UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+        try {
+            PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(webDriver);
+            UIBase uiBase=new UIBase(webDriver);
+            //Lease and space delete have the same object locator
+            String objectLocatorData="Common.Lease.";
+            Map<String, String> data = new HashMap<>();
+            data.put("propertyName", propertyName);
+            data.put("propertyCode", propertyCode);
+            LogMessage logMessageProperty = propertyCreateAndSearch.navigateToProperty(data);
+            String mainWindow=webDriver.getWindowHandle();
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            if(logMessageProperty.isPassed()) {
+                for (String spaceName : spaceNames) {
+                    LogMessage logMessageSpace = navigateToSpacePageFromProperty(spaceName);
+                    UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                    if (logMessageSpace.isPassed()) {
+                        WebElement webElement = WebObjectSearch.getChildWebElement(webDriver, objectLocatorData + "header", objectLocatorData + "delete");
+                        uiBase.Click(webElement);
+                        while (utilKeywordScript.isAlertPresent()) {
+                            webDriver.switchTo().alert().accept();
+                        }
+                        LogMessage logMessage = uiBase.WaitingForSuccessfullPopup();
+                        webDriver.close();
+                        utilKeywordScript.switchToPreviousTab(webDriver,mainWindow);
+                        if (logMessage.isPassed()) {
+                            logMessages.add(new LogMessage(true, "Space is deleted"));
+                        }
+                        else {
+                            logMessages.add(new LogMessage(false, "Space cannot be deleted"));
+                        }
+                    } else
+                        logMessages.add(new LogMessage(false, "Space doesnot exist"));
+
+                }
+            }
+            else {
+                logMessages.add(new LogMessage(false, "Property doesnot exist"));
+            }
+            utilKeywordScript.redirectHomePage();
+            return logMessages;
+        }catch (Exception e){
+            e.printStackTrace();
+            utilKeywordScript.redirectHomePage();
+            logMessages.add(new LogMessage(false,"Exception occur in space delete "+e.getMessage()));
+            return logMessages;
         }
     }
 }
