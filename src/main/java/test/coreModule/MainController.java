@@ -94,15 +94,14 @@ public class MainController {
                List<TestCase> testCases = testSuite.getAllTestCases();
                ExecuteTests executeTests = new ExecuteTests(webDriver);
                for (TestCase testCase : testCases) {
-                   List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
-                   /*
+
                   List<LogMessage> logMessages = createPrerequisiteData(testCase);
                    if(!validateLogMessages(logMessages)) {
                        logMessages.add(new LogMessage(false,"All Prerequisite data are not created"));
                        logReport.addTestcaseLogreport(testCase, logMessages);
                        return;
                    }
-                 */
+
                    logMessages.add(new LogMessage(true,"Prerequisite data creation done"));
                    logMessages.addAll(executeTests.executeTest(testCase));
                    logReport.addTestcaseLogreport(testCase, logMessages);
