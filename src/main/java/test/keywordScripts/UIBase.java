@@ -205,4 +205,18 @@ public class UIBase {
     }
 
 
+    public LogMessage compareGreaterThanValue(String value,String compareTovalue ) {
+        try {
+            Integer num1 = Integer.valueOf(value) ;
+            Integer num2 = Integer.valueOf(compareTovalue) ;
+           return  num1.compareTo(num1) == 1 ? new LogMessage(true,  "given value greater than  " + compareTovalue) :  new LogMessage(false,  "given value is not greater than  " + compareTovalue) ;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occured " + ex.getMessage());
+
+        }
+    }
+
+
+
 }

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -199,6 +200,26 @@ public class UnitTesting {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testgetPrequisiteTestCase() {
+        TestPlan tp =  new MainController().createTestPlanAndModule() ;
+        PreRequiste preRequiste = new PreRequiste() ;
+        //make sure in excel correspoding test case  row is yes.
+        Optional<TestCase> ts =   preRequiste.getPrequisiteTestCase("FASB", "5689132");
+        assertTrue(ts.isPresent());
+        assertTrue(ts.get().getTestCaseName().contains("FASB/IASB Lessee - Capitalization Threshold - Edit Revision - When IASB ROU Asset Capitalization Threshold is made less than the calculated ROU Asset, Lease Classification should not be Small Ticket Item"));
+
+    }
+
+    @Test
+    public void testJsontoMap(){
+        Optional<Map> map =  UtilKeywordScript.jsonStringToMap( "p:0,l:0,s:2") ;
+        Map m = map.get() ;
+        assertTrue(m.get("p").equals("0"));
+        assertTrue(m.get("s").equals("2"));
+
     }
 
 
