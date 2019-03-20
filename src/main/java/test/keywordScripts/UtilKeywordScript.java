@@ -7,12 +7,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.utility.PropertyConfig;
 
-import java.util.Iterator;
-import java.util.Set;
+
+
+import java.util.*;
+
 
 public class UtilKeywordScript {
 
-    private WebDriver webDriver ;
+    private static WebDriver webDriver ;
 
     public UtilKeywordScript() {
 
@@ -32,7 +34,7 @@ public class UtilKeywordScript {
 
     }
 
-    public LogMessage redirectHomePage() {
+    public static LogMessage redirectHomePage() {
         try {
                     Set<String> windows = webDriver.getWindowHandles();
                     Iterator<String> iter = windows.iterator();
@@ -104,9 +106,9 @@ public class UtilKeywordScript {
             ex.printStackTrace();
         }
     }
-    public boolean isAlertPresent(){
+    public static boolean isAlertPresent(){
         boolean foundAlert = false;
-        WebDriverWait wait = new WebDriverWait(webDriver, 0);
+        WebDriverWait wait = new WebDriverWait(webDriver, 5);
         try {
             wait.until(ExpectedConditions.alertIsPresent());
             foundAlert = true;
@@ -171,6 +173,20 @@ public class UtilKeywordScript {
     public static boolean  isEmpty(String inputString){
         if(null == inputString ) return  true;
         return removeSpaceAndNewline(inputString).isEmpty();
+    }
+
+    public static Optional<Map> jsonStringToMap(String value) {
+            try {
+                String[] items = value.split(",") ;
+                Map map = new HashMap() ;
+                for(String item : items) {
+                    map.put(item.split(":")[0],item.split(":")[1]) ;
+                }
+                return Optional.ofNullable(map) ;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Optional.empty();
+        }
     }
 
 }

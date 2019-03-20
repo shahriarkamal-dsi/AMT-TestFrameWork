@@ -9,16 +9,16 @@ import test.keywordScripts.*;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
-import java.util.Map;
+import java.util.*;
 
-public class PropertyCreate {
+public class PropertyCreateAndSearch {
     private WebDriver webDriver;
 
-    public PropertyCreate(WebDriver driver) {
+    public PropertyCreateAndSearch(WebDriver driver) {
         this.webDriver = driver ;
     }
 
-    public PropertyCreate(){
+    public PropertyCreateAndSearch(){
 
     }
 
@@ -85,6 +85,7 @@ public class PropertyCreate {
 
     }
 
+
     public LogMessage isPropertyExist(Map data){
         try{
             String  objectLocatorPrefix = "Common.Property.";
@@ -95,12 +96,15 @@ public class PropertyCreate {
 
             Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
             if(null == row || row.isEmpty()){
+                UtilKeywordScript.redirectHomePage();
                 return new LogMessage(false, "Property not found");
             }
             else{
+                UtilKeywordScript.redirectHomePage();
                 return new LogMessage(true, "Property  found");
             }
         }catch (Exception e){
+            UtilKeywordScript.redirectHomePage();
             return new LogMessage(false, "Exception occur "+ e.getMessage());
 
         }
@@ -121,13 +125,13 @@ public class PropertyCreate {
 
             Map<String, WebElement> propertyRow = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
             if(null == propertyRow || propertyRow.isEmpty()){
+                UtilKeywordScript.redirectHomePage();
                 return new LogMessage(false, "Property not found");
+
             }
             for (String key : propertyRow.keySet()) {
-                if(key.split(",").length<2)
-                    continue;
-                String clName = key.split(",")[1];
-                if(columnName.equals(clName)){
+                String clName = Optional.ofNullable(key).orElse("noValue");
+                if(clName.contains(columnName)){
                     WebElement element = propertyRow.get(key) ;
                     String text = element.getText();
                     if(columnValue.equals(text)) {
@@ -142,14 +146,44 @@ public class PropertyCreate {
             }
 
 
-            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
             webDriver.close();
             UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
             return new LogMessage(true, "Navigate to property complete");
         }catch (Exception e){
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
     }
+    public LogMessage deleteProperty(String propertyName, String propertyCode){
+        try{
+            String  objectLocatorPrefix = "Common.Property.";
+            Map<String,String> map =new HashMap<>();
+            map.put("propertyCode",propertyCode);
+            map.put("propertyName",propertyName);
+            UIBase uiBase=new UIBase(webDriver);
+            LogMessage logMessage=navigateToProperty(map);
+            if(logMessage.isPassed()) {
+                WebElement webElement;
+                webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "delete");
+                webElement.click();
+                while (UtilKeywordScript.isAlertPresent()) {
+                    webDriver.switchTo().alert().accept();
+                }
+                UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                if (uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome").isPassed())
+                    return new LogMessage(true, "Property is deleted");
+                else
+                    return new LogMessage(false, "Property is not deleted");
+            }
+            else
+                return new LogMessage(false, "Property is doesnot exists");
+
+        }catch (Exception e){
+            return new LogMessage(false, "Exception occur " + e.getMessage());
+        }
+
+    }
+
 
 }
