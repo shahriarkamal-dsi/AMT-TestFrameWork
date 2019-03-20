@@ -348,7 +348,7 @@ public class UITable extends  UtilKeywordScript{
             if(columnValue.equals(element.getText())) {
                 return new LogMessage(true, "proper cell is  present");
             }
-            return new LogMessage(true, "proper cell is not present.");
+            return new LogMessage(false, "proper cell is not present.");
         } catch(Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false,"exception occured: " + ex.getMessage());
