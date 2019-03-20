@@ -204,21 +204,23 @@ public class ExecuteTests {
                 for(String splitTestData:splitTestDatas){
                     if(splitTestData != "" && splitTestData.charAt(0)=='$'){
                         splitTestData=splitTestData.substring(1);
-                        String[] testDataDetails = splitTestData.split("_");
-                        List<Map> datas= prerequisiteTestData.getData(testDataDetails[0].toUpperCase(),testCaseId);
-                       String indexValue = utilData.isPresent() ? Optional.ofNullable( (String) utilData.get().get(testDataDetails[0])).orElse("") : "" ;
-                       if(indexValue != "")
-                            testDataDetails[2] = indexValue ;
-                        if(testDataDetails.length==2)
-                        {
-                            Map data= datas.get(0);
-                            finalTestData=finalTestData+ (String) data.get(testDataDetails[1]);
+                        String storeValue = TestPlan.getInstance().getStoreData(splitTestData) ;
+                        if(null != storeValue && !storeValue.isEmpty())
+                            finalTestData = finalTestData + storeValue ;
+                        else {
+                            String[] testDataDetails = splitTestData.split("_");
+                            List<Map> datas = prerequisiteTestData.getData(testDataDetails[0].toUpperCase(), testCaseId);
+                            String indexValue = utilData.isPresent() ? Optional.ofNullable((String) utilData.get().get(testDataDetails[0])).orElse("") : "";
+                            if (indexValue != "")
+                                testDataDetails[2] = indexValue;
+                            if (testDataDetails.length == 2) {
+                                Map data = datas.get(0);
+                                finalTestData = finalTestData + (String) data.get(testDataDetails[1]);
 
-                        }
-                        else if(testDataDetails.length==3)
-                        {
-                            Map data= datas.get(Integer.parseInt(testDataDetails[2]));
-                            finalTestData=finalTestData+ (String) data.get(testDataDetails[1]);
+                            } else if (testDataDetails.length == 3) {
+                                Map data = datas.get(Integer.parseInt(testDataDetails[2]));
+                                finalTestData = finalTestData + (String) data.get(testDataDetails[1]);
+                            }
                         }
                     }
                     else
