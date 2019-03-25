@@ -132,7 +132,7 @@ public class SpaceCreateAndSearch {
             return new LogMessage(false, "Space does not exist");
         }
     }
-    public List<LogMessage> deleteSpace(String propertyName,String propertyCode,List<String> spaceNames){
+    public List<LogMessage> deleteSpace(String propertyName,String propertyCode,List<Map> spaceNames){
         List<LogMessage> logMessages=new ArrayList<>();
         UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
         try {
@@ -147,8 +147,8 @@ public class SpaceCreateAndSearch {
             String mainWindow=webDriver.getWindowHandle();
             UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
             if(logMessageProperty.isPassed()) {
-                for (String spaceName : spaceNames) {
-                    LogMessage logMessageSpace = navigateToSpacePageFromProperty(spaceName);
+                for (Map spaceName : spaceNames) {
+                    LogMessage logMessageSpace = navigateToSpacePageFromProperty((String) spaceName.get("Space"));
                     UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
                     if (logMessageSpace.isPassed()) {
                         WebElement webElement = WebObjectSearch.getChildWebElement(webDriver, objectLocatorData + "header", objectLocatorData + "delete");
@@ -174,6 +174,7 @@ public class SpaceCreateAndSearch {
                 logMessages.add(new LogMessage(false, "Property doesnot exist"));
             }
             utilKeywordScript.redirectHomePage();
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             return logMessages;
         }catch (Exception e){
             e.printStackTrace();

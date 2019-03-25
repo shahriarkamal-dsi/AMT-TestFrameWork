@@ -24,7 +24,13 @@ public class TestStep {
             return null;
         }
     }
-
+    public String getLogMessage(){
+        try {
+            return (String) step.get(PropertyConfig.LOGMESSAGE);
+        }catch(Exception ex) {
+            return null;
+        }
+    }
     public String getTestStepDescription(){
         try {
             return (String) step.get(PropertyConfig.TEST_STEP_DESCRIPTION);

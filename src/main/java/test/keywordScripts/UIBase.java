@@ -215,8 +215,16 @@ public class UIBase {
             return new LogMessage(false, "exception occured " + ex.getMessage());
 
         }
-    }
 
+    }
+    public LogMessage refreshPage(){
+        try{
+            webDriver.navigate().refresh();
+            return new LogMessage(true,"Page refreshed");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
 
 
 }

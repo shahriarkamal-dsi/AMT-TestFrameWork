@@ -25,13 +25,13 @@ public class TestData {
         return testData;
     }
 
-    public List<LogMessage> runPrequisites(String testCaseId) {
+    public List<LogMessage> runPrequisites(String testCaseId,String createData) {
         List<LogMessage> logMessageList =new ArrayList<>();
         try {
             //System.out.println(SpaceData);
             if(PropertyData.containsKey(testCaseId) || LeaseData.containsKey(testCaseId) || SpaceData.containsKey(testCaseId) || RecurData.containsKey(testCaseId))
                 logMessageList.add(new LogMessage(true,"Starting prerequisite data creation"));
-            if(PropertyData.containsKey(testCaseId)){
+            if(PropertyData.containsKey(testCaseId) && (null==createData || createData.isEmpty() || createData.toLowerCase().contains("property"))){
                 List<Map> propertyRecords=PropertyData.get(testCaseId);
                 PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(driver);
                 for(Map propertyRecord: propertyRecords){
@@ -43,7 +43,7 @@ public class TestData {
                     }
                 }
             }
-            if(LeaseData.containsKey(testCaseId))
+            if(LeaseData.containsKey(testCaseId) && (null==createData || createData.isEmpty() || createData.toLowerCase().contains("lease")))
             {
                 List<Map> leaseRecords=LeaseData.get(testCaseId);
                 LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
@@ -54,7 +54,7 @@ public class TestData {
                     return logMessageList;
                 }
             }
-            if(SpaceData.containsKey(testCaseId))
+            if(SpaceData.containsKey(testCaseId) && (null==createData || createData.isEmpty() || createData.toLowerCase().contains("space")))
             {
                 List<Map> spaceRecords = SpaceData.get(testCaseId);
                 SpaceCreateAndSearch spaceCreateAndSearch=new SpaceCreateAndSearch(driver);
@@ -78,7 +78,7 @@ public class TestData {
                     }
                 }
             }
-            if(RecurData.containsKey(testCaseId))
+            if(RecurData.containsKey(testCaseId) && (null==createData || createData.isEmpty() || createData.toLowerCase().contains("recur")))
             {
                 List<Map> recurRecords = RecurData.get(testCaseId);
                 LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
