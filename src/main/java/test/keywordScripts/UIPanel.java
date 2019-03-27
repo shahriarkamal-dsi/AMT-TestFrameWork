@@ -38,5 +38,20 @@ public class UIPanel {
             return new LogMessage(false, "Exception occur " +e.getMessage());
         }
     }
+    public LogMessage VerifyPanelContentFalse(String objectLocatorData,String testData){
+        try{
+            String elementPath = "//*[contains(text(),'" + testData + "')]";
+            WebElement rootPanel = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if (null == rootPanel)
+                return new LogMessage(false,"Panel not found");
+            if(null==rootPanel.findElements(By.xpath(elementPath)) || rootPanel.findElements(By.xpath(elementPath)).size()<=0)
+                return new LogMessage(true,"Panel content found");
+            else
+                return new LogMessage(false,"Panel content not found");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, "Exception occur " +e.getMessage());
+        }
+    }
 
 }

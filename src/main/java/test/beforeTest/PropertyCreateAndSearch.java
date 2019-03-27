@@ -87,24 +87,23 @@ public class PropertyCreateAndSearch {
 
 
     public LogMessage isPropertyExist(Map data){
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
             String  objectLocatorPrefix = "Common.Property.";
             UITable uiTable  = new UITable(webDriver);
-            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
-
             utilKeywordScript.globalSearch((String)data.get("propertyCode"),"Property");
 
             Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
             if(null == row || row.isEmpty()){
-                UtilKeywordScript.redirectHomePage();
+                utilKeywordScript.redirectHomePage();
                 return new LogMessage(false, "Property not found");
             }
             else{
-                UtilKeywordScript.redirectHomePage();
+                utilKeywordScript.redirectHomePage();
                 return new LogMessage(true, "Property  found");
             }
         }catch (Exception e){
-            UtilKeywordScript.redirectHomePage();
+            utilKeywordScript.redirectHomePage();
             return new LogMessage(false, "Exception occur "+ e.getMessage());
 
         }
@@ -117,17 +116,13 @@ public class PropertyCreateAndSearch {
             String columnValue = (String)data.get("propertyName");
             UITable uiTable  = new UITable(webDriver);
             UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
-
             LogMessage searchLog = utilKeywordScript.globalSearch((String)data.get("propertyCode"),"Property");
-
             if (!searchLog.isPassed())
                 return new LogMessage(false,"Exception occur in global search");
-
             Map<String, WebElement> propertyRow = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
             if(null == propertyRow || propertyRow.isEmpty()){
-                UtilKeywordScript.redirectHomePage();
+                utilKeywordScript.redirectHomePage();
                 return new LogMessage(false, "Property not found");
-
             }
             for (String key : propertyRow.keySet()) {
                 String clName = Optional.ofNullable(key).orElse("noValue");
@@ -156,6 +151,7 @@ public class PropertyCreateAndSearch {
         }
     }
     public LogMessage deleteProperty(String propertyName, String propertyCode){
+        UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
         try{
             String  objectLocatorPrefix = "Common.Property.";
             Map<String,String> map =new HashMap<>();
@@ -167,19 +163,26 @@ public class PropertyCreateAndSearch {
                 WebElement webElement;
                 webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "delete");
                 webElement.click();
-                while (UtilKeywordScript.isAlertPresent()) {
+                while ( utilKeywordScript.isAlertPresent()) {
                     webDriver.switchTo().alert().accept();
                 }
                 UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
-                if (uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome").isPassed())
+                if (uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome").isPassed()) {
+                    utilKeywordScript.redirectHomePage();
                     return new LogMessage(true, "Property is deleted");
-                else
+                }
+                else{
+                    utilKeywordScript.redirectHomePage();
                     return new LogMessage(false, "Property is not deleted");
+                }
             }
-            else
+            else {
+                utilKeywordScript.redirectHomePage();
                 return new LogMessage(false, "Property is doesnot exists");
+            }
 
         }catch (Exception e){
+            utilKeywordScript.redirectHomePage();
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
 

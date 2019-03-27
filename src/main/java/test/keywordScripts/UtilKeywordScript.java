@@ -13,7 +13,7 @@ import java.util.*;
 
 public class UtilKeywordScript {
 
-    private static WebDriver webDriver ;
+    private WebDriver webDriver ;
 
     public UtilKeywordScript() {
 
@@ -33,7 +33,7 @@ public class UtilKeywordScript {
 
     }
 
-    public static LogMessage redirectHomePage() {
+    public LogMessage redirectHomePage() {
         try {
                     Set<String> windows = webDriver.getWindowHandles();
                     Iterator<String> iter = windows.iterator();
@@ -105,7 +105,7 @@ public class UtilKeywordScript {
             ex.printStackTrace();
         }
     }
-    public static boolean isAlertPresent(){
+    public boolean isAlertPresent(){
         boolean foundAlert = false;
         WebDriverWait wait = new WebDriverWait(webDriver, 5);
         try {
@@ -116,7 +116,24 @@ public class UtilKeywordScript {
         }
         return foundAlert;
     }
+    public static void switchToPreviousTab(WebDriver webDriver,String mainWindow){
+        try {
+            Set<String> set = webDriver.getWindowHandles();
+            Iterator<String> itr = set.iterator();
+            while (itr.hasNext()) {
+                String childWindow = itr.next();
+                if (!mainWindow.equals(childWindow)) {
+                    webDriver.switchTo().window(childWindow);
+                    webDriver.close();
+                }
 
+            }
+            webDriver.switchTo().window(mainWindow);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     public static void delay(int time) {
         try {
             Thread.sleep(time * 1000);

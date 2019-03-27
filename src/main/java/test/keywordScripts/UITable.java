@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.coreModule.TestPlan;
 import test.objectLocator.WebObjectSearch;
+import test.utility.PropertyConfig;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -405,7 +406,9 @@ public class UITable extends  UtilKeywordScript{
             if(element.isEnabled()) {
                 //element.click();
                 // UtilKeywordScript.delay(3);
-                element.findElement(By.tagName("input")).sendKeys(columnValue);
+                WebElement webElement=element.findElement(By.tagName("input"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                webElement.sendKeys(columnValue);
                 return new LogMessage(true,"enter text data");
             } else {
                 return new LogMessage(false," text field disabled");
