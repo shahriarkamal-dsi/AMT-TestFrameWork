@@ -61,7 +61,7 @@ public class LeaseCreateAndSearch {
 
         try {
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
-            String[] dropDownFields = new String[] {"leaseStatus","leaseType","billingType"};
+            String[] dropDownFields = new String[] {"leaseStatus","leaseType","billingType","leaseGroup1"};
             String[] textFields = new String[] {"dbaName","leaseCode","beginDate","expirationDate"};
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocatorPrefix + "propertyList");
             uiBase = new UIBase(webDriver);

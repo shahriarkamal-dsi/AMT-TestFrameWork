@@ -5,8 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
-import test.objectLocator.WebObject;
 import test.utility.PropertyConfig;
+
+
 
 import java.util.*;
 
@@ -105,6 +106,22 @@ public class UtilKeywordScript {
             ex.printStackTrace();
         }
     }
+    public LogMessage switchLastTab() {
+
+        try {
+            Set<String> windows = webDriver.getWindowHandles();
+            Iterator<String> iter = windows.iterator();
+            String lastTab = "" ;
+            while (iter.hasNext())
+                lastTab=iter.next();
+            webDriver.switchTo().window(lastTab);
+            return new LogMessage(true,"Switch to last tab successfully");
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur "+ ex.getMessage());
+        }
+    }
+
     public static boolean isAlertPresent(){
         boolean foundAlert = false;
         WebDriverWait wait = new WebDriverWait(webDriver, 5);
@@ -155,7 +172,7 @@ public class UtilKeywordScript {
             uiDropDown.SelectItem(objectLocatorPrefix + "searchOption", selectOption);
             uiBase.Click(objectLocatorPrefix + "btnSearch");
 
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
             UtilKeywordScript.switchLastTab(webDriver);
 
             return new LogMessage(true, "Search complete");
@@ -183,8 +200,32 @@ public class UtilKeywordScript {
                 }
                 return Optional.ofNullable(map) ;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
             return Optional.empty();
+        }
+    }
+
+
+    public static boolean isItDigit(String value) {
+        try {
+            value = value.replaceAll("[^\\d.]", "") ;
+            if (value == "" )
+                return false ;
+            Double digit =   Double.parseDouble(value.replaceAll("[^\\d.]", ""));
+            return Optional.ofNullable(digit).isPresent()  ;
+
+        } catch (Exception ex) {
+            return false ;
+        }
+    }
+
+    public static String convertStringToNumber(String value) {
+        try {
+            Double digit  =  Double.parseDouble(value.replaceAll("[^\\d.]", ""));
+            return String.valueOf(digit) ;
+
+        } catch (Exception ex) {
+            return null ;
         }
     }
 

@@ -50,7 +50,7 @@ public class SpaceCreateAndSearch {
             UIText uiText = new UIText(webDriver);
 
             UtilKeywordScript.delay(1);
-            uiLink.ClickLink("","Add New Space");
+            uiLink.ClickLink("","Add New Suite");
             UtilKeywordScript.delay(5);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
