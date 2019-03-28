@@ -25,7 +25,7 @@ public class SpaceCreateAndSearch {
             LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(webDriver);
             uiBase = new UIBase(webDriver);
             leaseCreateAndSearch.searchLease(datas.get(0));
-            UtilKeywordScript.delay(5);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
             mainWindow = webDriver.getWindowHandle();
             for(Map data: datas)
             {
@@ -48,28 +48,28 @@ public class SpaceCreateAndSearch {
 
             UIText uiText = new UIText(webDriver);
 
-            UtilKeywordScript.delay(1);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiLink.ClickLink("","Add New Space");
-            UtilKeywordScript.delay(5);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
 
-            UtilKeywordScript.delay(5);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
 
             uiText.SetText(objectLocatorPrefix +"space",(String)data.get("Space"));
             uiText.SetText(objectLocatorPrefix +"floor",(String)data.get("Floor"));
 
             List<WebElement>  linkedItems  = WebObjectSearch.getWebElements(webDriver, objectLocatorPrefix + "linked");
             uiBase.Click(linkedItems.get(0));
-            UtilKeywordScript.delay(5);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
 
             uiBase.Click(objectLocatorPrefix + "btnSave");
 
             uiBase.WaitingForPageLoad();
             LogMessage lm = uiBase.WaitingForSuccessfullPopup();
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             uiBase.Click(objectLocatorPrefix + "btnClose");
-            UtilKeywordScript.delay(2);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             Set<String> set =webDriver.getWindowHandles();
             Iterator<String> itr= set.iterator();
             while(itr.hasNext()){
@@ -106,7 +106,7 @@ public class SpaceCreateAndSearch {
             if (!clickLinkLog.isPassed())
                 return new LogMessage(false, "exception occur during expanding property information");
 
-            UtilKeywordScript.delay(2);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             LogMessage log = uiPanel.VerifyPanelContentTrue(objectLocatorPrefix +"tbSpace", (String)data.get("Space"));
             if (log.isPassed()){
                 return new LogMessage(true, "Space already exist");

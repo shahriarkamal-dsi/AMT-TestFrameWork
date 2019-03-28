@@ -51,7 +51,6 @@ public class WebObjectSearch {
         try {
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
             List<WebElement> userelemnts = searchWebObject(webDriver, objectLocatorData);
-            //System.out.println(userelemnts.size());
             if(null == userelemnts)
                 return null;
             else

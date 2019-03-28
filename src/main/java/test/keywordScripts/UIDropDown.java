@@ -50,11 +50,11 @@ public class UIDropDown {
             WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if (null == dropDownElement)
                 return new LogMessage(false," drop down element is not found.");
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
 
             dropDownElement.click();
-            UtilKeywordScript.delay(3);
-            List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[text() = '" + testData + "']"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+            List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[contains(text() , '" + testData + "')]"));
             if (null == dropDownDataElements || dropDownDataElements.isEmpty())
                 return new LogMessage(false," drop down list element is not found.");
             dropDownDataElements.get(dropDownDataElements.size()-1).click();
@@ -72,9 +72,9 @@ public class UIDropDown {
             if (null == dropDownElement)
                 return new LogMessage(false," drop down element is not found.");
             dropDownElement.clear();
-            UtilKeywordScript.delay(2);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             dropDownElement.sendKeys(testData);
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[text() = '" + testData + "']"));
             if (null == dropDownDataElements || dropDownDataElements.isEmpty())
                 return new LogMessage(false," drop down list element is not found.");

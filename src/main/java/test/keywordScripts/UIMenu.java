@@ -18,6 +18,7 @@ public class UIMenu {
 
     public LogMessage SelectMenu(String objectLocator,String testData ) {
         try {
+
              String menuItems[] = testData.split(",");
              for(String menuItem : menuItems) {
                  webDriver.findElement(By.linkText(menuItem)).click();

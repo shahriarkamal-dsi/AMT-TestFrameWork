@@ -31,16 +31,17 @@ public class PropertyCreateAndSearch {
             String[] dropDownFields = new String[] {"country","state","codeType" , "status" , "currency", "propertyGroup1", "propertyGroup2", "propertyGroup3"} ;
             String autoManageChkBox = "autoManage" ;
             String  objectlocatorPrefix = "Common.Property." ;
+            UIText uiText=new UIText(webDriver);
             UIMenu menu = new UIMenu(webDriver);
             menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Property") ;
             UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(10);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*2);
 
             for(String elementName : textFields) {
                 WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix  + elementName) ;
                 element.clear();
                 element.sendKeys( (String) data.get(elementName));
-                UtilKeywordScript.delay(3);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             }
 
             for(String elementName : dropDownFields) {
@@ -55,18 +56,18 @@ public class PropertyCreateAndSearch {
                 select.selectByVisibleText( (String)data.get(elementName));
                 if(elementName.equals("codeType")) {
                     webDriver.switchTo().alert().accept();
-                    UtilKeywordScript.delay(3);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
                 }
-                UtilKeywordScript.delay(3);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             }
             WebElement checkBoxItem = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + autoManageChkBox) ;
             if(  data.get(autoManageChkBox).toString().toLowerCase().equals("true"))
                 checkBoxItem.click();
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "save") ;
             element.click();
-            UtilKeywordScript.delay(15);
-
-            if(webDriver.findElement(By.xpath("//*[contains(@id,'lblPropertyCodeValue')]")).getText().equals(data.get("propertyCode")))
+            uiText.WaitForInvisibilityOfText(objectlocatorPrefix+"createPropertyTitle","Property Information");
+            LogMessage logMessage=uiText.WaitForVisibilityOfText(objectlocatorPrefix+"propertyCode", (String) data.get("propertyCode"));
+            if(logMessage.isPassed())
             {
                 utilKeywordScript.redirectHomePage();
                 return new LogMessage(true, "Property"+data.get("propertyName")+"-"+data.get("propertyCode") +" is created successfully");

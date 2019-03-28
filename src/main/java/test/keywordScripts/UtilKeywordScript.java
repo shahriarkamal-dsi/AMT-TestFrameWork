@@ -1,10 +1,12 @@
 package test.keywordScripts;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
+import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObject;
 import test.utility.PropertyConfig;
 
@@ -107,7 +109,7 @@ public class UtilKeywordScript {
     }
     public boolean isAlertPresent(){
         boolean foundAlert = false;
-        WebDriverWait wait = new WebDriverWait(webDriver, 5);
+        WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
         try {
             wait.until(ExpectedConditions.alertIsPresent());
             foundAlert = true;
@@ -172,7 +174,7 @@ public class UtilKeywordScript {
             uiDropDown.SelectItem(objectLocatorPrefix + "searchOption", selectOption);
             uiBase.Click(objectLocatorPrefix + "btnSearch");
 
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
             UtilKeywordScript.switchLastTab(webDriver);
 
             return new LogMessage(true, "Search complete");
@@ -203,6 +205,60 @@ public class UtilKeywordScript {
             ex.printStackTrace();
             return Optional.empty();
         }
+    }
+    public LogMessage switchLastTab() {
+
+        try {
+            Set<String> windows = webDriver.getWindowHandles();
+            Iterator<String> iter = windows.iterator();
+            String lastTab = "" ;
+            while (iter.hasNext())
+                lastTab=iter.next();
+            webDriver.switchTo().window(lastTab);
+            return new LogMessage(true,"Switch to last tab successfully");
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur "+ ex.getMessage());
+        }
+    }
+    public LogMessage switchToIframe(String objectLocator){
+        try {
+            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
+            webDriver.switchTo().frame((String) objectLocatorData.get(PropertyConfig.OBJECT_LOCATORS));
+            return new LogMessage(true,"Switch to iframe successful");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Cannot switch to iframe"+e.getMessage());
+        }
+    }
+    public LogMessage backFromIframe(){
+        try{
+            webDriver.switchTo().defaultContent();
+            return new LogMessage(true,"Returned from iframe successful");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Cannot return from iframe"+e.getMessage());
+        }
+
+    }
+    public LogMessage verifyAddLeasePage(){
+        try {
+            UIBase uiBase=new UIBase(webDriver);
+            String objectlocatorPrefix= "MENU.QuickLink.";
+            if(uiBase.VerifyVisibleOnScreenTrue(objectlocatorPrefix+"addLeaseCode").isPassed()){
+                return new LogMessage(true,"Navigated to add Lease Page successful");
+            }
+            else if(uiBase.VerifyVisibleOnScreenTrue(objectlocatorPrefix+"addLease").isPassed()){
+                return new LogMessage(true,"Navigated to add Lease Page successful");
+            }
+
+            return new LogMessage(false,"Cannot Navigate to add Lease Page");
+        }catch (Exception e){
+            return new LogMessage(false,"Cannot Navigate to add Lease Page"+e.getMessage());
+
+        }
+
+
     }
 
 }
