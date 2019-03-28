@@ -522,6 +522,7 @@ public class UITable extends  UtilKeywordScript{
             if(!row.containsKey(columnName))
                 return new LogMessage( false, "column name is not present") ;
             String columnValue = row.get(columnName).getText() ;
+            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnName ;
             TestPlan.getInstance().setStoreData(varName,columnValue);
 
             return new LogMessage( true, "column value is stored") ;

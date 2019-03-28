@@ -205,11 +205,14 @@ public class UIBase {
     }
 
 
-    public LogMessage compareGreaterThanValue(String value,String compareTovalue ) {
+    public LogMessage compareGreaterThanValue(String  testData ) {
         try {
-            Integer num1 = Integer.valueOf(value) ;
-            Integer num2 = Integer.valueOf(compareTovalue) ;
-           return  num1.compareTo(num1) == 1 ? new LogMessage(true,  "given value greater than  " + compareTovalue) :  new LogMessage(false,  "given value is not greater than  " + compareTovalue) ;
+            String value  = testData.split(",")[0] ;
+           String  compareTovalue  = testData.split(",")[1] ;
+            Double num1 = Double.parseDouble(value) ;
+            Double num2 = Double.parseDouble(compareTovalue) ;
+            System.out.println(num1 + " "  + num2);
+           return  num1.compareTo(num2) == 1 ? new LogMessage(true,  "given value greater than  " + compareTovalue) :  new LogMessage(false,  "given value is not greater than  " + compareTovalue) ;
         } catch (Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "exception occured " + ex.getMessage());
@@ -221,6 +224,35 @@ public class UIBase {
         try{
             webDriver.navigate().refresh();
             return new LogMessage(true,"Page refreshed");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
+
+    public LogMessage refreshPage(){
+        try{
+            webDriver.navigate().refresh();
+            return new LogMessage(true,"Page refreshed");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
+
+    public LogMessage waitForRevision(String objectLocatorData){
+        try{
+            UITable uiTable = new UITable(webDriver);
+            for (int i = 0; i<10; i++){
+                webDriver.findElement(By.xpath("//*[@title='Refresh']")).click();
+                List<Map<String,WebElement>> rows = uiTable.getAllValuesfromTable(objectLocatorData);
+                if (null == rows || rows.isEmpty()){
+                    UtilKeywordScript.delay(60);
+                }
+                else{
+                    return new LogMessage(true,"Revision found");
+                }
+            }
+            System.out.println("enter  2") ;
+            return new LogMessage(false,"Revision not found");
         }catch (Exception e){
             return new LogMessage(false,"Exception occur " + e.getMessage());
         }

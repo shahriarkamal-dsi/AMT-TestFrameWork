@@ -62,7 +62,7 @@ public class LeaseCreateAndSearch {
     public LogMessage createLease(Map data){
 
         try {
-            String[] dropDownFields = new String[] {"leaseStatus","leaseType","billingType"};
+            String[] dropDownFields = new String[] {"leaseStatus","leaseType","billingType","leaseGroup1"};
             String[] textFields = new String[] {"dbaName","leaseCode","beginDate","expirationDate"};
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocatorPrefix + "propertyList");
             uiBase = new UIBase(webDriver);
