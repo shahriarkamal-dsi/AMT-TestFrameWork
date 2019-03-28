@@ -28,7 +28,7 @@ public class PropertyCreateAndSearch {
         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try {
             String[] textFields = new String[] {"propertyName","propertyCode","address1" , "postal" , "city" , "sqFtRentable"} ;
-            String[] dropDownFields = new String[] {"country","state","codeType" , "status" , "currency", "propertyGroup1", "propertyGroup2", "propertyGroup3"} ;
+            String[] dropDownFields = new String[] {"country","state","codeType" , "status" , "currency","chartType","propertyGroup1", "propertyGroup2", "propertyGroup3"} ;
             String autoManageChkBox = "autoManage" ;
             String  objectlocatorPrefix = "Common.Property." ;
             UIMenu menu = new UIMenu(webDriver);
@@ -53,7 +53,7 @@ public class PropertyCreateAndSearch {
 
                 }
                 select.selectByVisibleText( (String)data.get(elementName));
-                if(elementName.equals("codeType")) {
+                if(elementName.equals("codeType") || elementName.equals("chartType")) {
                     webDriver.switchTo().alert().accept();
                     UtilKeywordScript.delay(3);
                 }
@@ -64,7 +64,7 @@ public class PropertyCreateAndSearch {
                 checkBoxItem.click();
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "save") ;
             element.click();
-            UtilKeywordScript.delay(15);
+            UtilKeywordScript.delay(60);
 
             if(webDriver.findElement(By.xpath("//*[contains(@id,'lblPropertyCodeValue')]")).getText().equals(data.get("propertyCode")))
             {
