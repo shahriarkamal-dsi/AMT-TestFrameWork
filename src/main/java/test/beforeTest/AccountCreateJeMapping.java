@@ -59,7 +59,7 @@ public class AccountCreateJeMapping {
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.chartOfAccountList");
             uiDropDown.searchAndSelectItem("Common.GlobalSearch.chartOfAccountInput", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), chartOfAccount);
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*2);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *2);
             for (Map accountData : accountDatas) {
                 if (null == accountData.get(PropertyConfig.EXECUTION_FLAG) || accountData.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !accountData.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
@@ -90,7 +90,7 @@ public class AccountCreateJeMapping {
            // UIMenu uiMenu = new UIMenu(webDriver);
             uiMenu.SelectMenu("","JE Mapping");
             uibase.WaitingForPageLoad();
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*3);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *3);
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.leaseTypes");
             uiDropDown.SelectItem("Common.GlobalSearch.leaseTypes", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("Lease Types"));

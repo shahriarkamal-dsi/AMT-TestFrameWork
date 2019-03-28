@@ -2,7 +2,6 @@ package test.beforeTest;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.WebObjectSearch;
@@ -25,7 +24,7 @@ public class SpaceCreateAndSearch {
             LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(webDriver);
             uiBase = new UIBase(webDriver);
             leaseCreateAndSearch.searchLease(datas.get(0));
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             mainWindow = webDriver.getWindowHandle();
             for(Map data: datas)
             {
@@ -50,18 +49,18 @@ public class SpaceCreateAndSearch {
 
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiLink.ClickLink("","Add New Space");
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
 
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
 
             uiText.SetText(objectLocatorPrefix +"space",(String)data.get("Space"));
             uiText.SetText(objectLocatorPrefix +"floor",(String)data.get("Floor"));
 
             List<WebElement>  linkedItems  = WebObjectSearch.getWebElements(webDriver, objectLocatorPrefix + "linked");
             uiBase.Click(linkedItems.get(0));
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
 
             uiBase.Click(objectLocatorPrefix + "btnSave");
 
@@ -124,7 +123,7 @@ public class SpaceCreateAndSearch {
         String  objectLocatorPrefix = "Common.Property.";
         UILink uiLink = new UILink(webDriver);
         LogMessage log =uiLink.ClickLink(objectLocatorPrefix +"tbSpace", spaceName);
-        UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+        UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
         UtilKeywordScript.switchLastTab(webDriver);
         if (log.isPassed()){
             return new LogMessage(true, "Navigated to Space page");
@@ -145,11 +144,11 @@ public class SpaceCreateAndSearch {
             data.put("propertyCode", propertyCode);
             LogMessage logMessageProperty = propertyCreateAndSearch.navigateToProperty(data);
             String mainWindow=webDriver.getWindowHandle();
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             if(logMessageProperty.isPassed()) {
                 for (Map spaceName : spaceNames) {
                     LogMessage logMessageSpace = navigateToSpacePageFromProperty((String) spaceName.get("Space"));
-                    UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                    UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
                     if (logMessageSpace.isPassed()) {
                         WebElement webElement = WebObjectSearch.getChildWebElement(webDriver, objectLocatorData + "header", objectLocatorData + "delete");
                         uiBase.Click(webElement);

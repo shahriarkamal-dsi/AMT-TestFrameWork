@@ -24,7 +24,7 @@ public class RecurringPaymentCreateandSearch {
             uiBase = new UIBase(webDriver);
             LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(webDriver);
             leaseCreateAndSearch.searchLease(datas.get(0));
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             mainWindow = webDriver.getWindowHandle();
             for(Map data: datas)
             {
@@ -51,10 +51,10 @@ public class RecurringPaymentCreateandSearch {
             UITable uiTable = new UITable(webDriver);
 
             uiLink.ClickLink("","Add New");
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
 
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             for (String element : dropdownFields){
@@ -74,8 +74,8 @@ public class RecurringPaymentCreateandSearch {
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0,"+ (String)data.get("effDate"));
 
-            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("effDate"));
-            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("effDate"));
+            uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
+            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
 
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));

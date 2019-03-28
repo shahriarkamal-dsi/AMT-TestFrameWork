@@ -196,7 +196,6 @@ public class UnitTesting {
             List<String> stringList=new ArrayList<>();
             stringList.add("Test_Property_Auto_Final_10_Lease_Space_32");
             stringList.add("Test_Property_Auto_Final_10_Lease_Space_38");
-            //System.out.println(spaceCreateAndSearch.deleteSpace("Test_Property_Auto_Final","666677773",stringList));
         }catch (Exception e){
             e.printStackTrace();
         }

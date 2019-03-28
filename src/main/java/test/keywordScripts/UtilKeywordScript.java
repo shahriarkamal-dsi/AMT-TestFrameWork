@@ -10,6 +10,8 @@ import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObject;
 import test.utility.PropertyConfig;
 
+
+
 import java.util.*;
 
 
@@ -107,6 +109,8 @@ public class UtilKeywordScript {
             ex.printStackTrace();
         }
     }
+
+
     public boolean isAlertPresent(){
         boolean foundAlert = false;
         WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
@@ -173,8 +177,7 @@ public class UtilKeywordScript {
             uiText.SetText(objectLocatorPrefix +"txtSearch",name);
             uiDropDown.SelectItem(objectLocatorPrefix + "searchOption", selectOption);
             uiBase.Click(objectLocatorPrefix + "btnSearch");
-
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
             UtilKeywordScript.switchLastTab(webDriver);
 
             return new LogMessage(true, "Search complete");
@@ -202,7 +205,7 @@ public class UtilKeywordScript {
                 }
                 return Optional.ofNullable(map) ;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
             return Optional.empty();
         }
     }
@@ -259,6 +262,30 @@ public class UtilKeywordScript {
         }
 
 
+    }
+
+
+    public static boolean isItDigit(String value) {
+        try {
+            value = value.replaceAll("[^\\d.]", "") ;
+            if (value == "" )
+                return false ;
+            Double digit =   Double.parseDouble(value.replaceAll("[^\\d.]", ""));
+            return Optional.ofNullable(digit).isPresent()  ;
+
+        } catch (Exception ex) {
+            return false ;
+        }
+    }
+
+    public static String convertStringToNumber(String value) {
+        try {
+            Double digit  =  Double.parseDouble(value.replaceAll("[^\\d.]", ""));
+            return String.valueOf(digit) ;
+
+        } catch (Exception ex) {
+            return null ;
+        }
     }
 
 }

@@ -3,7 +3,6 @@ package test.objectLocator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.utility.PropertyConfig;
@@ -24,12 +23,14 @@ public enum WebObjectSearchType implements WebObject {
         @Override
         public List<WebElement> findElement(WebDriver driver, String searchKey) {
             List <WebElement> elements=driver.findElements(By.name(searchKey));
+
             return elements;
         }
     },
     BY_CLASSNAME{
         @Override
         public List<WebElement> findElement(WebDriver driver, String searchKey) {
+
             List <WebElement> elements=driver.findElements(By.className(searchKey));
             return elements;
 

@@ -206,7 +206,7 @@ public class UITable extends  UtilKeywordScript{
 
     private List<Map<String, WebElement>> getAllValuesfromSingleTable(String objectLocatorData ) {
         try {
-        webDriver.manage().timeouts().implicitlyWait(PropertyConfig.WAIT_TIME_SECONDS*2, TimeUnit.SECONDS) ;
+        webDriver.manage().timeouts().implicitlyWait(PropertyConfig.SHORT_WAIT_TIME_SECONDS *2, TimeUnit.SECONDS) ;
         List<Map<String,WebElement>> tableData = new ArrayList<Map<String,WebElement>>();
         WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
         List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
@@ -350,7 +350,7 @@ public class UITable extends  UtilKeywordScript{
             if(columnValue.equals(element.getText())) {
                 return new LogMessage(true, "proper cell is  present");
             }
-            return new LogMessage(true, "proper cell is not present.");
+            return new LogMessage(false, "proper cell is not present.");
         } catch(Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false,"exception occured: " + ex.getMessage());
@@ -522,6 +522,7 @@ public class UITable extends  UtilKeywordScript{
             if(!row.containsKey(columnName))
                 return new LogMessage( false, "column name is not present") ;
             String columnValue = row.get(columnName).getText() ;
+            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnName ;
             TestPlan.getInstance().setStoreData(varName,columnValue);
 
             return new LogMessage( true, "column value is stored") ;

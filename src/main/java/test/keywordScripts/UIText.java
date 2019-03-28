@@ -10,6 +10,11 @@ import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.JavascriptExecutor;
+
+
 import java.util.Map;
 
 public class UIText {
@@ -26,6 +31,7 @@ public class UIText {
             WebElement userWeb = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == userWeb )
                 return new LogMessage(false,"webElement is not founding");
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", userWeb);
             userWeb.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.click();
@@ -37,6 +43,8 @@ public class UIText {
             return new LogMessage(false,"exception occured:- " + ex.getMessage());
         }
     }
+
+
     public LogMessage WaitForVisibilityOfText(String objectLocator, String textData){
         try {
             String[] splittedTestData = textData.split(",");
@@ -55,6 +63,7 @@ public class UIText {
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
     }
+
     public LogMessage WaitForInvisibilityOfText(String objectLocator, String textData){
         try {
             String[] splittedTestData = textData.split(",");
@@ -72,5 +81,7 @@ public class UIText {
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
     }
+
+
 
 }
