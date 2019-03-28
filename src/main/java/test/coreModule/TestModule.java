@@ -3,10 +3,7 @@ package test.coreModule;
 
 import test.utility.PropertyConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TestModule {
     private String moduleName ;
@@ -58,6 +55,10 @@ public class TestModule {
         if(testSuiteIndex.containsKey(testSuite.getTestSuiteName())){
             testSuits.set(testSuiteIndex.get(testSuite.getTestSuiteName()),testSuite);
         }
+    }
+
+    public Optional<TestSuite> getTestSuiteByTestCaseNumber(String testCaseNumber) {
+      return getAllTestSuits().stream().filter(testSuite -> Optional.ofNullable(testSuite.getTestCase(testCaseNumber)).isPresent()).findFirst() ;
     }
 
     public List<TestSuite>  getAllTestSuits(){

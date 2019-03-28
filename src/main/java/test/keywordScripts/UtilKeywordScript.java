@@ -8,9 +8,8 @@ import test.Log.LogMessage;
 import test.objectLocator.WebObject;
 import test.utility.PropertyConfig;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.logging.LoggingMXBean;
+import java.util.*;
+
 
 public class UtilKeywordScript {
 
@@ -108,7 +107,7 @@ public class UtilKeywordScript {
     }
     public boolean isAlertPresent(){
         boolean foundAlert = false;
-        WebDriverWait wait = new WebDriverWait(webDriver, 0);
+        WebDriverWait wait = new WebDriverWait(webDriver, 5);
         try {
             wait.until(ExpectedConditions.alertIsPresent());
             foundAlert = true;
@@ -117,7 +116,24 @@ public class UtilKeywordScript {
         }
         return foundAlert;
     }
+    public static void switchToPreviousTab(WebDriver webDriver,String mainWindow){
+        try {
+            Set<String> set = webDriver.getWindowHandles();
+            Iterator<String> itr = set.iterator();
+            while (itr.hasNext()) {
+                String childWindow = itr.next();
+                if (!mainWindow.equals(childWindow)) {
+                    webDriver.switchTo().window(childWindow);
+                    webDriver.close();
+                }
 
+            }
+            webDriver.switchTo().window(mainWindow);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     public static void delay(int time) {
         try {
             Thread.sleep(time * 1000);
@@ -173,6 +189,20 @@ public class UtilKeywordScript {
     public static boolean  isEmpty(String inputString){
         if(null == inputString ) return  true;
         return removeSpaceAndNewline(inputString).isEmpty();
+    }
+
+    public static Optional<Map> jsonStringToMap(String value) {
+            try {
+                String[] items = value.split(",") ;
+                Map map = new HashMap() ;
+                for(String item : items) {
+                    map.put(item.split(":")[0],item.split(":")[1]) ;
+                }
+                return Optional.ofNullable(map) ;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Optional.empty();
+        }
     }
 
 }

@@ -2,6 +2,9 @@ package test;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import test.Log.CreateLog;
+import test.beforeTest.LeaseCreateAndSearch;
+import test.beforeTest.PropertyCreateAndSearch;
+import test.beforeTest.SpaceCreateAndSearch;
 import test.beforeTest.TestData;
 import test.coreModule.*;
 
@@ -17,10 +20,12 @@ import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
 import java.io.File;
+import java.io.SerializablePermission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -165,6 +170,55 @@ public class UnitTesting {
         UITree uiTree= new UITree(driver);
         String obj="//*[@id='treeContainer']";
         uiTree.AssetTreeMenuExpand(obj,"tree,taka");
+
+    }
+    @Test
+    public void Testdataupdate(){
+        WebDriver driver=DriverFactory.createDriver("chrome",false);
+        ExecuteTests executeTests=new ExecuteTests(driver);
+        System.out.println(executeTests.updateTestData("666677777","Property,$Lease_dbaName,$Property_propertyCode_0",null));
+    }
+    @Test
+    public void searchalltest(){
+        try {
+            WebDriver driver = DriverFactory.createDriver("chrome", false);
+            new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(), PropertyConfig.getPropertyValue("userName"), PropertyConfig.getPropertyValue("password"), PropertyConfig.getPropertyValue("client"));
+           //LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
+            SpaceCreateAndSearch spaceCreateAndSearch=new SpaceCreateAndSearch(driver);
+            /*TestData testData = TestData.getInstance();
+            List<Map> spaceRecords = testData.getData("SPACE","666677777");
+            List<Map> leaseRecords = testData.getData("LEASE","666677777");
+            List<Map> recurRecords = testData.getData("RECURRINGPAYMENT","666677777");
+            List<LogMessage> logMessages = leaseCreateAndSearch.isLeaseSpaceRecurExistsWithinAProperty(leaseRecords, spaceRecords, recurRecords);
+            for (LogMessage logMessage : logMessages) {
+                System.out.println(logMessage.getLogMessage());
+            }*/
+            List<String> stringList=new ArrayList<>();
+            stringList.add("Test_Property_Auto_Final_10_Lease_Space_32");
+            stringList.add("Test_Property_Auto_Final_10_Lease_Space_38");
+            System.out.println(spaceCreateAndSearch.deleteSpace("Test_Property_Auto_Final","666677773",stringList));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testgetPrequisiteTestCase() {
+        TestPlan tp =  new MainController().createTestPlanAndModule() ;
+        PreRequiste preRequiste = new PreRequiste() ;
+        //make sure in excel correspoding test case  row is yes.
+        Optional<TestCase> ts =   preRequiste.getPrequisiteTestCase("FASB", "5689132");
+        assertTrue(ts.isPresent());
+        assertTrue(ts.get().getTestCaseName().contains("FASB/IASB Lessee - Capitalization Threshold - Edit Revision - When IASB ROU Asset Capitalization Threshold is made less than the calculated ROU Asset, Lease Classification should not be Small Ticket Item"));
+
+    }
+
+    @Test
+    public void testJsontoMap(){
+        Optional<Map> map =  UtilKeywordScript.jsonStringToMap( "p:0,l:0,s:2") ;
+        Map m = map.get() ;
+        assertTrue(m.get("p").equals("0"));
+        assertTrue(m.get("s").equals("2"));
 
     }
 

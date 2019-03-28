@@ -25,17 +25,17 @@ public class TestData {
         return testData;
     }
 
-    public List<LogMessage> runPrequisites(String testCaseId) {
+    public List<LogMessage> runPrequisites(String testCaseId,String createData) {
         List<LogMessage> logMessageList =new ArrayList<>();
         try {
             //System.out.println(SpaceData);
             if(PropertyData.containsKey(testCaseId) || LeaseData.containsKey(testCaseId) || SpaceData.containsKey(testCaseId) || RecurData.containsKey(testCaseId))
                 logMessageList.add(new LogMessage(true,"Starting prerequisite data creation"));
-            if(PropertyData.containsKey(testCaseId)){
+            if(PropertyData.containsKey(testCaseId) && (null==createData || createData.isEmpty() || createData.toLowerCase().contains("property"))){
                 List<Map> propertyRecords=PropertyData.get(testCaseId);
-                PropertyCreate propertyCreate = new PropertyCreate(driver);
+                PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(driver);
                 for(Map propertyRecord: propertyRecords){
-                    LogMessage logMessage = propertyCreate.createProperty(propertyRecord);
+                    LogMessage logMessage = propertyCreateAndSearch.createProperty(propertyRecord);
                     logMessageList.add(logMessage);
                     if(!logMessage.isPassed()) {
                         logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
@@ -43,21 +43,21 @@ public class TestData {
                     }
                 }
             }
-            if(LeaseData.containsKey(testCaseId))
+            if(LeaseData.containsKey(testCaseId) && (null==createData || createData.isEmpty() || createData.toLowerCase().contains("lease")))
             {
                 List<Map> leaseRecords=LeaseData.get(testCaseId);
-                LeaseCreate leaseCreate = new LeaseCreate(driver);
-                List<LogMessage> logMessages = leaseCreate.createMultipleLeases(leaseRecords);
+                LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
+                List<LogMessage> logMessages = leaseCreateAndSearch.createMultipleLeases(leaseRecords);
                 logMessageList.addAll(logMessages);
                 if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))) {
                     logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
                     return logMessageList;
                 }
             }
-            if(SpaceData.containsKey(testCaseId))
+            if(SpaceData.containsKey(testCaseId) && (null==createData || createData.isEmpty() || createData.toLowerCase().contains("space")))
             {
                 List<Map> spaceRecords = SpaceData.get(testCaseId);
-                LeaseCreate leaseCreate = new LeaseCreate(driver);
+                SpaceCreateAndSearch spaceCreateAndSearch=new SpaceCreateAndSearch(driver);
                 Map<String, List<Map>> spacesList = new HashMap<>();
                 for (Map spaceRecord : spaceRecords) {
                     if (!spacesList.containsKey(spaceRecord.get("LeaseName"))) {
@@ -70,7 +70,7 @@ public class TestData {
 
                 }
                 for (String key : spacesList.keySet()) {
-                    List<LogMessage> logMessages = leaseCreate.createMultipleSpaces(spacesList.get(key));
+                    List<LogMessage> logMessages = spaceCreateAndSearch.createMultipleSpaces(spacesList.get(key));
                     logMessageList.addAll(logMessages);
                     if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))) {
                         logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
@@ -78,12 +78,12 @@ public class TestData {
                     }
                 }
             }
-            if(RecurData.containsKey(testCaseId))
+            if(RecurData.containsKey(testCaseId) && (null==createData || createData.isEmpty() || createData.toLowerCase().contains("recur")))
             {
                 List<Map> recurRecords = RecurData.get(testCaseId);
-                LeaseCreate leaseCreate = new LeaseCreate(driver);
+                LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
                 Map<String, List<Map>> recurList = new HashMap<>();
-
+                RecurringPaymentCreateandSearch recurringPaymentCreateandSearch=new RecurringPaymentCreateandSearch(driver);
                 for (Map spaceRecord : recurRecords) {
                     if (!recurList.containsKey(spaceRecord.get("LeaseName"))) {
                         List<Map> record = new ArrayList<Map>();
@@ -96,7 +96,7 @@ public class TestData {
                 }
                 //System.out.println(spacesList);
                 for (String key : recurList.keySet()) {
-                    List<LogMessage> logMessages = leaseCreate.addMultipleRecurringPayments(recurList.get(key));
+                    List<LogMessage> logMessages = recurringPaymentCreateandSearch.addMultipleRecurringPayments(recurList.get(key));
                     logMessageList.addAll(logMessages);
                     if(logMessages.stream().anyMatch(o -> o.isPassed().equals(false))){
                         logMessageList.add(new LogMessage(false, "Prerequisite not fulfilled"));
@@ -141,7 +141,17 @@ public class TestData {
             }
         }
     }
+    public List<Map> getData(String datatype, String testCaseId){
+       datatype=datatype.toUpperCase();
+       switch(datatype){
+           case "PROPERTY": return PropertyData.get(testCaseId);
+           case  "LEASE": return LeaseData.get(testCaseId);
+           case "SPACE": return SpaceData.get(testCaseId);
+           case "RECURRINGPAYMENT": return RecurData.get(testCaseId);
+           default: return null;
 
+       }
+    }
 
    private void keepData() {
        try {

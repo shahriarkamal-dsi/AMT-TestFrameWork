@@ -2,8 +2,10 @@ package test;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 import test.Log.LogMessage;
-import test.beforeTest.LeaseCreate;
-import test.beforeTest.PropertyCreate;
+import test.beforeTest.LeaseCreateAndSearch;
+import test.beforeTest.PropertyCreateAndSearch;
+import test.beforeTest.RecurringPaymentCreateandSearch;
+import test.beforeTest.SpaceCreateAndSearch;
 import test.driver.DriverFactory;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
@@ -33,11 +35,11 @@ public class DataCreate {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
             List<Map> propertyRecords = readExcel.read("Property");
 
-            PropertyCreate propertyCreate = new PropertyCreate(driver);
+            PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(driver);
             for (Map propertyRecord : propertyRecords) {
                 if (null == propertyRecord.get(PropertyConfig.EXECUTION_FLAG) || propertyRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !propertyRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
-                LogMessage logMessage = propertyCreate.createProperty(propertyRecord);
+                LogMessage logMessage = propertyCreateAndSearch.createProperty(propertyRecord);
                 assertTrue(logMessage.isPassed());
             }
         }
@@ -47,14 +49,14 @@ public class DataCreate {
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("lease")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
             List<Map> leaseRecords = readExcel.read("Lease");
-            LeaseCreate leaseCreate = new LeaseCreate(driver);
+            LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
             List<Map> leaseDatas=new ArrayList<>();
             for (Map leaseRecord : leaseRecords) {
                 if (null == leaseRecord.get(PropertyConfig.EXECUTION_FLAG) || leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !leaseRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
                 leaseDatas.add(leaseRecord);
             }
-            List<LogMessage> logMessages = leaseCreate.createMultipleLeases(leaseDatas);
+            List<LogMessage> logMessages = leaseCreateAndSearch.createMultipleLeases(leaseDatas);
             assertTrue(logMessages.stream().allMatch(o -> o.isPassed().equals(true)));
         }
 
@@ -64,7 +66,7 @@ public class DataCreate {
         if (PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("space")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
             List<Map> spaceRecords = readExcel.read("Space");
-            LeaseCreate leaseCreate = new LeaseCreate(driver);
+            SpaceCreateAndSearch spaceCreateAndSearch = new SpaceCreateAndSearch(driver);
             Map<String, List<Map>> spacesList = new HashMap<>();
             for (Map spaceRecord : spaceRecords) {
                 if (null == spaceRecord.get(PropertyConfig.EXECUTION_FLAG) || spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !spaceRecord.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
@@ -79,7 +81,7 @@ public class DataCreate {
 
             }
             for (String key : spacesList.keySet()) {
-                leaseCreate.createMultipleSpaces(spacesList.get(key));
+                spaceCreateAndSearch.createMultipleSpaces(spacesList.get(key));
             }
         }
     }
@@ -89,7 +91,7 @@ public class DataCreate {
         if(PropertyConfig.getPropertyValue("dataCreate").contains("all") || PropertyConfig.getPropertyValue("dataCreate").toLowerCase().contains("recurringpayment")) {
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
             List<Map> spaceRecords = readExcel.read("RecurringPayment");
-            LeaseCreate leaseCreate = new LeaseCreate(driver);
+            RecurringPaymentCreateandSearch recurringPaymentCreateandSearch = new RecurringPaymentCreateandSearch(driver);
             Map<String, List<Map>> spacesList = new HashMap<>();
 
             for (Map spaceRecord : spaceRecords) {
@@ -106,7 +108,7 @@ public class DataCreate {
             }
             //System.out.println(spacesList);
             for (String key : spacesList.keySet()) {
-                leaseCreate.addMultipleRecurringPayments(spacesList.get(key));
+                recurringPaymentCreateandSearch.addMultipleRecurringPayments(spacesList.get(key));
             }
         }
 

@@ -189,6 +189,42 @@ public class UIBase {
             return new LogMessage(false, "Exception occurred during loading page");
         }
     }
+    public LogMessage VerifyEnabledTrue(String objectLocatorData){
+        try{
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if(null == element)
+                return  new LogMessage(false, "Element is not found");
+            String logMessage = element.isEnabled() ? "Element is enabled " : "Element is not enabled" ;
+            return new LogMessage(element.isEnabled(), logMessage);
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new LogMessage(false, "Element is not clickable");
+        }
+    }
+
+
+    public LogMessage compareGreaterThanValue(String value,String compareTovalue ) {
+        try {
+            Integer num1 = Integer.valueOf(value) ;
+            Integer num2 = Integer.valueOf(compareTovalue) ;
+           return  num1.compareTo(num1) == 1 ? new LogMessage(true,  "given value greater than  " + compareTovalue) :  new LogMessage(false,  "given value is not greater than  " + compareTovalue) ;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occured " + ex.getMessage());
+
+        }
+
+    }
+    public LogMessage refreshPage(){
+        try{
+            webDriver.navigate().refresh();
+            return new LogMessage(true,"Page refreshed");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
 
 
 }
