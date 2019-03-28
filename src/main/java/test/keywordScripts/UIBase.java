@@ -211,7 +211,6 @@ public class UIBase {
            String  compareTovalue  = testData.split(",")[1] ;
             Double num1 = Double.parseDouble(value) ;
             Double num2 = Double.parseDouble(compareTovalue) ;
-            System.out.println(num1 + " "  + num2);
            return  num1.compareTo(num2) == 1 ? new LogMessage(true,  "given value greater than  " + compareTovalue) :  new LogMessage(false,  "given value is not greater than  " + compareTovalue) ;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -219,14 +218,6 @@ public class UIBase {
 
         }
 
-    }
-    public LogMessage refreshPage(){
-        try{
-            webDriver.navigate().refresh();
-            return new LogMessage(true,"Page refreshed");
-        }catch (Exception e){
-            return new LogMessage(false,"Exception occur " + e.getMessage());
-        }
     }
 
     public LogMessage refreshPage(){
@@ -251,7 +242,6 @@ public class UIBase {
                     return new LogMessage(true,"Revision found");
                 }
             }
-            System.out.println("enter  2") ;
             return new LogMessage(false,"Revision not found");
         }catch (Exception e){
             return new LogMessage(false,"Exception occur " + e.getMessage());

@@ -64,7 +64,7 @@ public class PropertyCreateAndSearch {
                 checkBoxItem.click();
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "save") ;
             element.click();
-            UtilKeywordScript.delay(15);
+            UtilKeywordScript.delay(60);
 
             if(webDriver.findElement(By.xpath("//*[contains(@id,'lblPropertyCodeValue')]")).getText().equals(data.get("propertyCode")))
             {
