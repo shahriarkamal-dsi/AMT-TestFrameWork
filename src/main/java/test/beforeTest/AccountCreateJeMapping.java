@@ -28,20 +28,18 @@ public class AccountCreateJeMapping {
         try {
 
             UIBase uiBase = new UIBase(webDriver);
-            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             uiBase.Click(webDriver.findElement(By.linkText("Add New")));
-           // webDriver.findElement(By.linkText("Add New")).click();
-            UtilKeywordScript.delay(2);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             UITable uiTable = new UITable(webDriver);
             uiTable.ClickCellData("Common.GlobalSearch.accountTable","*Account Number,0,"+(String)data.get("Account Number"));
-            UtilKeywordScript.delay(1);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiTable.EnterCellData("Common.GlobalSearch.accountTable","*Account Number,0,"+(String)data.get("Account Number"));
-            UtilKeywordScript.delay(2);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             uiTable.ClickCellData("Common.GlobalSearch.accountTable","*Description,0,"+(String)data.get("Description"));
-            UtilKeywordScript.delay(1);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiTable.EnterCellData("Common.GlobalSearch.accountTable","*Description,0,"+(String)data.get("Description"));
-            UtilKeywordScript.delay(2);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -55,24 +53,24 @@ public class AccountCreateJeMapping {
 
             uiMenu.SelectMenu("Common.Homepage.pgAMTHome" , "Accounting,Accounting Setup") ;
             uibase.WaitingForPageLoad();
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             uiMenu.SelectMenu("","Account Numbers");
             uibase.WaitingForPageLoad();
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.chartOfAccountList");
             uiDropDown.searchAndSelectItem("Common.GlobalSearch.chartOfAccountInput", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), chartOfAccount);
-            UtilKeywordScript.delay(10);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *2);
             for (Map accountData : accountDatas) {
                 if (null == accountData.get(PropertyConfig.EXECUTION_FLAG) || accountData.get(PropertyConfig.EXECUTION_FLAG).toString().isEmpty() || !accountData.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes"))
                     continue;
                 else {
                     createAccount(accountData);
-                    UtilKeywordScript.delay(1);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                 }
             }
             webDriver.findElement(By.linkText("Update")).click();
             uibase.WaitingForPageLoad();
-            UtilKeywordScript.delay(2);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,31 +86,30 @@ public class AccountCreateJeMapping {
             WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
             uiMenu.SelectMenu("Common.Homepage.pgAMTHome" , "Accounting,Accounting Setup") ;
             uibase.WaitingForPageLoad();
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
            // UIMenu uiMenu = new UIMenu(webDriver);
             uiMenu.SelectMenu("","JE Mapping");
             uibase.WaitingForPageLoad();
-            UtilKeywordScript.delay(05);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *3);
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.leaseTypes");
-            UtilKeywordScript.delay(5);
             uiDropDown.SelectItem("Common.GlobalSearch.leaseTypes", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("Lease Types"));
            // uibase.WaitingForPageLoad();
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.jMappingchartOfAccountList");
             uiDropDown.SelectItem("Common.GlobalSearch.jMappingchartOfAccountList", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("chartOfAccount"));
-            UtilKeywordScript.delay(02);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             objectLocatorData = ObjectLocatorDataStorage.getObjectLocator("Common.GlobalSearch.jMappingMaintainCodeType");
             uiDropDown.SelectItem("Common.GlobalSearch.jMappingMaintainCodeType", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("Maintain Code Type"));
-            UtilKeywordScript.delay(02);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
 
             webDriver.findElement(By.linkText("Add New")).click();
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             UIDropDown dropDown = new UIDropDown(webDriver);
             dropDown.SelectItem("Common.GlobalSearch.contractType", (String) JMappingData.get("Contract Type"));
-
             UITable uiTable = new UITable(webDriver);
             uiTable.ClickCellData("Common.GlobalSearch.jeMappingTable","*Payment Type,0,test");
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             dropDown.SelectItem("Common.GlobalSearch.paymentType",(String) JMappingData.get("Payment Type"));
 
             Map accountRecord = new HashMap<String,Map>() ;
@@ -172,16 +169,16 @@ public class AccountCreateJeMapping {
                 WebElement element = row.get(key);
                 //System.out.println(element);
                 element.click();
-                UtilKeywordScript.delay(5);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                 element.findElement(By.tagName("button")).click();
                 uibase.WaitingForPageLoad();
-                UtilKeywordScript.delay(5);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                 Map account = (Map) accountData.get(clName);
                 System.out.println(account.get("Account Number"));
                 uiTable.filterTableByColumn("Common.GlobalSearch.jMappingAccountTable", "Account Number," + account.get("Account Number"));
-                UtilKeywordScript.delay(4);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
                 uiTable.DoubleClickCellInTable("Common.GlobalSearch.jMappingAccountTable", "Account Number," + account.get("Account Number"));        //FASB/IASB - Expense Debit - Financing
-                UtilKeywordScript.delay(2);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
 
             }
 

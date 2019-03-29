@@ -29,8 +29,9 @@ public class UILink {
                     webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
                     webElement = webElement.findElement(By.linkText(Linkname));
                 }
-                else
-                    return new LogMessage(false,"Elements not found");
+                else{
+                    webElement = webDriver.findElement(By.linkText(Linkname));
+                }
             }
             else{
                 webElement = webDriver.findElement(By.linkText(Linkname));
@@ -39,7 +40,7 @@ public class UILink {
             return new LogMessage(true,"web element is clicked");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false,"Exception occured");
+            return new LogMessage(false,"Exception occured"+e.getMessage());
         }
     }
 

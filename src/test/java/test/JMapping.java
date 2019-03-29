@@ -32,7 +32,7 @@ public class JMapping {
             List<Map> accountRecords = readExcel.read("createAccount");
             List<Map> jMappingRecords= readExcel.read("JMapping");
             AccountCreateJeMapping accountCreateJeMapping = new AccountCreateJeMapping(webDriver) ;
-            accountCreateJeMapping.createAccounts(accountRecords, (String) jMappingRecords.get(0).get("chartOfAccount"));
+            //accountCreateJeMapping.createAccounts(accountRecords, (String) jMappingRecords.get(0).get("chartOfAccount"));
             accountCreateJeMapping.createJEMappping(accountRecords,jMappingRecords.get(0));
             long end = System.currentTimeMillis();
             System.out.println((end-start)/1000);

@@ -206,7 +206,7 @@ public class UITable extends  UtilKeywordScript{
 
     private List<Map<String, WebElement>> getAllValuesfromSingleTable(String objectLocatorData ) {
         try {
-        webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS) ;
+        webDriver.manage().timeouts().implicitlyWait(PropertyConfig.SHORT_WAIT_TIME_SECONDS *2, TimeUnit.SECONDS) ;
         List<Map<String,WebElement>> tableData = new ArrayList<Map<String,WebElement>>();
         WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
         List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
@@ -472,11 +472,11 @@ public class UITable extends  UtilKeywordScript{
                         UIBase uiBase = new UIBase(webDriver);
                         uiBase.Click(element.findElement(By.linkText("")));
                        // element.findElement(By.xpath("//*[@class='k-icon k-filter']")).click();
-                        UtilKeywordScript.delay(1);
+                        UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                         webDriver.findElement(By.xpath("//input[@class='k-textbox']")).sendKeys(columnValue);   //button[text()='Filter']
-                        UtilKeywordScript.delay(1);
+                        UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                         webDriver.findElement(By.xpath("//button[text()='Filter']")).click();
-                        UtilKeywordScript.delay(3);
+                        UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                        return  new LogMessage(true, "column filter done");
 
                     }

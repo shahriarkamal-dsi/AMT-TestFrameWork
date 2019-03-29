@@ -33,9 +33,9 @@ public class UIText {
                 return new LogMessage(false,"webElement is not founding");
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", userWeb);
             userWeb.clear();
-            UtilKeywordScript.delay(1);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.click();
-            UtilKeywordScript.delay(1);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.sendKeys(textData);
             return new LogMessage(true,"text is set up");
         } catch(Exception ex){

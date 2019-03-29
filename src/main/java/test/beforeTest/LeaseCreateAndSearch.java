@@ -1,8 +1,6 @@
 package test.beforeTest;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.ObjectLocatorDataStorage;
@@ -137,10 +135,10 @@ public class LeaseCreateAndSearch {
             UtilKeywordScript.switchLastTab(webDriver);
             UtilKeywordScript.delay(10);
             LogMessage logMessage =  uiTable.ClickLinkInTable(objectLocatorPrefix + "leasetable","DBA Name," + (String)data.get("LeaseName"));
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
             webDriver.close();
             UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS*PropertyConfig.NUMBER_OF_ITERATIONS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
 
             return new LogMessage(true, " Lease found successfully");
         }catch (Exception e){
@@ -165,7 +163,7 @@ public class LeaseCreateAndSearch {
             if (!clickLinkLog.isPassed())
                 return new LogMessage(false, "exception occur during expanding property information");
 
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
 
             UIPanel uiPanel = new UIPanel(webDriver);
             LogMessage log = uiPanel.VerifyPanelContentTrue(objectLocatorPrefix +"tbLease", (String)data.get("dbaName"));
@@ -185,7 +183,7 @@ public class LeaseCreateAndSearch {
         String  objectLocatorPrefix = "Common.Property.";
         UILink uiLink = new UILink(webDriver);
         LogMessage log =uiLink.ClickLink(objectLocatorPrefix +"tbLease", leaseName);
-        UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+        UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
         UtilKeywordScript.switchLastTab(webDriver);
         if (log.isPassed()){
             return new LogMessage(true, "Navigated to lease page");
@@ -210,7 +208,7 @@ public class LeaseCreateAndSearch {
                 logMessages.add(new  LogMessage(false, "Error occur while expanding all in property named "+leaseList.get(0).get("propertyName")+" and code "+leaseList.get(0).get("propertyCode")));
                 return logMessages;
             }
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             for(Map lease:leaseList){
                 LogMessage logMessage=uiPanel.VerifyPanelContentTrue(leaseObjectLocator, (String) lease.get("dbaName"));
                 if(logMessage.isPassed()) {
@@ -245,9 +243,9 @@ public class LeaseCreateAndSearch {
                 mainWindow=webDriver.getWindowHandle();
                 navigateToLeasePageFromProperty(key);
                 UtilKeywordScript.switchLastTab(webDriver);
-                UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
                 LogMessage log = uiLink.ClickLink(null,"Expand All");
-                UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
                 if (!log.isPassed()) {
                     logMessages.add(new LogMessage(false, "exception occur during expanding lease information"));
                     return logMessages;
@@ -308,11 +306,11 @@ public class LeaseCreateAndSearch {
             data.put("propertyCode", propertyCode);
             LogMessage logMessageProperty = propertyCreateAndSearch.navigateToProperty(data);
             String mainWindow=webDriver.getWindowHandle();
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             if(logMessageProperty.isPassed()) {
                 for (Map lease : leases) {
                     LogMessage logMessageSpace = navigateToLeasePageFromProperty((String)lease.get("dbaName"));
-                    UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+                    UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
                     if (logMessageSpace.isPassed()) {
                         UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
                         WebElement webElement = WebObjectSearch.getChildWebElement(webDriver, objectLocatorData + "header", objectLocatorData + "delete");
