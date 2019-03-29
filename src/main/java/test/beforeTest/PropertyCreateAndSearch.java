@@ -165,7 +165,9 @@ public class PropertyCreateAndSearch {
                 uiText.WaitForVisibilityOfText(objectLocatorPrefix+"propertyCodeCheck", propertyCode);
                 webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "delete");
                 webElement.click();
-
+                while ( utilKeywordScript.isAlertPresent()) {
+                    webDriver.switchTo().alert().accept();
+                }
                 UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
                 if (uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome").isPassed()) {
                     utilKeywordScript.redirectHomePage();
