@@ -107,7 +107,7 @@ public class UITable extends  UtilKeywordScript{
                     if(null  != columnName && null != columnValue ) {
                         if(columnName.equals(headCells.get(index).getText())) {
 
-                            if(columnValue.equals(bodyCell.getText())) {
+                            if(bodyCell.getText().contains(columnValue)) {
                                 getMatchrow = true;
                             }
                         }
@@ -174,7 +174,7 @@ public class UITable extends  UtilKeywordScript{
                 int index = 0;
                 for(WebElement bodyCell : bodyCells) {
                     if(null  != columnName && null != columnValue ) {
-                        if(columnName.equals(headCells.get(index).getText())) {
+                        if(headCells.get(index).getText().contains(columnValue)) {
                             if(columnValue.equals(bodyCell.getText())) {
                                 getMatchrow = true;
                             }
@@ -257,7 +257,7 @@ public class UITable extends  UtilKeywordScript{
 
             WebElement element = row.get(columnName) ;
             String text = element.getText();
-            if(columnValue.equals(element.getText())) {
+            if(element.getText().contains(columnValue)) {
                 UIBase uibase = new UIBase(webDriver);
                 uibase.ClickDbClickRClick(element,"DBLCLICK");
                 return new LogMessage(true, "element is double clicked");
@@ -471,11 +471,26 @@ public class UITable extends  UtilKeywordScript{
                     if(element.getText().equals(columnName)) {
                         UIBase uiBase = new UIBase(webDriver);
                         uiBase.Click(element.findElement(By.linkText("")));
-                       // element.findElement(By.xpath("//*[@class='k-icon k-filter']")).click();
                         UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-                        webDriver.findElement(By.xpath("//input[@class='k-textbox']")).sendKeys(columnValue);   //button[text()='Filter']
+                        List<WebElement> webElements=webDriver.findElements(By.xpath("//input[@class='k-textbox']"));
+                        for(WebElement webElement: webElements)
+                        {
+                            if(webElement.isDisplayed() && webElement.isEnabled()){
+                                webElement.sendKeys(columnValue);
+                                break;
+                            }
+
+                        }
                         UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-                        webDriver.findElement(By.xpath("//button[text()='Filter']")).click();
+                        webElements=webDriver.findElements(By.xpath("//button[text()='Filter']"));
+                        for(WebElement webElement: webElements)
+                        {
+                            if(webElement.isDisplayed() && webElement.isEnabled()){
+                                uiBase.Click(webElement);
+                                break;
+                            }
+
+                        }
                         UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                        return  new LogMessage(true, "column filter done");
 

@@ -164,7 +164,7 @@ public class PropertyCreateAndSearch {
                 WebElement webElement;
                 uiText.WaitForVisibilityOfText(objectLocatorPrefix+"propertyCodeCheck", propertyCode);
                 webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "delete");
-                webElement.click();
+                uiBase.Click(webElement);
                 while ( utilKeywordScript.isAlertPresent()) {
                     webDriver.switchTo().alert().accept();
                 }
