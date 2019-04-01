@@ -65,8 +65,7 @@ public class PropertyCreateAndSearch {
                 checkBoxItem.click();
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "save") ;
             element.click();
-            uiText.WaitForInvisibilityOfText(objectlocatorPrefix+"createPropertyTitle","Property Information");
-            LogMessage logMessage=uiText.WaitForVisibilityOfText(objectlocatorPrefix+"propertyCode", (String) data.get("propertyCode"));
+            LogMessage logMessage=uiText.WaitForVisibilityOfText(objectlocatorPrefix+"propertyCodeCheck", (String) data.get("propertyCode"));
             if(logMessage.isPassed())
             {
                 utilKeywordScript.redirectHomePage();
@@ -159,11 +158,13 @@ public class PropertyCreateAndSearch {
             map.put("propertyCode",propertyCode);
             map.put("propertyName",propertyName);
             UIBase uiBase=new UIBase(webDriver);
+            UIText uiText= new UIText(webDriver);
             LogMessage logMessage=navigateToProperty(map);
             if(logMessage.isPassed()) {
                 WebElement webElement;
+                uiText.WaitForVisibilityOfText(objectLocatorPrefix+"propertyCodeCheck", propertyCode);
                 webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "delete");
-                webElement.click();
+                uiBase.Click(webElement);
                 while ( utilKeywordScript.isAlertPresent()) {
                     webDriver.switchTo().alert().accept();
                 }

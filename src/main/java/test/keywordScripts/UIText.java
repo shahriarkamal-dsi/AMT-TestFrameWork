@@ -60,6 +60,7 @@ public class UIText {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(objectLocatorPath +"//*[contains(text(),'" + textData + "')]")));
             return new LogMessage(true, "Text is visible");
         }catch (Exception e){
+            e.printStackTrace();
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
     }

@@ -50,7 +50,7 @@ public class RecurringPaymentCreateandSearch {
             UIBase uiBase = new UIBase(webDriver);
             UITable uiTable = new UITable(webDriver);
 
-            uiLink.ClickLink("","Add New");
+            uiLink.ClickLink("Common.Lease.tbRPayment","Add New");
             UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();

@@ -117,7 +117,7 @@ public class UtilKeywordScript {
         try {
             wait.until(ExpectedConditions.alertIsPresent());
             foundAlert = true;
-        } catch (TimeoutException e) {
+        } catch (Exception e) {
             foundAlert = false;
         }
         return foundAlert;
