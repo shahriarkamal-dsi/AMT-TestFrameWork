@@ -105,7 +105,7 @@ public class UITable extends  UtilKeywordScript{
                 for(WebElement bodyCell : bodyCells) {
                     //System.out.println("Column Name"+headCells.get(index).getText() + "Value"+bodyCell.getText());
                     if(null  != columnName && null != columnValue ) {
-                        if(columnName.equals(headCells.get(index).getText())) {
+                        if(headCells.get(index).getText().contains(columnName)) {
 
                             if(bodyCell.getText().contains(columnValue)) {
                                 getMatchrow = true;
@@ -174,8 +174,8 @@ public class UITable extends  UtilKeywordScript{
                 int index = 0;
                 for(WebElement bodyCell : bodyCells) {
                     if(null  != columnName && null != columnValue ) {
-                        if(headCells.get(index).getText().contains(columnValue)) {
-                            if(columnValue.equals(bodyCell.getText())) {
+                        if(headCells.get(index).getText().contains(columnName)) {
+                            if(bodyCell.getText().contains(columnValue)) {
                                 getMatchrow = true;
                             }
                         }
@@ -439,7 +439,6 @@ public class UITable extends  UtilKeywordScript{
                 return new LogMessage(false, "no table data");
             if(!row.containsKey(columnName))
                 return new LogMessage(false, "column name not present");
-
             WebElement element = row.get(columnName) ;
             if(element.isEnabled()) {
                 if(inputTag != "")

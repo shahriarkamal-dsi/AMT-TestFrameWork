@@ -3,6 +3,7 @@ package test.Log;
 import test.coreModule.TestCase;
 
 import java.awt.*;
+import java.nio.file.LinkOption;
 import java.util.List;
 
 public class LogReport {
@@ -32,6 +33,14 @@ public class LogReport {
         }
         
         for(LogMessage logMessage : logmessages) {
+            List<LogMessage> subLogMessages=logMessage.getSubLogMessage();
+            if(!subLogMessages.isEmpty())
+            {
+                for(LogMessage subLogMessage: subLogMessages)
+                {
+                    createLog.writeLog(logName,subLogMessage.getLogMessage(),subLogMessage.isPassed(),subLogMessage.isSkipped());
+                }
+            }
             createLog.writeLog(logName,logMessage.getLogMessage(),logMessage.isPassed(),logMessage.isSkipped());
             if(!testCase.isPassed()){
                 createFailedLog.writeLog(logName,logMessage.getLogMessage(),logMessage.isPassed(),logMessage.isSkipped());
