@@ -1,10 +1,13 @@
 package test.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LogMessage {
     private Boolean passed = false ;  ;
     private String logMessage = "" ;
     private Boolean skipped = false;
-
+    private List<LogMessage> subLogMessages= new ArrayList<LogMessage>();
     public LogMessage(){
 
     }
@@ -21,8 +24,8 @@ public class LogMessage {
     public void setPassed(Boolean passedValue) {
         this.passed = passedValue ;
     }
-
-
+    public void setSubLogMessage(LogMessage logMessage){ this.subLogMessages.add(logMessage); }
+    public List<LogMessage> getSubLogMessage(){ return this.subLogMessages; }
     public String getLogMessage(){
         return logMessage ;
     }

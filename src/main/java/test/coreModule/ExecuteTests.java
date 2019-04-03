@@ -139,6 +139,16 @@ public class ExecuteTests {
             Boolean pageRefresh = testStep.isRefreshPageOn();
             Boolean critical = testStep.isCritical();
             String[] logMeessageFromXL=null;
+            String passedLogMessage="";
+            String failedLogMessage="";
+            if(null!=testStep.getLogMessage() && !testStep.getLogMessage().equals("")) {
+                logMeessageFromXL = testStep.getLogMessage().split("\\?");
+                passedLogMessage = logMeessageFromXL[0];
+                if (logMeessageFromXL.length == 2) {
+                    failedLogMessage = logMeessageFromXL[1];
+                }
+
+            }
             int numberOfParams = 0;
 
             if (! executionFlag) {
@@ -156,24 +166,10 @@ public class ExecuteTests {
             }
             UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
-            if(null!=testStep.getLogMessage() && !testStep.getLogMessage().equals("")) {
-                logMeessageFromXL = testStep.getLogMessage().split("\\?");
-                if (logMessage.isPassed() && logMeessageFromXL.length == 1) {
-                    logMessage.setLogMessage(logMeessageFromXL[0]);
-                } else if (logMeessageFromXL[0].equals("")) {
-                    if(!logMessage.isPassed())
-                        logMessage.setLogMessage(logMeessageFromXL[1]);
-                    else
-                        logMessage.setLogMessage(testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage());
-                } else if (logMeessageFromXL.length == 2) {
-                    if (logMessage.isPassed())
-                        logMessage.setLogMessage(logMeessageFromXL[0]);
-                    else
-                        logMessage.setLogMessage(logMeessageFromXL[1]);
-                }else
-                    logMessage.setLogMessage(testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage());
-            }else
-                logMessage.setLogMessage(testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage());
+            if(logMessage.isPassed())
+                logMessage.setLogMessage(passedLogMessage.isEmpty()? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage(): passedLogMessage);
+            else
+                logMessage.setLogMessage(failedLogMessage.isEmpty()? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage(): failedLogMessage);
 
             testStep.setPassed(logMessage.isPassed());
 
