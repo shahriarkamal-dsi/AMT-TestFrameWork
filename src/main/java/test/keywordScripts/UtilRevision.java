@@ -2,50 +2,59 @@ package test.keywordScripts;
 
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
+import test.objectLocator.WebObjectSearch;
 
-public class RevisionUtility {
+public class UtilRevision {
 
     private WebDriver webDriver ;
 
-    public RevisionUtility() {
+    public UtilRevision() {
 
     }
 
-    public  RevisionUtility(WebDriver webDriver) {
+    public UtilRevision(WebDriver webDriver) {
         this.webDriver = webDriver ;
     }
 
     public LogMessage validateProcessing(){
+        LogMessage log = new LogMessage();
         try{
             String objectlocatorPrefix = "FASB.FIProcess.";
             UIText uiText = new UIText(webDriver);
+            UILink uiLink = new UILink(webDriver);
             UIBase uiBase = new UIBase(webDriver);
-            LogMessage log0 = uiText.WaitForVisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete ,60");
-            LogMessage log = uiText.WaitForVisibilityOfText(objectlocatorPrefix + "processInfoPanel","Position in Queue:");
-            LogMessage log1 = uiBase.VerifyEnabledTrue(objectlocatorPrefix + "lnkContinueWithProcess");
-            if (!log1.isPassed()){
-                System.out.println("lnkContinueWithProcess");
-            }
-            LogMessage log2 = uiBase.VerifyEnabledTrue(objectlocatorPrefix + "lnkPrint");
-            if (!log2.isPassed()){
-                System.out.println("lnkPrint");
-            }
-            LogMessage log3 = uiBase.VerifyEnabledTrue(objectlocatorPrefix + "lnkCancel");
-            if (log3.isPassed()){
-                System.out.println("lnkCancel");
-            }
-            LogMessage log4 = uiText.WaitForVisibilityOfText(objectlocatorPrefix + "processInfoPanel","Ready To Process 0 Revisions");
-            if (log4.isPassed()){
-                System.out.println("Ready To Process 0 Revisions");
-            }
-            LogMessage log5 = uiText.WaitForInvisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete ,60");
-            if (log5.isPassed()){
-                return new LogMessage(true,"Processing done");
-            }
-            return new LogMessage(false,"Processing fail");
+            UIPanel uiPanel = new UIPanel(webDriver);
+            LogMessage subLog = uiText.WaitForVisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete,60");
+            log.setSubLogMessage(subLog);
+            subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processInfoPanel","Position in Queue:");
+            log.setSubLogMessage(subLog);
+            WebElement element = WebObjectSearch.getWebElement(webDriver, objectlocatorPrefix + "queueCount");
+            String countString = element.getText().toString();
+            subLog = uiBase.compareGreaterThanValue(countString + ",0");
+            log.setSubLogMessage(subLog);
+            subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkContinueWithProcess");
+            log.setSubLogMessage(subLog);
+            subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkPrint");
+            log.setSubLogMessage(subLog);
+            subLog = uiLink.verifyLinkEnabledTrue(objectlocatorPrefix + "lnkCancel");
+            log.setSubLogMessage(subLog);
+            subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processCount","Ready To Process 0 Revisions");
+            log.setSubLogMessage(subLog);
+            subLog = uiText.WaitForInvisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete ,60");
+            log.setSubLogMessage(subLog);
+            if (subLog.isPassed()){
+                log.setPassed(true);
+                log.setLogMessage("Processing done");
+                return log;
+            };
+            log.setPassed(false);
+            log.setLogMessage("Processing fail");
+            return log;
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur");
+            log.setLogMessage("Exception occur");
+            return log;
         }
     }
 
