@@ -48,20 +48,24 @@ public class SpaceCreateAndSearch {
             UIText uiText = new UIText(webDriver);
 
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-            uiLink.ClickLink("","Add New Space");
+            WebElement addSpaceElement=WebObjectSearch.getWebElement(webDriver,objectLocatorPrefix+"btnNewSpace");
+            uiBase.Click(addSpaceElement);
             UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
 
-            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
 
             uiText.SetText(objectLocatorPrefix +"space",(String)data.get("Space"));
             uiText.SetText(objectLocatorPrefix +"floor",(String)data.get("Floor"));
 
             List<WebElement>  linkedItems  = WebObjectSearch.getWebElements(webDriver, objectLocatorPrefix + "linked");
             uiBase.Click(linkedItems.get(0));
-            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
-
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            uiText.SetText(objectLocatorPrefix+"startDate", (String) data.get("startDate"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            uiText.SetText(objectLocatorPrefix+"endDate", (String) data.get("endDate"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiBase.Click(objectLocatorPrefix + "btnSave");
 
             uiBase.WaitingForPageLoad();
