@@ -47,6 +47,7 @@ public class UIDropDown {
 
     public LogMessage SelectItem(String objectLocatorData,String dropDownObjectLocatorData,String testData) {
         try {
+            UIBase uiBase = new UIBase(webDriver);
             WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if (null == dropDownElement)
                 return new LogMessage(false," drop down element is not found.");
@@ -57,9 +58,8 @@ public class UIDropDown {
             List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[contains(text() , '" + testData + "')]"));
             if (null == dropDownDataElements || dropDownDataElements.isEmpty())
                 return new LogMessage(false," drop down list element is not found.");
-            dropDownDataElements.get(dropDownDataElements.size()-1).click();
-            //UIBase uiBase = new UIBase(webDriver);
-           // uiBase.Click(dropDownDataElement);
+            WebElement dropDownDataElement = dropDownDataElements.get(dropDownDataElements.size()-1);
+            uiBase.Click(dropDownDataElement);
             return new LogMessage(true, "drop down item is selected") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
