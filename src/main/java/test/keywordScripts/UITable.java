@@ -544,7 +544,7 @@ public class UITable extends  UtilKeywordScript{
             String columnValue2=data[3];
             Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);//
             WebElement element=row.get(columnName2);
-            String columnValueOfUI  = UtilKeywordScript.convertStringToNumber(element.getText()) ;
+            String columnValueOfUI  = UtilKeywordScript.convertStringToNumber(element.getAttribute("textContent")) ;
             if(Double.parseDouble(columnValue2)==Double.parseDouble(columnValueOfUI)){
                 return new LogMessage( true, "Verified Equal Value");
             }
