@@ -35,6 +35,8 @@ public class PropertyConfig {
     public static Integer WAIT_TIME_EXPLICIT_WAIT=60;
     public static Integer ONE_SECOND =1;
     public static String LOGMESSAGE="LogMessage";
+    public static String DELAY="Delay";
+    public static String PARENT="Parent";
 
     public static String  getPropertyValue(String property){
         try {

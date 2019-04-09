@@ -164,8 +164,10 @@ public class ExecuteTests {
                 objects.add(testData);
                 numberOfParams++;
             }
-            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
+            int delayTime=delayTime(testStep.delayTime());
+            if(!(delayTime<=0))
+                UtilKeywordScript.delay(delayTime);
             if(logMessage.isPassed())
                 logMessage.setLogMessage(passedLogMessage.isEmpty()? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage(): passedLogMessage);
             else
@@ -288,6 +290,14 @@ public class ExecuteTests {
         catch (Exception ex){
             ex.printStackTrace();
             return testData;
+        }
+    }
+    private int delayTime(String time){
+        try{
+            return Integer.parseInt(time.trim());
+
+        }catch (Exception e){
+            return PropertyConfig.SHORT_WAIT_TIME_SECONDS;
         }
     }
 }

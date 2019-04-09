@@ -1,6 +1,7 @@
 package test.keywordScripts;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
@@ -49,7 +50,7 @@ public class UITable extends  UtilKeywordScript{
                Map<String,WebElement> data = bodyCells.stream().collect(Collectors.toMap( bodycell ->
                {
                    int count = index.getAndIncrement() ;
-                 return UtilKeywordScript.isEmpty(headCells.get(count).getText()) ? String.valueOf(count) :  headCells.get(count).getText() ;
+                 return UtilKeywordScript.isEmpty(headCells.get(count).getAttribute("textContent")) ? String.valueOf(count) :  headCells.get(count).getAttribute("textContent") ;
                }, bodycell -> bodycell));
                return data;
            }).collect(Collectors.toList());
@@ -78,7 +79,6 @@ public class UITable extends  UtilKeywordScript{
             List<Map> tableData = new ArrayList<Map>();
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             List<WebElement> tables  = rootElement.findElements(By.tagName("table"));
-
             boolean specialTable = false;
             if(tables.size() <2) {
                 return getSingleRowfromSingleTable(objectLocatorData,columnName,columnValue,rowIndex);
@@ -89,12 +89,6 @@ public class UITable extends  UtilKeywordScript{
             if(rows.size()>1)
                 specialTable = true;
             List<WebElement> headCells = rows.get(0).findElements(By.tagName("th"));
-            /*
-            for(WebElement row : rows) {
-                List<WebElement> headCells = row.findElements(By.tagName("th"));
-                for(WebElement headcell : headCells) {
-                }
-            }*/
             rows = body.findElements(By.tagName("tr"));
             int countRow = 0 ;
             boolean getMatchrow = false ;
@@ -103,7 +97,6 @@ public class UITable extends  UtilKeywordScript{
                 List<WebElement> bodyCells = row.findElements(By.tagName("td"));
                 int index = 0;
                 for(WebElement bodyCell : bodyCells) {
-                    //System.out.println("Column Name"+headCells.get(index).getText() + "Value"+bodyCell.getText());
                     if(null  != columnName && null != columnValue ) {
                         if(headCells.get(index).getText().contains(columnName)) {
 
@@ -114,18 +107,13 @@ public class UITable extends  UtilKeywordScript{
                     }
                     String key = "";
                     if(specialTable) {
-                        //  String clmnName = bodyCell.getAttribute("title") == "" ? "na" : bodyCell.getAttribute("title") ;
-                     //   key = String.valueOf(index) + "," + bodyCell.getAttribute("title") ;
                         key =  Optional.ofNullable(bodyCell.getAttribute("title")).orElse(String.valueOf(index));
                     }
-                    else
-                       // key =  String.valueOf(index) + "," + headCells.get(index).getText();
-                       key =  Optional.ofNullable(headCells.get(index).getText()).orElse(String.valueOf(index));
+                    else {
+                        key = Optional.ofNullable(headCells.get(index).getAttribute("textContent")).orElse(String.valueOf(index));
+                    }
                     rowdata.put(key,bodyCell);
                     index++;
-
-                    //System.out.println(bodyCell.getText());
-                    //System.out.println(headcell.getAttribute("data-title"));
                 }
                 if(null  != rowIndex &&  countRow == rowIndex.intValue())
                     return rowdata ;
@@ -226,7 +214,7 @@ public class UITable extends  UtilKeywordScript{
             int index = 0;
             for(WebElement bodyCell : bodyCells) {
               //  String key =  String.valueOf(index) + "," + headCells.get(index).getText();
-               String key =  Optional.ofNullable(headCells.get(index).getText()).orElse(String.valueOf(index));
+               String key =  Optional.ofNullable(headCells.get(index).getAttribute("textContent")).orElse(String.valueOf(index));
                 rowdata.put(key,bodyCell);
                 index++;
             }
@@ -363,20 +351,18 @@ public class UITable extends  UtilKeywordScript{
             if(!validateTestData(testData,4)){
                 return  new LogMessage(false, "test data invalid");
             }
-            String[] data = testData.split(",");
+           String[] data = testData.split(",");
            final String columnName1 = Optional.ofNullable(data[0]).orElse("") ;
-           final String columnValue1 = Optional.ofNullable(data[1]).orElse("") ;
-          final  String columnName2 = Optional.ofNullable(data[2]).orElse("") ;
-           final String columnValue2 = Optional.ofNullable(data[3]).orElse("") ;
-
+           final String columnValue1 = Optional.ofNullable(data[1].trim()).orElse("") ;
+           final  String columnName2 = Optional.ofNullable(data[2]).orElse("") ;
+           final String columnValue2 = Optional.ofNullable(data[3].trim()).orElse("") ;
             List<Map<String,WebElement>> rows = getAllValuesfromTable(objectLocatorData);
             if (null == rows || rows.isEmpty()){
                 return new LogMessage(false,"no table data found");
             }
-
             boolean isMatched =  rows.stream().anyMatch(row ->
-                    Optional.ofNullable(row.get(columnName1).getText()).orElse("").equals(columnValue1) &&
-                    Optional.ofNullable(row.get(columnName2).getText()).orElse("").equals(columnValue2)
+                    Optional.ofNullable(row.get(columnName1).getAttribute("textContent").trim()).orElse("").equals(columnValue1) &&
+                    Optional.ofNullable(row.get(columnName2).getAttribute("textContent").trim()).orElse("").equals(columnValue2)
             ) ;
             return  isMatched  ? new LogMessage(true,"Corresponding column data verified") :  new LogMessage(false,"Proper cell is not present");
         }catch (Exception e){
@@ -545,6 +531,30 @@ public class UITable extends  UtilKeywordScript{
             ex.printStackTrace();
             return new LogMessage( false, "exception occured in StoreColumnValue  " + ex.getMessage()) ;
         }
+    }
+    public LogMessage CompareEqualInTable(String objectLocator,String testData){
+        try{
+            if(!validateTestData(testData,4)){
+                return  new LogMessage(false, "test data invalid");
+            }
+            String[] data=testData.split(",");
+            String columnName1=data[0];
+            String columnValue1=data[1];
+            String columnName2=data[2];
+            String columnValue2=data[3];
+            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);//
+            WebElement element=row.get(columnName2);
+            String columnValueOfUI  = UtilKeywordScript.convertStringToNumber(element.getAttribute("textContent")) ;
+            if(Double.parseDouble(columnValue2)==Double.parseDouble(columnValueOfUI)){
+                return new LogMessage( true, "Verified Equal Value");
+            }
+            else
+                return new LogMessage( false, "Verified Equal Value false");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage( false, "exception occured " + ex.getMessage()) ;
+        }
+
     }
 
 }
