@@ -50,6 +50,14 @@ public class WebObjectSearch {
     static public WebElement getWebElement(WebDriver webDriver  ,String objectLocator) {
         try {
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
+            String parentLocator=(String)objectLocatorData.get(PropertyConfig.PARENT);
+            if(null!=parentLocator)
+            {
+                if(!(parentLocator.trim().isEmpty())) {
+                    String[] splitedLocators = objectLocator.split("\\.");
+                    return getChildWebElement(webDriver, splitedLocators[0] + "." + splitedLocators[1] + "." + parentLocator, objectLocator);
+                }
+            }
             List<WebElement> userelemnts = searchWebObject(webDriver, objectLocatorData);
             if(null == userelemnts)
                 return null;

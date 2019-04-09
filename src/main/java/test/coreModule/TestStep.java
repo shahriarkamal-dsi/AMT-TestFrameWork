@@ -88,6 +88,13 @@ public class TestStep {
             return false;
         }
     }
+    public String delayTime(){
+        try {
+            return (String) step.get(PropertyConfig.DELAY);
+        }catch (Exception e){
+            return null;
+        }
+    }
 
     public boolean isRefreshPageOn(){
         try{
