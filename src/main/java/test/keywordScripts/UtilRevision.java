@@ -35,13 +35,13 @@ public class UtilRevision {
             return new LogMessage(false,"no table data found");
         }
         WebElement startDateElement=row.get("FASB/IASB Start Date");
-        LocalDate startDate=LocalDate.parse(startDateElement.getText().trim(),formatter);
+        LocalDate startDate=LocalDate.parse(startDateElement.getAttribute("textContent").trim(),formatter);
         WebElement endDateElement=row.get("FASB/IASB End Date");
-        LocalDate endDate=LocalDate.parse(endDateElement.getText().trim(),formatter);
+        LocalDate endDate=LocalDate.parse(endDateElement.getAttribute("textContent").trim(),formatter);
 
-        Double noOfMonths =(double) (ChronoUnit.MONTHS.between(startDate,endDate)+1);
+        double noOfMonths =(double) (ChronoUnit.MONTHS.between(startDate,endDate)+1);
         WebElement noOfPeriodsElement=row.get("# of Periods");
-        if(Double.parseDouble(noOfPeriodsElement.getText())==noOfMonths){
+        if(Double.parseDouble(noOfPeriodsElement.getAttribute("textContent"))==noOfMonths){
             return new  LogMessage(true,"No of periods verified");
         }
         else
@@ -61,9 +61,9 @@ public class UtilRevision {
             if (null == row || row.isEmpty()){
                 return new LogMessage(false,"no table data found");
             }
-            Double noOfPeriods=Double.parseDouble(row.get("# of Periods").getText());
-            Double amountToCapitalize=Double.parseDouble(UtilKeywordScript.convertStringToNumber(row.get("Total Amount to Be Capitalized").getText()));
-            Double rentalAmount=Double.parseDouble(UtilKeywordScript.convertStringToNumber(row.get("Straight Line").getText()));
+            double noOfPeriods=Double.parseDouble(row.get("# of Periods").getAttribute("textContent"));
+            double amountToCapitalize=Double.parseDouble(UtilKeywordScript.convertStringToNumber(row.get("Total Amount to Be Capitalized").getAttribute("textContent")));
+            double rentalAmount=Double.parseDouble(UtilKeywordScript.convertStringToNumber(row.get("Straight Line").getAttribute("textContent")));
             if(amountToCapitalize==(noOfPeriods*rentalAmount)){
                 return new  LogMessage(true,"Amount to capitalize verified");
             }
