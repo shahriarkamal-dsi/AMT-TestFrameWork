@@ -36,7 +36,7 @@ public class UtilRevision {
             subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processInfoPanel","Position in Queue:");
             log.setSubLogMessage(subLog);
             WebElement element = WebObjectSearch.getWebElement(webDriver, objectlocatorPrefix + "queueCount");
-            String countString = element.getText().toString();
+            String countString = element.getAttribute("textContent").toString();
             subLog = uiBase.compareGreaterThanValue(countString + ",0");
             log.setSubLogMessage(subLog);
             subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkContinueWithProcess");
@@ -53,23 +53,13 @@ public class UtilRevision {
                 log.setPassed(true);
                 log.setLogMessage("Processing done");
                 return log;
-            };
+            }
             log.setPassed(false);
             log.setLogMessage("Processing fail");
             return log;
         }catch (Exception e){
             log.setLogMessage("Exception occur");
             return log;
-        }
-    }
-
-    public LogMessage validateProcessingComplete(){
-        try{
-
-
-            return new LogMessage(true,"");
-        }catch (Exception e){
-            return new LogMessage(false,"Exception occur");
         }
     }
 
