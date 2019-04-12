@@ -241,14 +241,19 @@ public class UIBase {
     public LogMessage CustomEnabledTrue(String objectLocatorData){
         try{
             WebElement webElement;
+            Boolean enable=false;
             webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
             if (null == webElement){
                 return new LogMessage(false, " Link not found");
             }
-            String attribute = webElement.getAttribute("disabled");
-            if (null == attribute)
-                return new LogMessage(true,"Link is enabled ");
-            return new LogMessage(false,"Link is disabled");
+            if(VerifyEnabledTrue(objectLocatorData).isPassed())
+                enable=true;
+            else if (null==webElement.getAttribute("disabled"))
+                enable=true;
+            else if(webElement.getAttribute("aria-disabled").equals("false"))
+                enable=true;
+            String logMessage=enable?"Element is enabled":"Element is enabled";
+            return new LogMessage(enable,logMessage);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -258,17 +263,52 @@ public class UIBase {
     public LogMessage CustomEnabledFalse(String objectLocatorData){
         try{
             WebElement webElement;
+            Boolean disable=false;
             webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
             if (null == webElement){
                 return new LogMessage(false, " Link not found");
             }
-            String attribute = webElement.getAttribute("disabled");
-            if (null!=attribute)
-                return new LogMessage(true,"Link is disabled");
-            return new LogMessage(false,"Link is enabled");
+            if(!VerifyEnabledTrue(objectLocatorData).isPassed())
+                disable=true;
+            else if (null!=webElement.getAttribute("disabled"))
+                disable=true;
+            else if(webElement.getAttribute("aria-disabled").equals("true"))
+                disable=true;
+            String logMessage=disable?"Element is not enabled":"Element is enabled";
+            return new LogMessage(disable,logMessage);
 
         }catch (Exception e){
             return new LogMessage(false,"Exception occur");
+        }
+    }
+    public LogMessage compareValue(String testData) {
+        try {
+            String value = testData.split(",")[0] ;
+            String compareTovalue = testData.split(",")[1] ;
+            if(value.equals(null) || value.equals("")) value = " ";
+            if(compareTovalue.equals(null) || compareTovalue.equals("")) compareTovalue = " ";
+            if(value.equals(compareTovalue))
+                return new LogMessage(true, "Value matches with the referred value");
+            else
+                return new LogMessage(false, "Value does not match with the referred value");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage( false, "exception occurred in StoreUIValue " + ex.getMessage()) ;
+        }
+    }
+    public LogMessage storeUIValue(String objectLocatorData,String varName) {
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if(null == element)
+                return new LogMessage(false, "UI element is not found");
+            else {
+                String varValue = element.getText();
+                TestPlan.getInstance().setStoreData(varName, varValue);
+                return new LogMessage(true, "UI value :" + varValue + " is stored");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage( false, "exception occurred in StoreUIValue " + ex.getMessage()) ;
         }
     }
     public LogMessage storeNumericValue(String objectLocatorData,String varName){
