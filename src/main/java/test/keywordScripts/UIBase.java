@@ -16,6 +16,7 @@ import test.utility.PropertyConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 
@@ -250,7 +251,7 @@ public class UIBase {
                 enable=false;
             else if (null==webElement.getAttribute("disabled"))
                 enable=true;
-            else if(webElement.getAttribute("aria-disabled").equals("false"))
+            else if(Optional.ofNullable(webElement.getAttribute("aria-disabled")).orElse("").equals("false"))
                 enable=true;
             String logMessage=enable?"Element is enabled":"Element is enabled";
             return new LogMessage(enable,logMessage);
@@ -272,7 +273,7 @@ public class UIBase {
                 disable=true;
             else if (null!=webElement.getAttribute("disabled"))
                 disable=true;
-            else if(webElement.getAttribute("aria-disabled").equals("true"))
+            else if(Optional.ofNullable(webElement.getAttribute("aria-disabled")).orElse("").equals("true"))
                 disable=true;
             String logMessage=disable?"Element is not enabled":"Element is enabled";
             return new LogMessage(disable,logMessage);
