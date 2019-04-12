@@ -246,7 +246,7 @@ public class UIBase {
                 return new LogMessage(false, " Link not found");
             }
             String attribute = webElement.getAttribute("disabled");
-            if (attribute == null)
+            if (null == attribute)
                 return new LogMessage(true,"Link is enabled ");
             return new LogMessage(false,"Link is disabled");
 
@@ -263,7 +263,7 @@ public class UIBase {
                 return new LogMessage(false, " Link not found");
             }
             String attribute = webElement.getAttribute("disabled");
-            if (attribute != null)
+            if (null!=attribute)
                 return new LogMessage(true,"Link is disabled");
             return new LogMessage(false,"Link is enabled");
 
