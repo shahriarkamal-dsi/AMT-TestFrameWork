@@ -16,6 +16,7 @@ import org.openqa.selenium.JavascriptExecutor;
 
 
 import java.util.Map;
+import java.util.Optional;
 
 public class UIText {
     private WebDriver webDriver;
@@ -86,11 +87,11 @@ public class UIText {
         try {
             WebElement webElement = WebObjectSearch.getWebElement(webDriver, objectLocator);
             if (null == webElement) {
-                return null;
+                return "";
             }
-            return webElement.getAttribute("textContent").trim();
+            return Optional.ofNullable(webElement.getAttribute("textContent").trim()).orElse("");
         }catch (Exception e){
-            return null;
+            return "";
         }
     }
     public LogMessage compareText(String objectLocator, String testData){
