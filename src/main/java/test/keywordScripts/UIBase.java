@@ -246,8 +246,8 @@ public class UIBase {
             if (null == webElement){
                 return new LogMessage(false, " Element not found");
             }
-            if(VerifyEnabledTrue(objectLocatorData).isPassed())
-                enable=true;
+            if(!VerifyEnabledTrue(objectLocatorData).isPassed())
+                enable=false;
             else if (null==webElement.getAttribute("disabled"))
                 enable=true;
             else if(webElement.getAttribute("aria-disabled").equals("false"))
@@ -281,36 +281,7 @@ public class UIBase {
             return new LogMessage(false,"Exception occur");
         }
     }
-    public LogMessage compareValue(String testData) {
-        try {
-            String value = testData.split(",")[0] ;
-            String compareTovalue = testData.split(",")[1] ;
-            if(value.equals(null) || value.equals("")) value = " ";
-            if(compareTovalue.equals(null) || compareTovalue.equals("")) compareTovalue = " ";
-            if(value.equals(compareTovalue))
-                return new LogMessage(true, "Value matches with the referred value");
-            else
-                return new LogMessage(false, "Value does not match with the referred value");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new LogMessage( false, "exception occurred in StoreUIValue " + ex.getMessage()) ;
-        }
-    }
-    public LogMessage storeUIValue(String objectLocatorData,String varName) {
-        try {
-            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
-            if(null == element)
-                return new LogMessage(false, "UI element is not found");
-            else {
-                String varValue = element.getText();
-                TestPlan.getInstance().setStoreData(varName, varValue);
-                return new LogMessage(true, "UI value :" + varValue + " is stored");
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new LogMessage( false, "exception occurred in StoreUIValue " + ex.getMessage()) ;
-        }
-    }
+
     public LogMessage storeNumericValue(String objectLocatorData,String varName){
         try {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
