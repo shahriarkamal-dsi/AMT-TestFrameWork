@@ -244,7 +244,7 @@ public class UIBase {
             Boolean enable=false;
             webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
             if (null == webElement){
-                return new LogMessage(false, " Link not found");
+                return new LogMessage(false, " Element not found");
             }
             if(VerifyEnabledTrue(objectLocatorData).isPassed())
                 enable=true;
@@ -266,7 +266,7 @@ public class UIBase {
             Boolean disable=false;
             webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
             if (null == webElement){
-                return new LogMessage(false, " Link not found");
+                return new LogMessage(false, " Elemnet not found");
             }
             if(!VerifyEnabledTrue(objectLocatorData).isPassed())
                 disable=true;
