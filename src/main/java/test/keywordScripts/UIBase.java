@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
+import test.coreModule.TestPlan;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
@@ -195,8 +196,6 @@ public class UIBase {
             return new LogMessage(false, "Element is not clickable");
         }
     }
-
-
     public LogMessage compareGreaterThanValue(String  testData ) {
         try {
             String value  = testData.split(",")[0] ;
@@ -239,6 +238,54 @@ public class UIBase {
             return new LogMessage(false,"Exception occur " + e.getMessage());
         }
     }
+    public LogMessage CustomEnabledTrue(String objectLocatorData){
+        try{
+            WebElement webElement;
+            webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+            if (null == webElement){
+                return new LogMessage(false, " Link not found");
+            }
+            String attribute = webElement.getAttribute("disabled");
+            if (attribute == null)
+                return new LogMessage(true,"Link is enabled ");
+            return new LogMessage(false,"Link is disabled");
 
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Exception occur" + e.getMessage());
+        }
+    }
+    public LogMessage CustomEnabledFalse(String objectLocatorData){
+        try{
+            WebElement webElement;
+            webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+            if (null == webElement){
+                return new LogMessage(false, " Link not found");
+            }
+            String attribute = webElement.getAttribute("disabled");
+            if (attribute != null)
+                return new LogMessage(true,"Link is disabled");
+            return new LogMessage(false,"Link is enabled");
+
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur");
+        }
+    }
+    public LogMessage storeNumericValue(String objectLocatorData,String varName){
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if(null == element)
+                return new LogMessage(false, "UI element is not found");
+            else {
+                String varValue = element.getAttribute("textContent");
+                varValue=UtilKeywordScript.convertStringToNumber(varValue);
+                TestPlan.getInstance().setStoreData(varName, varValue);
+                return new LogMessage(true, "UI value :" + varValue + " is stored");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage( false, "exception occurred in StoreUIValue " + ex.getMessage()) ;
+        }
+    }
 
 }
