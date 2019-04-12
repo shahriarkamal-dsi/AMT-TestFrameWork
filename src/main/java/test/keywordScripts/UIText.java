@@ -82,7 +82,29 @@ public class UIText {
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
     }
-
+    public String getText(String objectLocator){
+        try {
+            WebElement webElement = WebObjectSearch.getWebElement(webDriver, objectLocator);
+            if (null == webElement) {
+                return null;
+            }
+            return webElement.getAttribute("textContent").trim();
+        }catch (Exception e){
+            return null;
+        }
+    }
+    public LogMessage compareText(String objectLocator, String testData){
+        try{
+            String[] splittedTestData=testData.split(",");
+            String attribute = getText(objectLocator);
+            if(attribute.equals(splittedTestData[0].trim()))
+                return new LogMessage(true, "Value is verified");
+            else
+                return new LogMessage(false, "Value is not verified");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur" + e.getMessage());
+        }
+    }
 
 
 }
