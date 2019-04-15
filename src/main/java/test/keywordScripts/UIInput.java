@@ -1,10 +1,11 @@
 package test.keywordScripts;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
-
+import test.utility.PropertyConfig;
 import java.util.Optional;
 
 public class UIInput {
@@ -34,6 +35,22 @@ public class UIInput {
             return Optional.ofNullable(webElement.getAttribute("value").trim()).orElse("");
         }catch (Exception e){
             return "";
+        }
+    }
+
+    public LogMessage setValue(String objectLocator, String value){
+        try{
+            JavascriptExecutor jse = (JavascriptExecutor)webDriver;
+
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            if(null == element )
+                return new LogMessage(false,"webElement is not founding");
+            jse.executeScript("arguments[0].scrollIntoView(true);", element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            jse.executeScript("arguments[0].value='" + value + "';",element);
+            return new LogMessage(true,"Value set successfully");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur" + e.getMessage());
         }
     }
 

@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
+import test.coreModule.TestPlan;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObject;
 import test.utility.PropertyConfig;
@@ -286,6 +287,15 @@ public class UtilKeywordScript {
         } catch (Exception ex) {
             return null ;
         }
+    }
+    public static String getUniqueNumber(String data){
+        try{
+            String uniqueNumber = data.substring(2) + TestPlan.getInstance().getUniqueData() ;
+            return uniqueNumber;
+        }catch (Exception e){
+            return null;
+        }
+
     }
 
 }

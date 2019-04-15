@@ -139,7 +139,9 @@ public class ExecuteTests {
             String actionName = testStep.getAction();
             String objectLocators = testStep.getObjectLocator();
             testStep.setTestData(updateTestData(testCase.getTestCaseNumber(),testStep.getTestData(),testCase.getPreqData()));
-            String testData = testStep.getTestData();
+            String testData = Optional.ofNullable(testStep.getTestData()).orElse("");
+            if(testData.contains("$Unq"))
+                testData = testData.replace("$Unq",UtilKeywordScript.getUniqueNumber(testCase.getTestCaseNumber()));
             Boolean executionFlag = testStep.isExecutionFlagOn();
             Boolean pageRefresh = testStep.isRefreshPageOn();
             Boolean critical = testStep.isCritical();

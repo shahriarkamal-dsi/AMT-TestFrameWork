@@ -103,7 +103,8 @@ public class AccountCreateJeMapping {
             uiDropDown.SelectItem("Common.GlobalSearch.jMappingMaintainCodeType", (String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR), (String) JMappingData.get("Maintain Code Type"));
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
 
-            webDriver.findElement(By.linkText("Add New")).click();
+            WebElement element = webDriver.findElement(By.linkText("Add New"));
+            uibase.Click(element);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             UIDropDown dropDown = new UIDropDown(webDriver);
             dropDown.SelectItem("Common.GlobalSearch.contractType", (String) JMappingData.get("Contract Type"));

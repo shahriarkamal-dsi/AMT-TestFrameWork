@@ -29,13 +29,13 @@ public class UIText {
 
     public LogMessage SetText(String objectLocator, String textData){
         try {
+            UIBase uiBase = new UIBase(webDriver);
             WebElement userWeb = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == userWeb )
                 return new LogMessage(false,"webElement is not founding");
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", userWeb);
-            userWeb.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-            userWeb.click();
+            uiBase.Click(userWeb);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.sendKeys(textData);
             return new LogMessage(true,"text is set up");
@@ -83,6 +83,25 @@ public class UIText {
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
     }
+
+    public LogMessage SetTextWithoutClear(String objectLocator, String textData){
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            if(null == element )
+                return new LogMessage(false,"Element not found");
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            UIBase uiBase = new UIBase(webDriver);
+            uiBase.Click(element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            element.sendKeys(textData);
+            return new LogMessage(true,"Text is set up");
+        } catch(Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"exception occured:- " + ex.getMessage());
+        }
+    }
+
     public String getText(String objectLocator){
         try {
             WebElement webElement = WebObjectSearch.getWebElement(webDriver, objectLocator);
