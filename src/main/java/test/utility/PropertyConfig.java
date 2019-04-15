@@ -26,6 +26,7 @@ public class PropertyConfig {
     public static String  PREREQ_COMMAND = "#PREQ" ;
     public static String  CREATE_COMMAND = "#CREATE" ;
     public static String  DELETE_COMMAND = "#DELETE" ;
+    public static String  COMMON_COMMAND = "#COMMON" ;
     public static Integer INIT = 0 ;
     public static Integer CREATED = 1 ;
     public static Integer TESTED = 2 ;

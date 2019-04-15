@@ -60,7 +60,7 @@ public class MainController {
         TestPlan testPlan = createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule testModule : modules){
-            if(testModule.getModuleName().equals("Preq"))
+            if(testModule.getModuleName().equals("Preq") || testModule.getModuleName().equals("CommonTC"))
                 continue;
             List<TestSuite>  testSuites = testModule.getAllTestSuits();
             testSuites.stream().forEach(testSuite ->

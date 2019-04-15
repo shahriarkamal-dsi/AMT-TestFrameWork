@@ -78,7 +78,7 @@ public class ExecuteTests {
                 }
                 if (isItPrequisite(testStep.getAction())) {
                     logMessages.add(new LogMessage(true, "Prerequisite started : " + testStep.getTestStepDescription()));
-                    List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep);
+                    List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep,true);
                     logMessages.addAll(preqLogMessages);
                     testCase.setPassed(preqLogMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
                     if (!testCase.isPassed()) {
@@ -87,7 +87,12 @@ public class ExecuteTests {
                     } else {
                         logMessages.add(new LogMessage(true, "Prerequisite fullfiled"));
                     }
-                } else if (isItCreate(testStep.getAction().toUpperCase())) {
+                }else if(isItCommon(testStep.getAction())){
+                    List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep,false);
+                    logMessages.addAll(preqLogMessages);
+                    testCase.setPassed(preqLogMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
+                }
+                else if (isItCreate(testStep.getAction().toUpperCase())) {
                     logMessages.addAll(testData.runPrequisites(testCase.getTestCaseNumber(), testStep.getTestData()));
                 } else if (isItDelete(testStep.getAction().toUpperCase())) {
                     if(null==testStep.getTestData() || testStep.getTestData().isEmpty() || testStep.getTestData().toLowerCase().contains("property"))
@@ -182,7 +187,6 @@ public class ExecuteTests {
             }
             return  logMessage ;
         } catch (Exception ex) {
-            ex.printStackTrace();
             testStep.setPassed(false);
             return new LogMessage(false, "exception occured running one test step " + ex.getMessage()) ;
         }
@@ -206,12 +210,11 @@ public class ExecuteTests {
             LogMessage logMessage = (LogMessage) callingMethod.invoke(constructor.newInstance(webDriver),object);
             return logMessage;
         } catch(Exception ex) {
-               ex.printStackTrace();
                return  new LogMessage(false,"exception occured");
         }
     }
 
-    public List<LogMessage> runPrequisite(TestCase testCase,TestStep testStep) {
+    public List<LogMessage> runPrequisite(TestCase testCase,TestStep testStep,boolean isPrerequisite) {
         try {
            Optional<TestCase> prerequiste =  new PreRequiste().getPrequisiteTestCase(testStep.getFieldName().split(":")[0],testStep.getFieldName().split(":")[1]) ;
            if(!prerequiste.isPresent()) {
@@ -220,13 +223,16 @@ public class ExecuteTests {
                    add(new LogMessage(false,"no valid prequisite found for " + testStep.getFieldName()));
                }};
            }
-           new UtilKeywordScript(webDriver).redirectHomePage() ;
+           if(isPrerequisite)
+                new UtilKeywordScript(webDriver).redirectHomePage() ;
            TestCase preqTCase = prerequiste.get() ;
            preqTCase.setTestCaseNumber(testCase.getTestCaseNumber());
            preqTCase.setPreqData(UtilKeywordScript.jsonStringToMap(testStep.getTestData()));
            List<LogMessage> preqLogMessages =  executeTest(preqTCase) ;
-            new UtilKeywordScript(webDriver).redirectHomePage() ;
-            return preqLogMessages ;
+           if(isPrerequisite) {
+               new UtilKeywordScript(webDriver).redirectHomePage();
+           }
+           return preqLogMessages ;
         } catch (Exception ex) {
             return new ArrayList<LogMessage>()
             {{
@@ -238,6 +244,10 @@ public class ExecuteTests {
 
     private Boolean isItPrequisite(String action) {
         if (action.equals(PropertyConfig.PREREQ_COMMAND)) return true;
+        return false;
+    }
+    private Boolean isItCommon(String action) {
+        if (action.equals(PropertyConfig.COMMON_COMMAND)) return true;
         return false;
     }
     private Boolean isItCreate(String action){
@@ -290,7 +300,6 @@ public class ExecuteTests {
             return finalTestData;
         }
         catch (Exception ex){
-            ex.printStackTrace();
             return testData;
         }
     }

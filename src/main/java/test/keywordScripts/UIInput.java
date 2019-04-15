@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
+import java.util.Optional;
 
 public class UIInput {
     private WebDriver webDriver;
@@ -29,11 +30,11 @@ public class UIInput {
         try {
             WebElement webElement = WebObjectSearch.getWebElement(webDriver, objectLocator);
             if (null == webElement) {
-                return null;
+                return "";
             }
-            return webElement.getAttribute("value");
+            return Optional.ofNullable(webElement.getAttribute("value").trim()).orElse("");
         }catch (Exception e){
-            return null;
+            return "";
         }
     }
 
