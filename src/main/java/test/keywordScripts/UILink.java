@@ -44,38 +44,4 @@ public class UILink {
         }
     }
 
-    public LogMessage verifyLinkEnabledTrue(String objectLocatorData){
-        try{
-            WebElement webElement;
-            webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
-            if (null == webElement){
-                return new LogMessage(false, " Link not found");
-            }
-            String attribute = webElement.getAttribute("disabled");
-            if (attribute == null)
-                return new LogMessage(true,"Link is enabled ");
-            return new LogMessage(false,"Link is disabled");
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return new LogMessage(false,"Exception occur" + e.getMessage());
-        }
-    }
-    public LogMessage verifyLinkEnabledFalse(String objectLocatorData){
-        try{
-            WebElement webElement;
-            webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
-            if (null == webElement){
-                return new LogMessage(false, " Link not found");
-            }
-            String attribute = webElement.getAttribute("disabled");
-            if (attribute != null)
-                return new LogMessage(true,"Link is disabled");
-            return new LogMessage(false,"Link is enabled");
-
-        }catch (Exception e){
-            return new LogMessage(false,"Exception occur");
-        }
-    }
-
 }

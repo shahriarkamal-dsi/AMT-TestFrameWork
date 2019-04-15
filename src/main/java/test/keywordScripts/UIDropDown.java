@@ -52,8 +52,7 @@ public class UIDropDown {
             if (null == dropDownElement)
                 return new LogMessage(false," drop down element is not found.");
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
-
-            dropDownElement.click();
+            uiBase.Click(dropDownElement);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[contains(text() , '" + testData + "')]"));
             if (null == dropDownDataElements || dropDownDataElements.isEmpty())
