@@ -26,6 +26,7 @@ public class UtilRevision {
     public LogMessage validateProcessing(){
         LogMessage log = new LogMessage();
         try{
+
             String objectlocatorPrefix = "FASB.FIProcess.";
             UIText uiText = new UIText(webDriver);
             UILink uiLink = new UILink(webDriver);
@@ -39,11 +40,11 @@ public class UtilRevision {
             String countString = element.getAttribute("textContent").toString();
             subLog = uiBase.compareGreaterThanValue(countString + ",0");
             log.setSubLogMessage(subLog);
-            subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkContinueWithProcess");
+            //subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkContinueWithProcess");
             log.setSubLogMessage(subLog);
-            subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkPrint");
+            //subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkPrint");
             log.setSubLogMessage(subLog);
-            subLog = uiLink.verifyLinkEnabledTrue(objectlocatorPrefix + "lnkCancel");
+            //subLog = uiLink.verifyLinkEnabledTrue(objectlocatorPrefix + "lnkCancel");
             log.setSubLogMessage(subLog);
             subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processCount","Ready To Process 0 Revisions");
             log.setSubLogMessage(subLog);
