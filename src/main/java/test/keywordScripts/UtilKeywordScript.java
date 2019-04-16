@@ -293,7 +293,7 @@ public class UtilKeywordScript {
             String uniqueNumber = data.substring(2) + TestPlan.getInstance().getUniqueData() ;
             return uniqueNumber;
         }catch (Exception e){
-            return null;
+            return "$Unq";
         }
 
     }
