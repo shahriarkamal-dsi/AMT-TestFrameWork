@@ -37,7 +37,7 @@ public class UtilRevision {
             subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processInfoPanel","Position in Queue:");
             log.setSubLogMessage(subLog);
             WebElement element = WebObjectSearch.getWebElement(webDriver, objectlocatorPrefix + "queueCount");
-            String countString = element.getAttribute("textContent").toString();
+            String countString = element.getAttribute("textContent");
             subLog = uiBase.compareGreaterThanValue(countString + ",0");
             log.setSubLogMessage(subLog);
             //subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkContinueWithProcess");

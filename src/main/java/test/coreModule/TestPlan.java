@@ -50,7 +50,15 @@ public class TestPlan {
 
     }
     public String getUniqueData(){
-       return  String.valueOf(creationTime.getHour()) + String.valueOf(creationTime.getMinute());
+        String hour = String.valueOf(creationTime.getHour());
+        String minute = String.valueOf(creationTime.getMinute());
+        if (hour.length()<2){
+            hour = "0" + hour;
+        }
+        if (minute.length()<2){
+            minute = "0" + minute;
+        }
+        return  hour + minute;
     }
 
     public List<TestModule>  getAllTesModules(){
