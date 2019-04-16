@@ -49,6 +49,17 @@ public class TestPlan {
         return  testModule.isPresent() ? testModule.get() : null ;
 
     }
+    public String getUniqueData(){
+        String hour = String.valueOf(creationTime.getHour());
+        String minute = String.valueOf(creationTime.getMinute());
+        if (hour.length()<2){
+            hour = "0" + hour;
+        }
+        if (minute.length()<2){
+            minute = "0" + minute;
+        }
+        return  hour + minute;
+    }
 
     public List<TestModule>  getAllTesModules(){
         return  testModules ;

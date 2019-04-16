@@ -60,7 +60,7 @@ public class MainController {
         TestPlan testPlan = createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
         for(TestModule testModule : modules){
-            if(testModule.getModuleName().equals("Preq"))
+            if(testModule.getModuleName().equals("Preq") || testModule.getModuleName().equals("CommonTC"))
                 continue;
             List<TestSuite>  testSuites = testModule.getAllTestSuits();
             testSuites.stream().forEach(testSuite ->
@@ -94,15 +94,7 @@ public class MainController {
                List<TestCase> testCases = testSuite.getAllTestCases();
                ExecuteTests executeTests = new ExecuteTests(webDriver);
                for (TestCase testCase : testCases) {
-
-                  List<LogMessage> logMessages = createPrerequisiteData(testCase);
-                   if(!validateLogMessages(logMessages)) {
-                       logMessages.add(new LogMessage(false,"All Prerequisite data are not created"));
-                       logReport.addTestcaseLogreport(testCase, logMessages);
-                       return;
-                   }
-
-                   logMessages.add(new LogMessage(true,"Prerequisite data creation done"));
+                   List<LogMessage> logMessages = new ArrayList<>();
                    logMessages.addAll(executeTests.executeTest(testCase));
                    logReport.addTestcaseLogreport(testCase, logMessages);
                    new UtilKeywordScript(webDriver).redirectHomePage();
@@ -167,23 +159,6 @@ public class MainController {
         file.delete();
          file = new File("./Report/" + PropertyConfig.getPropertyValue("failedReprtName"));
         file.delete();
-    }
-    private List<LogMessage> createPrerequisiteData(TestCase testCase)
-    {
-        List<LogMessage> logMessages = new ArrayList<>();
-        try
-        {
-            TestData testData = TestData.getInstance();
-            testData.setDriver(webDriver);
-            logMessages = testData.runPrequisites(testCase.getTestCaseNumber());
-            return logMessages;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logMessages.add(new LogMessage(false,"Prerequisite not handled"));
-            return logMessages;
-        }
-
-
     }
     public static Boolean validateLogMessages(List<LogMessage> logMessages){
         return logMessages.stream().noneMatch(o -> o.isPassed().equals(false));

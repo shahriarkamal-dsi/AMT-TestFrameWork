@@ -5,13 +5,13 @@ import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 
-public class UICkeckBox {
+public class UICheckBox {
     private WebDriver webDriver;
-    public UICkeckBox(WebDriver driver) {
+    public UICheckBox(WebDriver driver) {
         this.webDriver = driver ;
     }
 
-    public UICkeckBox(){
+    public UICheckBox(){
 
     }
 

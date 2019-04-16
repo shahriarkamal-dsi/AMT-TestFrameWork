@@ -8,6 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
+import test.coreModule.TestPlan;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
@@ -15,6 +16,7 @@ import test.utility.PropertyConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 
@@ -60,8 +62,6 @@ public class UIBase {
             webDriver.navigate().to(testData);
             webDriver.manage().window().maximize();
             return new LogMessage(true,"page is navigated");
-            // ex.ExecuteScript("arguments[0].click();", elementToClick);
-
         }catch(Exception ex){
             ex.printStackTrace();
             return new LogMessage(false,"exception occured:- " + ex.getMessage());
@@ -93,9 +93,6 @@ public class UIBase {
             action = action.toUpperCase();
             boolean clikced = false ;
             if(action.equals("CLICK")) {
-                //Actions act = new Actions(webDriver);
-               // act.click(element).perform();
-                //act.doubleClick(element).perform();
                 element.click();
                 clikced = true ;
             } else if(action.equals("DBLCLICK") || action.equals("DOUBLECLICK") || action.equals("DOUBLE CLICK") ) {
@@ -120,10 +117,7 @@ public class UIBase {
 
     public LogMessage Delay(String delayTime) {
         try {
-            //System.out.println("DelayTime"+delayTime);
             Thread.sleep(Integer.valueOf(delayTime).intValue()*1000);
-            //if(null != webDriver)
-              //  webDriver.manage().timeouts().implicitlyWait(Integer.valueOf("10"), TimeUnit.SECONDS) ;
             return new LogMessage(true,"wait for delay succesffull");
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -149,7 +143,7 @@ public class UIBase {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if(null == element)
                 return  new LogMessage(false, "element is not found");
-            WebDriverWait wait = new WebDriverWait(webDriver, 1*60);
+            WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
             wait.until(ExpectedConditions.visibilityOf(element));
             String logMessage = element.isDisplayed() == true ? "element is displayed " : "element is not displayed" ;
             return new LogMessage( element.isDisplayed(),logMessage);
@@ -167,7 +161,7 @@ public class UIBase {
 
     public LogMessage WaitingForPageLoad(){
         try{
-            WebDriverWait wait = new WebDriverWait(webDriver, 20);
+            WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("splashScr")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
             return new LogMessage(true,"Page load successfully");
@@ -180,7 +174,7 @@ public class UIBase {
 
     public LogMessage WaitingForSuccessfullPopup(){
         try{
-            WebDriverWait wait = new WebDriverWait(webDriver, 60);
+            WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             return new LogMessage(true,"Page load successfully");
@@ -203,23 +197,20 @@ public class UIBase {
             return new LogMessage(false, "Element is not clickable");
         }
     }
-
-
     public LogMessage compareGreaterThanValue(String  testData ) {
         try {
             String value  = testData.split(",")[0] ;
            String  compareTovalue  = testData.split(",")[1] ;
             Double num1 = Double.parseDouble(value) ;
             Double num2 = Double.parseDouble(compareTovalue) ;
-            System.out.println(num1 + " "  + num2);
            return  num1.compareTo(num2) == 1 ? new LogMessage(true,  "given value greater than  " + compareTovalue) :  new LogMessage(false,  "given value is not greater than  " + compareTovalue) ;
         } catch (Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "exception occured " + ex.getMessage());
 
         }
-    }
 
+    }
 
     public LogMessage refreshPage(){
         try{
@@ -243,12 +234,70 @@ public class UIBase {
                     return new LogMessage(true,"Revision found");
                 }
             }
-            System.out.println("enter  2") ;
             return new LogMessage(false,"Revision not found");
         }catch (Exception e){
             return new LogMessage(false,"Exception occur " + e.getMessage());
         }
     }
+    public LogMessage CustomEnabledTrue(String objectLocatorData){
+        try{
+            WebElement webElement;
+            Boolean enable=false;
+            webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+            if (null == webElement){
+                return new LogMessage(false, " Element not found");
+            }
+            if(!VerifyEnabledTrue(objectLocatorData).isPassed())
+                enable=false;
+            else if (null==webElement.getAttribute("disabled"))
+                enable=true;
+            else if(Optional.ofNullable(webElement.getAttribute("aria-disabled")).orElse("").equals("false"))
+                enable=true;
+            String logMessage=enable?"Element is enabled":"Element is enabled";
+            return new LogMessage(enable,logMessage);
 
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Exception occur" + e.getMessage());
+        }
+    }
+    public LogMessage CustomEnabledFalse(String objectLocatorData){
+        try{
+            WebElement webElement;
+            Boolean disable=false;
+            webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+            if (null == webElement){
+                return new LogMessage(false, " Elemnet not found");
+            }
+            if(!VerifyEnabledTrue(objectLocatorData).isPassed())
+                disable=true;
+            else if (null!=webElement.getAttribute("disabled"))
+                disable=true;
+            else if(Optional.ofNullable(webElement.getAttribute("aria-disabled")).orElse("").equals("true"))
+                disable=true;
+            String logMessage=disable?"Element is not enabled":"Element is enabled";
+            return new LogMessage(disable,logMessage);
+
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur");
+        }
+    }
+
+    public LogMessage storeNumericValue(String objectLocatorData,String varName){
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if(null == element)
+                return new LogMessage(false, "UI element is not found");
+            else {
+                String varValue = element.getAttribute("textContent");
+                varValue=UtilKeywordScript.convertStringToNumber(varValue);
+                TestPlan.getInstance().setStoreData(varName, varValue);
+                return new LogMessage(true, "UI value :" + varValue + " is stored");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage( false, "exception occurred in StoreUIValue " + ex.getMessage()) ;
+        }
+    }
 
 }

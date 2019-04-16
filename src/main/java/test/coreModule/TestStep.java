@@ -24,7 +24,13 @@ public class TestStep {
             return null;
         }
     }
-
+    public String getLogMessage(){
+        try {
+            return (String) step.get(PropertyConfig.LOGMESSAGE);
+        }catch(Exception ex) {
+            return null;
+        }
+    }
     public String getTestStepDescription(){
         try {
             return (String) step.get(PropertyConfig.TEST_STEP_DESCRIPTION);
@@ -80,6 +86,13 @@ public class TestStep {
             return  step.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes") ? true : false;
         }catch(Exception ex) {
             return false;
+        }
+    }
+    public String delayTime(){
+        try {
+            return (String) step.get(PropertyConfig.DELAY);
+        }catch (Exception e){
+            return null;
         }
     }
 

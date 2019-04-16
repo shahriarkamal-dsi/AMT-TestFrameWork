@@ -29,10 +29,16 @@ public class JMapping {
             long start = System.currentTimeMillis();
             ClassLoader classLoader = getClass().getClassLoader();
             ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/AccountCreateJmapping.xlsx").getPath());
-            List<Map> accountRecords = readExcel.read("createAccount");
+            List<Map> accountRecords = null;
             List<Map> jMappingRecords= readExcel.read("JMapping");
+            String chartOfAccount = (String) jMappingRecords.get(0).get("Lease Types");
+            if (chartOfAccount.equals("Expense")){
+                accountRecords = readExcel.read("Expense");
+            }else{
+                accountRecords = readExcel.read("Income");
+            }
             AccountCreateJeMapping accountCreateJeMapping = new AccountCreateJeMapping(webDriver) ;
-            //accountCreateJeMapping.createAccounts(accountRecords, (String) jMappingRecords.get(0).get("chartOfAccount"));
+            accountCreateJeMapping.createAccounts(accountRecords, (String) jMappingRecords.get(0).get("chartOfAccount"));
             accountCreateJeMapping.createJEMappping(accountRecords,jMappingRecords.get(0));
             long end = System.currentTimeMillis();
             System.out.println((end-start)/1000);

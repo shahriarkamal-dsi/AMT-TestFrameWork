@@ -31,16 +31,17 @@ public class PropertyCreateAndSearch {
             String[] dropDownFields = new String[] {"country","state","codeType" , "status" , "currency","chartType","propertyGroup1", "propertyGroup2", "propertyGroup3"} ;
             String autoManageChkBox = "autoManage" ;
             String  objectlocatorPrefix = "Common.Property." ;
+            UIText uiText=new UIText(webDriver);
             UIMenu menu = new UIMenu(webDriver);
             menu.SelectMenu("Common.Homepage.pgAMTHome" , "Portfolio Insight,Add,Property") ;
             UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(10);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *2);
 
             for(String elementName : textFields) {
                 WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix  + elementName) ;
                 element.clear();
                 element.sendKeys( (String) data.get(elementName));
-                UtilKeywordScript.delay(3);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             }
 
             for(String elementName : dropDownFields) {
@@ -55,18 +56,17 @@ public class PropertyCreateAndSearch {
                 select.selectByVisibleText( (String)data.get(elementName));
                 if(elementName.equals("codeType") || elementName.equals("chartType")) {
                     webDriver.switchTo().alert().accept();
-                    UtilKeywordScript.delay(3);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
                 }
-                UtilKeywordScript.delay(3);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             }
             WebElement checkBoxItem = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + autoManageChkBox) ;
             if(  data.get(autoManageChkBox).toString().toLowerCase().equals("true"))
                 checkBoxItem.click();
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectlocatorPrefix + "save") ;
             element.click();
-            UtilKeywordScript.delay(15);
-
-            if(webDriver.findElement(By.xpath("//*[contains(@id,'lblPropertyCodeValue')]")).getText().equals(data.get("propertyCode")))
+            LogMessage logMessage=uiText.WaitForVisibilityOfText(objectlocatorPrefix+"propertyCodeCheck", (String) data.get("propertyCode"));
+            if(logMessage.isPassed())
             {
                 utilKeywordScript.redirectHomePage();
                 return new LogMessage(true, "Property"+data.get("propertyName")+"-"+data.get("propertyCode") +" is created successfully");
@@ -87,24 +87,23 @@ public class PropertyCreateAndSearch {
 
 
     public LogMessage isPropertyExist(Map data){
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
             String  objectLocatorPrefix = "Common.Property.";
             UITable uiTable  = new UITable(webDriver);
-            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
-
             utilKeywordScript.globalSearch((String)data.get("propertyCode"),"Property");
 
             Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
             if(null == row || row.isEmpty()){
-                UtilKeywordScript.redirectHomePage();
+                utilKeywordScript.redirectHomePage();
                 return new LogMessage(false, "Property not found");
             }
             else{
-                UtilKeywordScript.redirectHomePage();
+                utilKeywordScript.redirectHomePage();
                 return new LogMessage(true, "Property  found");
             }
         }catch (Exception e){
-            UtilKeywordScript.redirectHomePage();
+            utilKeywordScript.redirectHomePage();
             return new LogMessage(false, "Exception occur "+ e.getMessage());
 
         }
@@ -117,17 +116,13 @@ public class PropertyCreateAndSearch {
             String columnValue = (String)data.get("propertyName");
             UITable uiTable  = new UITable(webDriver);
             UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
-
             LogMessage searchLog = utilKeywordScript.globalSearch((String)data.get("propertyCode"),"Property");
-
             if (!searchLog.isPassed())
                 return new LogMessage(false,"Exception occur in global search");
-
             Map<String, WebElement> propertyRow = uiTable.getSingleRowfromTable(objectLocatorPrefix +"tbProperty", "Property Code",(String)data.get("propertyCode"),null);
             if(null == propertyRow || propertyRow.isEmpty()){
-                UtilKeywordScript.redirectHomePage();
+                utilKeywordScript.redirectHomePage();
                 return new LogMessage(false, "Property not found");
-
             }
             for (String key : propertyRow.keySet()) {
                 String clName = Optional.ofNullable(key).orElse("noValue");
@@ -146,40 +141,50 @@ public class PropertyCreateAndSearch {
             }
 
 
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             webDriver.close();
             UtilKeywordScript.switchLastTab(webDriver);
-            UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             return new LogMessage(true, "Navigate to property complete");
         }catch (Exception e){
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
     }
     public LogMessage deleteProperty(String propertyName, String propertyCode){
+        UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
         try{
             String  objectLocatorPrefix = "Common.Property.";
             Map<String,String> map =new HashMap<>();
             map.put("propertyCode",propertyCode);
             map.put("propertyName",propertyName);
             UIBase uiBase=new UIBase(webDriver);
+            UIText uiText= new UIText(webDriver);
             LogMessage logMessage=navigateToProperty(map);
             if(logMessage.isPassed()) {
                 WebElement webElement;
+                uiText.WaitForVisibilityOfText(objectLocatorPrefix+"propertyCodeCheck", propertyCode);
                 webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorPrefix + "delete");
-                webElement.click();
-                while (UtilKeywordScript.isAlertPresent()) {
+                uiBase.Click(webElement);
+                while ( utilKeywordScript.isAlertPresent()) {
                     webDriver.switchTo().alert().accept();
                 }
-                UtilKeywordScript.delay(PropertyConfig.WAIT_TIME_SECONDS);
-                if (uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome").isPassed())
+                UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
+                if (uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome").isPassed()) {
+                    utilKeywordScript.redirectHomePage();
                     return new LogMessage(true, "Property is deleted");
-                else
+                }
+                else{
+                    utilKeywordScript.redirectHomePage();
                     return new LogMessage(false, "Property is not deleted");
+                }
             }
-            else
+            else {
+                utilKeywordScript.redirectHomePage();
                 return new LogMessage(false, "Property is doesnot exists");
+            }
 
         }catch (Exception e){
+            utilKeywordScript.redirectHomePage();
             return new LogMessage(false, "Exception occur " + e.getMessage());
         }
 

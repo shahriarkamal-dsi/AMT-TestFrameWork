@@ -6,6 +6,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
+import test.utility.PropertyConfig;
 
 import java.util.*;
 
@@ -23,7 +24,7 @@ public class RecurringPaymentCreateandSearch {
             uiBase = new UIBase(webDriver);
             LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(webDriver);
             leaseCreateAndSearch.searchLease(datas.get(0));
-            UtilKeywordScript.delay(5);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             mainWindow = webDriver.getWindowHandle();
             for(Map data: datas)
             {
@@ -43,21 +44,21 @@ public class RecurringPaymentCreateandSearch {
         try{
             String  objectLocatorPrefix = "Common.RecurringPayment." ;
             String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" } ;
-            WebDriverWait wait = new WebDriverWait(webDriver, 5*60);
+            WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
 
             UILink uiLink = new UILink(webDriver);
             UIBase uiBase = new UIBase(webDriver);
             UITable uiTable = new UITable(webDriver);
 
-            uiLink.ClickLink("","Add New");
-            UtilKeywordScript.delay(5);
+            uiLink.ClickLink("Common.Lease.tbRPayment","Add New");
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             UtilKeywordScript.switchLastTab(webDriver);
             webDriver.manage().window().maximize();
-            UtilKeywordScript.delay(5);
+            UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
 
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             for (String element : dropdownFields){
-                UtilKeywordScript.delay(1);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                 uiDropDown.SelectItem(objectLocatorPrefix + element,(String)data.get(element));
 
             }
@@ -68,7 +69,7 @@ public class RecurringPaymentCreateandSearch {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Rental Activity")));
 
             uiLink.ClickLink("","Add Rental Activity");
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
 
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0,"+ (String)data.get("effDate"));
@@ -81,7 +82,7 @@ public class RecurringPaymentCreateandSearch {
 
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "Annual,0,0");
 
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
 
             uiBase.Click(objectLocatorPrefix + "saveRentalActivity");
 
@@ -93,10 +94,10 @@ public class RecurringPaymentCreateandSearch {
             //uiBase.WaitingForPageLoad();
             LogMessage lm = uiBase.WaitingForSuccessfullPopup();
 
-            UtilKeywordScript.delay(3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
 
             uiBase.Click(objectLocatorPrefix + "btnClose");
-            UtilKeywordScript.delay(2);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             Set<String> set =webDriver.getWindowHandles();
             Iterator<String> itr= set.iterator();
             while(itr.hasNext()){
