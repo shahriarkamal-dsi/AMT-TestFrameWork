@@ -56,11 +56,11 @@ public class Property {
         this.id = id;
     }
 
-    public String getpropertyName() {
+    public String getPropertyName() {
         return propertyName;
     }
 
-    public void setpropertyName(String propertyNmae) {
+    public void setPropertyName(String propertyNmae) {
         this.propertyName = propertyNmae;
     }
 
