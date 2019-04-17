@@ -43,16 +43,16 @@ public class TestDataApplicationTests {
 	public void checkingTestData() {
 		Property property = new Property();
 		property.setPropertyCode("test");
-		property.setPropertyNmae("test");
+		property.setPropertyName("test");
 		propertyService.createOrUpdateProperty(property);
-		property.setPropertyNmae("test2");
+		property.setPropertyName("test2");
 		propertyService.createOrUpdateProperty(property);
 
 
 		assert(propertyService.getPropertyByPropertyCode("test").getPropertyCode().equals("test"));
 
 		Lease lease =  new Lease() ;
-		lease.setLeaseNmae("test");
+		lease.setLeaseName("test");
 		lease.setLeaseCode("test");
 		leaseService.createOrUpdateLease(lease);
 		assert(leaseService.getLeaseByLeaseCode("test").getLeaseCode().equals("test"));
@@ -71,7 +71,6 @@ public class TestDataApplicationTests {
 
 		Property property2 = new Property();
 		property2.setPropertyCode("test3");
-		property2.setPropertyNmae("test3");
 		propertyService.createOrUpdateProperty(property2);
 	}
 
