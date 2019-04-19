@@ -5,22 +5,27 @@ import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
+import test.keywordScripts.UtilDate;
 
 public class UtilRevision {
 
     private WebDriver webDriver ;
-
+    UtilDate utildate = new UtilDate();
     public UtilRevision() {
 
     }
 
     public UtilRevision(WebDriver webDriver) {
         this.webDriver = webDriver ;
+
     }
 
     public LogMessage validateProcessing(){
@@ -113,6 +118,40 @@ public class UtilRevision {
         }catch (Exception e){
             e.printStackTrace();
             return new  LogMessage(false,"Exception occer " + e.getMessage());
+        }
+    }
+
+    public LogMessage verifyPeriod(String objectLocator,String testData){
+        try{
+            String date1 = testData.split(",")[0] ;
+            String date2 = testData.split(",")[1] ;
+            String period1 = Long.toString(utildate.getDateGap(date1,date2,"M")) + ".00";
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            String period2 = element.getAttribute("textContent").trim();
+            System.out.println(period1+"***"+period2);
+            System.out.println(utildate.getDateGap(date1,date2,"M"));
+            if(element == null) return new LogMessage(false, "Element is not Present");
+            if(period1.equals(period2)) return new LogMessage(true, "Value matches with the referred value");
+            else return new LogMessage(false, "Value does not match with the referred value");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
+
+    public LogMessage verifyTotalPeriodPayments(String testData){
+        try{
+            String payments1 = testData.split(",")[0] ;
+            String payments2 = testData.split(",")[1] ;
+            String date1 = testData.split(",")[2] ;
+            String date2 = testData.split(",")[3] ;
+            System.out.println(payments2);
+            System.out.println(utildate.getDateGap(date1,date2,"M"));
+            payments2 = Long.toString(Long.parseLong(payments2) * utildate.getDateGap(date1,date2,"M")) + ".0";
+            System.out.println(payments1+"**"+payments2);
+            if(payments1.equals(payments2)) return new LogMessage(true, "Value matches with the referred value");
+            else return new LogMessage(false, "Value does not match with the referred value");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur");
         }
     }
 
