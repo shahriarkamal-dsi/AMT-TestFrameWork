@@ -1,6 +1,8 @@
 package test.coreModule;
 
 import org.openqa.selenium.WebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import test.Log.CreateLog;
 import test.Log.LogMessage;
 import test.beforeTest.LeaseCreateAndSearch;
@@ -12,7 +14,6 @@ import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
-import javax.swing.text.StyledEditorKit;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -20,11 +21,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
+@Component
 public class ExecuteTests {
 
-    private WebDriver webDriver;
-    public ExecuteTests(WebDriver driver) {
-        webDriver = driver ;
+    @Autowired
+    private TestData _testData ;
+    @Autowired
+    private PropertyCreateAndSearch _propertyCreateAndSearch ;
+    @Autowired
+    private LeaseCreateAndSearch _leaseCreateAndSearch ;
+    @Autowired
+    private SpaceCreateAndSearch _spaceCreateAndSearch ;
+
+    private WebDriver webDriver ;
+    public ExecuteTests() {
     }
     public void readAndExecute(String fileName,String sheetName) {
         ClassLoader classLoader = getClass().getClassLoader();
@@ -58,6 +69,14 @@ public class ExecuteTests {
         }
 
     }
+
+    public void setDriver(WebDriver wbd) {
+        this.webDriver = wbd ;
+        _testData.setDriver(webDriver);
+        _propertyCreateAndSearch.setDriver(webDriver);
+        _leaseCreateAndSearch.setDriver(webDriver);
+        _spaceCreateAndSearch.setDriver(webDriver);
+    }
     public List<LogMessage> executeTest(TestCase testCase) {
         List<LogMessage> logMessages = new ArrayList<LogMessage>();
         try {
@@ -66,8 +85,7 @@ public class ExecuteTests {
             long start = System.currentTimeMillis();
             List<TestStep> testSteps = testCase.getAllTestSteps();
             testCase.setPassed(true);
-            TestData testData = TestData.getInstance();
-            testData.setDriver(webDriver);
+            TestData testData = _testData ;
             for (TestStep testStep : testSteps) {
                 //every step either create data or remove data or prequisite or normal step, if execultion flag is not set, it will not be executed
                 Boolean executionFlag = testStep.isExecutionFlagOn();
@@ -93,11 +111,11 @@ public class ExecuteTests {
                     testCase.setPassed(preqLogMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
                 }
                 else if (isItCreate(testStep.getAction().toUpperCase())) {
-                    logMessages.addAll(testData.runPrequisites(testCase.getTestCaseNumber(), testStep.getTestData()));
+                    logMessages.addAll(testData.createTestData(testCase.getTestCaseNumber(), testStep.getTestData()));
                 } else if (isItDelete(testStep.getAction().toUpperCase())) {
                     if(null==testStep.getTestData() || testStep.getTestData().isEmpty() || testStep.getTestData().toLowerCase().contains("property"))
                     {
-                        PropertyCreateAndSearch propertyCreateAndSearch=new PropertyCreateAndSearch(webDriver);
+                        PropertyCreateAndSearch propertyCreateAndSearch= _propertyCreateAndSearch ;
                         List<Map> propertyDatas=testData.getData("Property",testCase.getTestCaseNumber());
                         for(Map propertyData:propertyDatas){
                             logMessages.add(propertyCreateAndSearch.deleteProperty((String)propertyData.get("propertyName"), (String) propertyData.get("propertyCode")));
@@ -106,12 +124,12 @@ public class ExecuteTests {
                     }
                     if(null==testStep.getTestData() || testStep.getTestData().isEmpty() || testStep.getTestData().toLowerCase().contains("lease"))
                     {
-                        LeaseCreateAndSearch leaseCreateAndSearch=new LeaseCreateAndSearch(webDriver);
+                        LeaseCreateAndSearch leaseCreateAndSearch =  _leaseCreateAndSearch ;
                         List<Map> leaseDatas=testData.getData("Lease",testCase.getTestCaseNumber());
                         logMessages.addAll(leaseCreateAndSearch.deleteLeases((String)leaseDatas.get(0).get("propertyName"),(String)leaseDatas.get(0).get("propertyCode"),leaseDatas));
                     }
                     if(null==testStep.getTestData() || testStep.getTestData().isEmpty() || testStep.getTestData().toLowerCase().contains("space")){
-                        SpaceCreateAndSearch spaceCreateAndSearch=new SpaceCreateAndSearch(webDriver);
+                        SpaceCreateAndSearch spaceCreateAndSearch = _spaceCreateAndSearch ;
                         List<Map> spaceDatas=testData.getData("Space",testCase.getTestCaseNumber());
                         logMessages.addAll(spaceCreateAndSearch.deleteSpace((String)spaceDatas.get(0).get("propertyName"),(String)spaceDatas.get(0).get("propertyCode"),spaceDatas));
                     }
@@ -264,8 +282,7 @@ public class ExecuteTests {
                 return testData ;
             String finalTestData="";
             String[] splitTestDatas=testData.split(",");
-            TestData prerequisiteTestData = TestData.getInstance();
-            prerequisiteTestData.setDriver(webDriver);
+            TestData prerequisiteTestData = _testData ;
             if(splitTestDatas.length>0)
             {
                 for(String splitTestData:splitTestDatas){

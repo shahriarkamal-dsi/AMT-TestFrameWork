@@ -144,6 +144,7 @@ public class Lease {
 
         Map<String,String> leaseMap = new HashMap<String, String>();
 
+        leaseMap.put("dataId",String.valueOf(id));
         leaseMap.put("propertyName",propertyName);
         leaseMap.put("propertyCode",propertyCode);
         leaseMap.put("dbaName",leaseName);

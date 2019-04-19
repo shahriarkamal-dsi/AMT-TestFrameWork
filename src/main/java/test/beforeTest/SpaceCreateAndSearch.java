@@ -2,6 +2,8 @@ package test.beforeTest;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.WebObjectSearch;
@@ -9,19 +11,29 @@ import test.utility.PropertyConfig;
 
 import java.util.*;
 
+@Component
 public class SpaceCreateAndSearch {
     private WebDriver webDriver;
     private UIBase uiBase;
     private String mainWindow;
-    public SpaceCreateAndSearch(WebDriver driver){
-        this.webDriver = driver;
+    @Autowired
+    LeaseCreateAndSearch _leaseCreateAndSearch ;
+    @Autowired
+    PropertyCreateAndSearch _propertyCreateAndSearch ;
+    public SpaceCreateAndSearch(){
+
+    }
+    public void setDriver(WebDriver wbd) {
+        this.webDriver = wbd ;
+        _leaseCreateAndSearch.setDriver(webDriver);
+        _propertyCreateAndSearch.setDriver(webDriver);
     }
     public List<LogMessage> createMultipleSpaces(List<Map> datas)
     {
         List<LogMessage> logMessageList = new ArrayList<>();
         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
-            LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(webDriver);
+            LeaseCreateAndSearch leaseCreateAndSearch = _leaseCreateAndSearch ;
             uiBase = new UIBase(webDriver);
             leaseCreateAndSearch.searchLease(datas.get(0));
             UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
@@ -98,7 +110,7 @@ public class SpaceCreateAndSearch {
             String  objectLocatorPrefix = "Common.Property.";
             UIPanel uiPanel = new UIPanel(webDriver);
             UILink uiLink = new UILink(webDriver);
-            PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(webDriver);
+            PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ; 
 
             LogMessage navigationLog = propertyCreateAndSearch.navigateToProperty(data);
             if (!navigationLog.isPassed())
@@ -139,7 +151,7 @@ public class SpaceCreateAndSearch {
         List<LogMessage> logMessages=new ArrayList<>();
         UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
         try {
-            PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(webDriver);
+            PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ;
             UIBase uiBase=new UIBase(webDriver);
             //Lease and space delete have the same object locator
             String objectLocatorData="Common.Lease.";

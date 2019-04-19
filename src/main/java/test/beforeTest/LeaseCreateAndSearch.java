@@ -1,6 +1,8 @@
 package test.beforeTest;
 
 import org.openqa.selenium.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.ObjectLocatorDataStorage;
@@ -9,14 +11,21 @@ import test.utility.PropertyConfig;
 
 import java.util.*;
 
+
+@Component
 public class LeaseCreateAndSearch {
 
     private WebDriver webDriver;
     private String  objectlocatorPrefix;
     private UIBase uiBase;
     private String mainWindow;
-    public LeaseCreateAndSearch(WebDriver driver){
-        this.webDriver = driver;
+
+    @Autowired
+    PropertyCreateAndSearch _propertyCreateAndSearch ;
+
+    public void setDriver(WebDriver wbd){
+        this.webDriver = wbd;
+        _propertyCreateAndSearch.setDriver(webDriver);
     }
 
     public LeaseCreateAndSearch(){
@@ -152,7 +161,7 @@ public class LeaseCreateAndSearch {
         try{
             String  objectLocatorPrefix = "Common.Property.";
             UILink uiLink = new UILink(webDriver);
-            PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(webDriver);
+            PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ;
 
             LogMessage navigationLog = propertyCreateAndSearch.navigateToProperty(data);
             if (!navigationLog.isPassed())
@@ -194,7 +203,7 @@ public class LeaseCreateAndSearch {
     public List<LogMessage> isLeaseSpaceRecurExistsWithinAProperty(List<Map> leaseList, List<Map> spaceList, List<Map> recurList){
         List<LogMessage> logMessages= new ArrayList<>();
         try{
-            PropertyCreateAndSearch propertyCreateAndSearch=new PropertyCreateAndSearch(webDriver);
+            PropertyCreateAndSearch propertyCreateAndSearch= _propertyCreateAndSearch ;
             //property information is avaiable in lease information
             propertyCreateAndSearch.navigateToProperty(leaseList.get(0));
             String leaseObjectLocator="Common.Property.tbLease";
@@ -297,7 +306,7 @@ public class LeaseCreateAndSearch {
         UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
         List<LogMessage> logMessages=new ArrayList<>();
         try {
-            PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(webDriver);
+            PropertyCreateAndSearch propertyCreateAndSearch =  _propertyCreateAndSearch;
             UIBase uiBase=new UIBase(webDriver);
             UIPanel uiPanel=new UIPanel(webDriver);
             String objectLocatorData="Common.Lease.";

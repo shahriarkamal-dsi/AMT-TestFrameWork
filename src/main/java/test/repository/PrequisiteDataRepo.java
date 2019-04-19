@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface PrequisiteDataRepo extends JpaRepository<PrequisiteData,Long>{
+
+    public PrequisiteData findFirstByDataIdAndType(Long dataId,String type);
 }

@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.springframework.stereotype.Component;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
 import test.objectLocator.WebObjectSearch;
@@ -11,15 +12,16 @@ import test.utility.PropertyConfig;
 
 import java.util.*;
 
+@Component
 public class PropertyCreateAndSearch {
     private WebDriver webDriver;
 
-    public PropertyCreateAndSearch(WebDriver driver) {
-        this.webDriver = driver ;
-    }
-
     public PropertyCreateAndSearch(){
 
+    }
+
+    public void setDriver(WebDriver wbd){
+        this.webDriver = wbd;
     }
 
 

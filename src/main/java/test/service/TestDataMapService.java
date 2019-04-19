@@ -37,6 +37,10 @@ public class TestDataMapService {
         return testDataMapRepo.findById(id).orElse(null) ;
     }
 
+    public TestDataMap getTestDataMapByPreqIdAndTcId(Long preqId,String tcId) {
+        return testDataMapRepo.findFirstByTestCaseIdAndPreqId(tcId,preqId);
+    }
+
 
     private Stream<TestDataMap> getFilterDataByType(String tcId,String type) {
         try {

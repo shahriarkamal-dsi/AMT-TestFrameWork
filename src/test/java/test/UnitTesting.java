@@ -85,7 +85,8 @@ public class UnitTesting {
     public void testingInvokeMethod() {
 
         WebDriver driver = null ;
-        ExecuteTests executeTests = new ExecuteTests(driver);
+        ExecuteTests executeTests = new ExecuteTests();
+        executeTests.setDriver(driver);
          String test = "test" ;
         Object[] object = new Object[]{test};
         LogMessage logMessage = executeTests.invokeMethod("UIBase","test_click",1,object);
@@ -175,7 +176,8 @@ public class UnitTesting {
     @Test
     public void Testdataupdate(){
         WebDriver driver=DriverFactory.createDriver("chrome",false);
-        ExecuteTests executeTests=new ExecuteTests(driver);
+        ExecuteTests executeTests=new ExecuteTests();
+        executeTests.setDriver(driver);
         System.out.println(executeTests.updateTestData("666677777","Property,$Lease_dbaName,$Property_propertyCode_0",null));
     }
     @Test
@@ -184,7 +186,8 @@ public class UnitTesting {
             WebDriver driver = DriverFactory.createDriver("chrome", false);
             new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(), PropertyConfig.getPropertyValue("userName"), PropertyConfig.getPropertyValue("password"), PropertyConfig.getPropertyValue("client"));
            //LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
-            SpaceCreateAndSearch spaceCreateAndSearch=new SpaceCreateAndSearch(driver);
+            SpaceCreateAndSearch spaceCreateAndSearch=new SpaceCreateAndSearch();
+            spaceCreateAndSearch.setDriver(driver);
             /*TestData testData = TestData.getInstance();
             List<Map> spaceRecords = testData.getData("SPACE","666677777");
             List<Map> leaseRecords = testData.getData("LEASE","666677777");

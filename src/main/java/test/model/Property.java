@@ -188,6 +188,7 @@ public class Property {
 
         Map<String,String> propertyMap=new HashMap<>();
 
+        propertyMap.put("dataId",String.valueOf(id));
         propertyMap.put("propertyName",propertyName);
         propertyMap.put("propertyCode",propertyCode);
         propertyMap.put("address1",address);

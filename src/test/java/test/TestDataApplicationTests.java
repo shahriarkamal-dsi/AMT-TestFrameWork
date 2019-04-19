@@ -1,5 +1,10 @@
 package test;
 
+import org.openqa.selenium.WebDriver;
+import test.beforeTest.DbDataInsertion;
+import test.beforeTest.TestData;
+import test.driver.DriverFactory;
+import test.keywordScripts.UtilKeywordScript;
 import test.model.*;
 import test.repository.PreqExecutionHistoryRepo;
 import test.service.*;
@@ -8,13 +13,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import test.utility.PropertyConfig;
 
-import javax.annotation.Priority;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = AmtTestFrameworkApplication.class)
 public class TestDataApplicationTests {
 
 	@Autowired
@@ -33,6 +38,12 @@ public class TestDataApplicationTests {
 	private PreqExecutionHistoryService preqExecutionHistoryService ;
 	@Autowired
 	private PreqExecutionHistoryRepo preqExecutionHistoryRepo ;
+	@Autowired
+	private DbDataInsertion dbDataInsertion ;
+	@Autowired
+    TestData _testData;
+
+
 
 	@Test
 	public void contextLoads() {
@@ -197,6 +208,49 @@ public class TestDataApplicationTests {
 		assert (notExecutedPreqData.getSpaceList().size()==1);
 		assert (notExecutedPreqData.getRprList().size()==1);
 	}
+
+
+	@Test
+	public void testDBInsertion() {
+		dbDataInsertion.dataInsertion();
+	}
+
+    @Test
+    public void checkPreqExecutiom(){
+        try {
+            Space space = new Space();
+            space.setPropertyName("Test_60067788_Propertry");
+            space.setPropertyCode("60067788");
+            space.setLeaseName("Test_60067788_Lease");
+            space.setSpaceName("Test_60067788_Lease_space_income_1");
+            space.setStartDate("01/01/2017");
+            space.setEndDate("12/31/2021");
+            space.setFloor("1");
+            spaceService.createOrUpdateSpace(space);
+            //PrequisiteData prequisiteData=new PrequisiteData();
+            //prequisiteData.setDataId(space.getId());
+            //prequisiteData.setType("Space");
+            //preqDataService.createOrUpdatePrequisiteData(prequisiteData);
+            TestDataMap testDataMap=new TestDataMap();
+            testDataMap.setTestCaseId("10000");
+            testDataMap.setPreqId(preqDataService.getPrequisiteDataByDataIdAndType(space.getId(),"space").getPreqId());
+            testDataMapService.createOrUpdateTestDataMap(testDataMap);
+            PreqExecutionHistory preqExecutionHistory=new PreqExecutionHistory();
+            preqExecutionHistory.setPassed(false);
+            preqExecutionHistory.setPreqId(preqDataService.getPrequisiteDataByDataIdAndType(space.getId(),"space").getPreqId());
+            preqExecutionHistory.setEnvironment("app");
+            preqExecutionHistory.setClientId("201480");
+            preqExecutionHistory.setCreationTime(LocalDateTime.now());
+            preqExecutionHistoryService.createOrUpdatePreqExecutionHistory(preqExecutionHistory);
+            WebDriver driver = DriverFactory.createDriver("chrome", false);
+            new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(), PropertyConfig.getPropertyValue("userName"), PropertyConfig.getPropertyValue("password"), PropertyConfig.getPropertyValue("client"));
+            _testData.createTestData("10000","na");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
 
 
 }

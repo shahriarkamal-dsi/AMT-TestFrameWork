@@ -4,25 +4,36 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import test.Log.LogMessage;
 import test.keywordScripts.*;
+import test.model.Lease;
 import test.utility.PropertyConfig;
 
 import java.util.*;
 
+@Component
 public class RecurringPaymentCreateandSearch {
     private WebDriver webDriver;
     private UIBase uiBase;
     private String mainWindow;
-    public RecurringPaymentCreateandSearch(WebDriver driver){
-        this.webDriver = driver;
+    @Autowired
+    LeaseCreateAndSearch _leaseCreateAndSearch ;
+    public RecurringPaymentCreateandSearch(){
+
+    }
+
+    public void setWebDriver(WebDriver wbd) {
+        this.webDriver = wbd;
+        _leaseCreateAndSearch.setDriver(webDriver);
     }
     public List<LogMessage> addMultipleRecurringPayments(List<Map> datas){
         List<LogMessage> logMessageList = new ArrayList<>();
         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
             uiBase = new UIBase(webDriver);
-            LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(webDriver);
+            LeaseCreateAndSearch leaseCreateAndSearch = _leaseCreateAndSearch;
             leaseCreateAndSearch.searchLease(datas.get(0));
             UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
             mainWindow = webDriver.getWindowHandle();
@@ -126,7 +137,7 @@ public class RecurringPaymentCreateandSearch {
             UIBase uiBase = new UIBase(webDriver);
 
             UITable uiTable  = new UITable(webDriver);
-            LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(webDriver);
+            LeaseCreateAndSearch leaseCreateAndSearch = _leaseCreateAndSearch ;
             leaseCreateAndSearch.searchLease(data);
 
             LogMessage log = uiBase.Click(objectLocatorPrefix + "link");

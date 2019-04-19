@@ -42,6 +42,11 @@ public class PreqDataService {
         return prequisiteDataRepo.findById(id).orElse(new PrequisiteData()) ;
     }
 
+    public PrequisiteData getPrequisiteDataByDataIdAndType(Long dataId,String type)
+    {
+        return prequisiteDataRepo.findFirstByDataIdAndType(dataId,type) ;
+    }
+
 
     private Stream<PrequisiteData> getFilterDataByType(Stream<PrequisiteData> data, String type) {
         try {

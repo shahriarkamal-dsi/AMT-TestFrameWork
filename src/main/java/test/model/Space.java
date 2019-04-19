@@ -96,6 +96,7 @@ public class Space {
 
         Map<String,String> SpaceMap=new HashMap<>();
 
+        SpaceMap.put("dataId",String.valueOf(id));
         SpaceMap.put("propertyName",propertyName);
         SpaceMap.put("propertyCode",propertyCode);
         SpaceMap.put("LeaseName",leaseName);

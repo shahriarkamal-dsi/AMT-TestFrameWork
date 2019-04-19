@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface TestDataMapRepo extends JpaRepository<TestDataMap,Long>{
 
     List<TestDataMap> findByTestCaseId(String testcaseId);
+    TestDataMap findFirstByTestCaseIdAndPreqId(String testcaseId,Long preqId);
 }

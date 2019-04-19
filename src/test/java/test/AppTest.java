@@ -59,7 +59,8 @@ public class AppTest
         WebDriver driver = DriverFactory.createDriver("chrome", false);
         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
         utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
-        PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch(driver);
+        PropertyCreateAndSearch propertyCreateAndSearch = new PropertyCreateAndSearch() ;
+        propertyCreateAndSearch.setDriver(driver);
         for(Map record : records) {
             propertyCreateAndSearch.createProperty(record);
         }
@@ -76,7 +77,8 @@ public class AppTest
         WebDriver driver = DriverFactory.createDriver("chrome", false);
         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(driver);
         utilKeywordScript.login("https://qa4.testamt.com/","saimaalam01","amtDirect01!", "201483");
-        LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(driver);
+        LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch();
+        leaseCreateAndSearch.setDriver(driver);
         for(Map record : records){
             LogMessage logMessage =  leaseCreateAndSearch.createLease(record);
             assertTrue(logMessage.isPassed());

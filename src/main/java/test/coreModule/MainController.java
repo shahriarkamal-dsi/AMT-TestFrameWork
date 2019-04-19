@@ -1,7 +1,8 @@
 package test.coreModule;
 
-import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import test.Log.EmailSend;
 import test.Log.LogMessage;
 import test.Log.LogReport;
@@ -13,17 +14,24 @@ import test.utility.ReadExcel;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.logging.Logger;
 
+@Component
 public class MainController {
+
+        @Autowired
+        private ExecuteTests executeTests ;
+        @Autowired
+        private TestData _testData;
         final static ClassLoader CLASS_LOADER = MainController.class.getClassLoader();
         private WebDriver webDriver;
 
         public MainController(){
 
         }
-        public MainController(WebDriver driver){
-            this.webDriver = driver ;
+
+        public void setDriver(WebDriver wbd) {
+            this.webDriver = wbd ;
+            _testData.setDriver(webDriver);
         }
 
     public TestPlan createTestPlanAndModule(){
@@ -92,10 +100,12 @@ public class MainController {
            try {
                LogReport logReport = LogReport.getInstance();
                List<TestCase> testCases = testSuite.getAllTestCases();
-               ExecuteTests executeTests = new ExecuteTests(webDriver);
+               executeTests.setDriver(webDriver);
                for (TestCase testCase : testCases) {
                    List<LogMessage> logMessages = new ArrayList<>();
-                   logMessages.addAll(executeTests.executeTest(testCase));
+                   logMessages.addAll(_testData.createTestData(testCase.getTestCaseNumber(),"na"));
+                   if(validateLogMessages(logMessages))
+                    logMessages.addAll(executeTests.executeTest(testCase));
                    logReport.addTestcaseLogreport(testCase, logMessages);
                    new UtilKeywordScript(webDriver).redirectHomePage();
                }
