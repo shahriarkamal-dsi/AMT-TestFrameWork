@@ -1,6 +1,9 @@
 package test.beforeTest;
 
+import com.google.gson.JsonArray;
 import org.assertj.core.error.ShouldBeAfterYear;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,10 +18,9 @@ import test.service.PreqExecutionHistoryService;
 import test.service.TestDataMapService;
 import test.utility.PropertyConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +39,10 @@ public class TestData {
     private SpaceCreateAndSearch _spaceCreateAndSearch ;
     @Autowired
     private RecurringPaymentCreateandSearch _recurringPaymentCreateandSearch ;
+    @Autowired
+    private PreqDataService preqDataService ;
+    @Autowired
+    private PreqExecutionHistoryService preqExecutionHistoryService ;
 
     private WebDriver driver;
     private String clientId=PropertyConfig.getPropertyValue("client");
@@ -78,6 +84,7 @@ public class TestData {
             }
             for (String key : spacesList.keySet()) {
                 logMessages = spaceCreateAndSearch.createMultipleSpaces(spacesList.get(key));
+                putPreqExecutionData(logMessages);
                 logMessageList.addAll(logMessages);
             }
 
@@ -122,22 +129,42 @@ public class TestData {
     }
     public WebDriver getDriver(){return driver;}
 
+
+
+    private void putPreqExecutionData(List<LogMessage> logMessages) {
+        try {
+            for (LogMessage lm : logMessages) {
+                JSONArray jsonArray = lm.getUitlData() ;
+              JSONObject jso = (JSONObject) Optional.ofNullable(jsonArray.get(0)).orElse(new JSONObject());
+              if(null !=jso.get("dataId"))
+                  putPreqExecutionData(Long.valueOf(jso.get("dataId").toString()),jso.get("type").toString(), (boolean) jso.get("isPassed"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void putPreqExecutionData(long dataId,String type,boolean isPassed){
-        PreqDataService preqDataService=new PreqDataService();
         PreqExecutionHistory preqExecutionHistory=new PreqExecutionHistory();
-        PreqExecutionHistoryService preqExecutionHistoryService=new PreqExecutionHistoryService();
         PrequisiteData prequisiteData =preqDataService.getPrequisiteDataByDataIdAndType(dataId,type);
         preqExecutionHistory.setClientId(clientId);
         preqExecutionHistory.setEnvironment(environment);
+        preqExecutionHistory.setCreationTime(LocalDateTime.now());
         preqExecutionHistory.setPreqId(prequisiteData.getPreqId());
         preqExecutionHistory.setPassed(isPassed);
         preqExecutionHistoryService.createOrUpdatePreqExecutionHistory(preqExecutionHistory);
-
-
     }
 
     public List<Map> getData(String type,String tcId) {
-        return new ArrayList<Map>() ;
+        if(type.toLowerCase().equals("property"))
+          return  testDataMapService.getPropertyRecordsByTcId(tcId).stream().map(o->o.getPropertyMap()).collect(Collectors.toList());
+      else if(type.toLowerCase().equals("lease"))
+            return  testDataMapService.getLeaseRecordsByTcId(tcId).stream().map(o->o.getLeaseMap()).collect(Collectors.toList());
+       else if(type.toLowerCase().equals("space"))
+            return  testDataMapService.getSpaceRecordsByTcId(tcId).stream().map(o->o.getSpaceMap()).collect(Collectors.toList());
+          else
+              return  testDataMapService.getRprRecordsByTcId(tcId).stream().map(o->o.getRprMap()).collect(Collectors.toList());
+
     }
 
 }

@@ -1,5 +1,6 @@
 package test.beforeTest;
 
+import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,12 @@ public class SpaceCreateAndSearch {
             for(Map data: datas)
             {
                 LogMessage lm=createSpace(data);
+                JSONObject jso = new JSONObject();
+                jso.put("Space",data.get("Space") );
+                jso.put("dataId",data.get("dataId") );
+                jso.put("type","space" );
+                jso.put("isPassed",lm.isPassed() );
+                lm.addJsonObject(jso);
                 logMessageList.add(lm);
             }
             utilKeywordScript.redirectHomePage();

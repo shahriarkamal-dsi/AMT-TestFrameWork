@@ -109,30 +109,6 @@ public class ExecuteTests {
                     List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep,false);
                     logMessages.addAll(preqLogMessages);
                     testCase.setPassed(preqLogMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
-                }
-                else if (isItCreate(testStep.getAction().toUpperCase())) {
-                    logMessages.addAll(testData.createTestData(testCase.getTestCaseNumber(), testStep.getTestData()));
-                } else if (isItDelete(testStep.getAction().toUpperCase())) {
-                    if(null==testStep.getTestData() || testStep.getTestData().isEmpty() || testStep.getTestData().toLowerCase().contains("property"))
-                    {
-                        PropertyCreateAndSearch propertyCreateAndSearch= _propertyCreateAndSearch ;
-                        List<Map> propertyDatas=testData.getData("Property",testCase.getTestCaseNumber());
-                        for(Map propertyData:propertyDatas){
-                            logMessages.add(propertyCreateAndSearch.deleteProperty((String)propertyData.get("propertyName"), (String) propertyData.get("propertyCode")));
-                        }
-                        continue;
-                    }
-                    if(null==testStep.getTestData() || testStep.getTestData().isEmpty() || testStep.getTestData().toLowerCase().contains("lease"))
-                    {
-                        LeaseCreateAndSearch leaseCreateAndSearch =  _leaseCreateAndSearch ;
-                        List<Map> leaseDatas=testData.getData("Lease",testCase.getTestCaseNumber());
-                        logMessages.addAll(leaseCreateAndSearch.deleteLeases((String)leaseDatas.get(0).get("propertyName"),(String)leaseDatas.get(0).get("propertyCode"),leaseDatas));
-                    }
-                    if(null==testStep.getTestData() || testStep.getTestData().isEmpty() || testStep.getTestData().toLowerCase().contains("space")){
-                        SpaceCreateAndSearch spaceCreateAndSearch = _spaceCreateAndSearch ;
-                        List<Map> spaceDatas=testData.getData("Space",testCase.getTestCaseNumber());
-                        logMessages.addAll(spaceCreateAndSearch.deleteSpace((String)spaceDatas.get(0).get("propertyName"),(String)spaceDatas.get(0).get("propertyCode"),spaceDatas));
-                    }
                 } else {
                     logMessages.add(runSingleStep(testStep, testCase));
                     if (!testStep.isPassed() && testStep.isCritical()) {
@@ -266,14 +242,6 @@ public class ExecuteTests {
     }
     private Boolean isItCommon(String action) {
         if (action.equals(PropertyConfig.COMMON_COMMAND)) return true;
-        return false;
-    }
-    private Boolean isItCreate(String action){
-        if (action.equals(PropertyConfig.CREATE_COMMAND)) return true;
-        return false;
-    }
-    private Boolean isItDelete(String action){
-        if (action.equals(PropertyConfig.DELETE_COMMAND)) return true;
         return false;
     }
     public String updateTestData(String testCaseId,String testData, Optional<Map> utilData){

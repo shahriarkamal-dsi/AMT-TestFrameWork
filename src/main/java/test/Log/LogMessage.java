@@ -1,5 +1,9 @@
 package test.Log;
 
+import com.google.gson.JsonArray;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +12,7 @@ public class LogMessage {
     private String logMessage = "" ;
     private Boolean skipped = false;
     private List<LogMessage> subLogMessages= new ArrayList<LogMessage>();
+    private JSONArray utilData = new JSONArray();
     public LogMessage(){
 
     }
@@ -40,5 +45,12 @@ public class LogMessage {
 
     public void setSkippedTrue(){
         skipped = true;
+    }
+
+    public void addJsonObject(JSONObject jso) {
+        utilData.put(jso);
+    }
+    public JSONArray getUitlData() {
+        return  utilData ;
     }
 }
