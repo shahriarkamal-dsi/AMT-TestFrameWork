@@ -50,19 +50,22 @@ public class UtilDate {
 
     public LogMessage CheckDate(String testData){
         try{
+            UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+           if(!utilKeywordScript.validateTestData(testData,3)){
+                return new LogMessage(false, "Not enough data");
+            }
 
             String day1 = testData.split(",")[0] ;
             String day2 = testData.split(",")[1] ;
-            String differenceType = testData.split(",")[2] ;
+            long differenceType = Long.parseLong(testData.split(",")[2].trim()) ;
             long difference = getDateGap(day1,day2,"D") ;
-
-
-            if(differenceType.equals("1"))
-                return  difference >=1 ?  new LogMessage(true,"passed") : new LogMessage(false," not passed");
-            else if(differenceType.equals("0"))
-                return  difference == 0 ?  new LogMessage(true,"passed") : new LogMessage(false," not passed");
-            else //if(differenceType.equals("-1"))
-                return  difference <=-1 ?  new LogMessage(true,"passed") : new LogMessage(false," not passed");
+            if(difference>=1)
+                difference=1;
+            else if(difference==0)
+                difference=0;
+            else
+                difference =-1 ;
+            return (difference==differenceType)?  new LogMessage( true, "Date Gap is correct" ) : new LogMessage( false, "Date gap is correct" );
 
 
         }catch (Exception e){
