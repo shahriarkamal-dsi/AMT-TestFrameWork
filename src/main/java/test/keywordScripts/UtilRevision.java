@@ -135,8 +135,8 @@ public class UtilRevision {
             if(!utilKeywordScript.validateTestData(testData,2)){
                 return new LogMessage(false, "Not enough data");
             }
-            String date1 = testData.split(",")[0] ;
-            String date2 = testData.split(",")[1] ;
+            String date1 = testData.split(",")[0].trim() ;
+            String date2 = testData.split(",")[1].trim() ;
             long period1 = utildate.getDateGap(date1,date2,"M");
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
             long period2 = Long.parseLong(element.getAttribute("textContent").trim());

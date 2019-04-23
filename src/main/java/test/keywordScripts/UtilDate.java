@@ -55,8 +55,8 @@ public class UtilDate {
                 return new LogMessage(false, "Not enough data");
             }
 
-            String day1 = testData.split(",")[0] ;
-            String day2 = testData.split(",")[1] ;
+            String day1 = testData.split(",")[0].trim() ;
+            String day2 = testData.split(",")[1].trim() ;
             long differenceType = Long.parseLong(testData.split(",")[2].trim()) ;
             long difference = getDateGap(day1,day2,"D") ;
             if(difference>=1)
