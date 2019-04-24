@@ -6,6 +6,7 @@ import java.util.*;
 public class TestCase {
     private String testCaseNumber;
     private String testCaseName;
+    private String categoryName;
     private List<TestStep> testSteps ;
     private boolean passed ;
 
@@ -32,6 +33,12 @@ public class TestCase {
 
     public void setTestCaseName(String name){
         this.testCaseName= name;
+    }
+    public void setcategoryName(String name){
+        this.categoryName= name;
+    }
+    public String getcategoryName(){
+        return categoryName;
     }
     public void addTestStep(TestStep testStep ){
         testSteps.add(testStep);

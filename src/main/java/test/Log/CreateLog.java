@@ -5,6 +5,9 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import org.testng.annotations.Test;
+import test.coreModule.TestCase;
+import test.keywordScripts.UtilDate;
+
 
 import java.util.HashMap;
 
@@ -26,11 +29,12 @@ public class CreateLog {
     }
 
     @Test
-    public void createLogger(String header){
+    public void createLogger(String header, String categoryName){
 
         String key = header.trim();
 
         ExtentTest logger = extent.createTest(key);
+        logger.assignCategory(categoryName);
         storeAllLogger.put(key , logger);
 
     }
