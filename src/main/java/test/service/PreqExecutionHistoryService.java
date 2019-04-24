@@ -45,6 +45,16 @@ public class PreqExecutionHistoryService {
     public PreqExecutionHistory getPreqExecutionHistory(long preqId, String clientId, String env) {
         return preqExecutionHistoryRepo.findFirstByPreqIdAndClientIdAndEnvironmentOrderByCreationTimeDesc(preqId,clientId,env) ;
     }
+    public void putPreqExecutionData(String clientId,String environment,long dataId,String type,boolean isPassed){
+        PreqExecutionHistory preqExecutionHistory=new PreqExecutionHistory();
+        PrequisiteData prequisiteData =preqDataService.getPrequisiteDataByDataIdAndType(dataId,type);
+        preqExecutionHistory.setClientId(clientId);
+        preqExecutionHistory.setEnvironment(environment);
+        preqExecutionHistory.setCreationTime(LocalDateTime.now());
+        preqExecutionHistory.setPreqId(prequisiteData.getPreqId());
+        preqExecutionHistory.setPassed(isPassed);
+        preqExecutionHistoryService.createOrUpdatePreqExecutionHistory(preqExecutionHistory);
+    }
 
 
 
