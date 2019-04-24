@@ -29,12 +29,12 @@ public class CreateLog {
     }
 
     @Test
-    public void createLogger(String header, String categoriesName){
+    public void createLogger(String header, String categoryName){
 
         String key = header.trim();
 
         ExtentTest logger = extent.createTest(key);
-        logger.assignCategory(categoriesName);
+        logger.assignCategory(categoryName);
         storeAllLogger.put(key , logger);
 
     }

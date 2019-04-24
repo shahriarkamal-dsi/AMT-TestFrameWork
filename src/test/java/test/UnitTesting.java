@@ -121,7 +121,7 @@ public class UnitTesting {
     public void testCreateLog(){
         TestCase TC = new TestCase();
         CreateLog createLog = new CreateLog("Log") ;
-        createLog.createLogger("sample test",TC.getcategoriesName());
+        createLog.createLogger("sample test",TC.getcategoryName());
         createLog.writeLog("sample test","test",true);
         File file = new File("./Report/Log.html");
         assertTrue(file.exists());

@@ -39,7 +39,7 @@ public class MainController {
                     String sheetName = (String) record.get(PropertyConfig.SHEET_NAME);
                     String testCaseID = (String) record.get(PropertyConfig.TCID);
                     String testCaseName = (String) record.get(PropertyConfig.TEST_CASE_NAME);
-                    String categoriesName = (String) record.get(PropertyConfig.TEST_Categories_Name);
+                    String categoryName = (String) record.get(PropertyConfig.TEST_Category_Name);
                     TestSuite testSuite = module.getTestSuite(sheetName);
                     if(null ==  testSuite){
                         testSuite = new TestSuite(sheetName);
@@ -48,7 +48,7 @@ public class MainController {
                     }
                     TestCase testCase = new TestCase(testCaseID);
                     testCase.setTestCaseName(testCaseName);
-                    testCase.setcategoriesName(categoriesName);
+                    testCase.setcategoryName(categoryName);
                     testSuite.addTestCase(testCase);
                 }
                 module.setState(PropertyConfig.CREATED);

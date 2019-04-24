@@ -28,13 +28,10 @@ public class ExecuteTests {
         webDriver = driver ;
     }
     public void readAndExecute(String fileName,String sheetName) {
-        TestCase TC = new TestCase();
         ClassLoader classLoader = getClass().getClassLoader();
         long start = System.currentTimeMillis();
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/" + fileName + ".xlsx").getPath());
         List<Map> records = readExcel.read(sheetName);
-        CreateLog createLog = new CreateLog("sampleReport");
-        createLog.createLogger("sample test",TC.getcategoriesName());
         for(Map map : records) {
             ArrayList<Object> objects = new ArrayList<Object>();
            // objects.add(webDriver);
@@ -56,7 +53,7 @@ public class ExecuteTests {
                 numberOfParams++;
             }
             LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
-            createLog.writeLog("sample test",logMessage.getLogMessage(),logMessage.isPassed());
+
         }
 
     }

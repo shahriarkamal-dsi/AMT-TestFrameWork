@@ -18,7 +18,7 @@ public class PropertyConfig {
     public static String TCID= "TCID" ;
     public static String TC_ID= "TC_ID" ;
     public static String TEST_CASE_NAME= "TestCaseName" ;
-    public static String TEST_Categories_Name= "CategoriesName" ;
+    public static String TEST_Category_Name= "CategoryName" ;
     public static String STEP_NO = "StepNo" ;
     public static String  TEST_STEP_DESCRIPTION = "TestStepDescription" ;
     public static String FIELD_NAME = "FieldName" ;
@@ -46,6 +46,8 @@ public class PropertyConfig {
             String appConfigPath = classLoader.getResource("default.properties").getPath();
             Properties appProps = new Properties();
             appProps.load(new FileInputStream(appConfigPath));
+            //
+            //appProps.se
             return appProps.getProperty(property);
         }catch (Exception ex) {
             ex.printStackTrace();
