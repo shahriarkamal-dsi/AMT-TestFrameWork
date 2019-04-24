@@ -9,7 +9,7 @@ public class Lease {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(unique = true)
+    @Column(name = "lease_name")
     private String leaseName;
     @Column(unique = true)
     private String leaseCode;

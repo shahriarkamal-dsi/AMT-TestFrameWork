@@ -1,5 +1,6 @@
 package test.beforeTest;
 
+import org.json.JSONObject;
 import org.openqa.selenium.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,7 +52,13 @@ public class LeaseCreateAndSearch {
                     uiBase.WaitingForPageLoad();
                 }
                 LogMessage lm = createLease(datas.get(i));
+                JSONObject jso = new JSONObject();
+                jso.put("dataId",datas.get(i).get("dataId") );
+                jso.put("type","lease" );
+                jso.put("isPassed",lm.isPassed() );
+                lm.addJsonObject(jso);
                 logMessageList.add(lm);
+
 
             }
             utilKeywordScript.redirectHomePage();

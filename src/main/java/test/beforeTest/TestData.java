@@ -60,16 +60,24 @@ public class TestData {
             List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
             NotExecutedPreqData notExecutedPreqData =  testDataMapService.getNotExecutedPreqData(testCaseId,clientId,environment,100);
             PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ;
-
-            for(Map propertyRecord: notExecutedPreqData.getPropertyList().stream().map( e -> e.getPropertyMap()).collect(Collectors.toList())){
+            List<Map> propertyRecords=notExecutedPreqData.getPropertyList().stream().map( e -> e.getPropertyMap()).collect(Collectors.toList());
+           for(Map propertyRecord: propertyRecords){
                 LogMessage logMessage = propertyCreateAndSearch.createProperty(propertyRecord);
+                JSONObject jso = new JSONObject();
+                jso.put("dataId",propertyRecord.get("dataId") );
+                jso.put("type","property" );
+                jso.put("isPassed",logMessage.isPassed() );
+                logMessage.addJsonObject(jso);
                 logMessageList.add(logMessage);
-                putPreqExecutionData(Long.parseLong((String) propertyRecord.get("dataId")),"property",logMessage.isPassed());
+                putPreqExecutionData(logMessageList);
             }
             LeaseCreateAndSearch leaseCreateAndSearch = _leaseCreateAndSearch ;
             List<Map> leaseRocords = notExecutedPreqData.getLeaseList().stream().map( e -> e.getLeaseMap()).collect(Collectors.toList()) ;
-            if(null != leaseRocords && !leaseRocords.isEmpty())
-                logMessageList.addAll(leaseCreateAndSearch.createMultipleLeases(leaseRocords));
+            if(null != leaseRocords && !leaseRocords.isEmpty()) {
+                logMessages=leaseCreateAndSearch.createMultipleLeases(leaseRocords);
+                putPreqExecutionData(logMessages);
+                logMessageList.addAll(logMessages);
+            }
             SpaceCreateAndSearch spaceCreateAndSearch = _spaceCreateAndSearch ;
             Map<String, List<Map>> spacesList = new HashMap<>();
             for (Map spaceRecord : notExecutedPreqData.getSpaceList().stream().map( e -> e.getSpaceMap()).collect(Collectors.toList())) {
@@ -104,6 +112,7 @@ public class TestData {
             //System.out.println(spacesList);
             for (String key : recurList.keySet()) {
                 logMessages = recurringPaymentCreateandSearch.addMultipleRecurringPayments(recurList.get(key));
+                putPreqExecutionData(logMessages);
                 logMessageList.addAll(logMessages);
             }
             if(logMessageList.stream().anyMatch(o -> o.isPassed().equals(false))) {
@@ -135,25 +144,16 @@ public class TestData {
         try {
             for (LogMessage lm : logMessages) {
                 JSONArray jsonArray = lm.getUitlData() ;
-              JSONObject jso = (JSONObject) Optional.ofNullable(jsonArray.get(0)).orElse(new JSONObject());
+                JSONObject jso = (JSONObject) Optional.ofNullable(jsonArray.get(0)).orElse(new JSONObject());
               if(null !=jso.get("dataId"))
-                  putPreqExecutionData(Long.valueOf(jso.get("dataId").toString()),jso.get("type").toString(), (boolean) jso.get("isPassed"));
+                  preqExecutionHistoryService.putPreqExecutionData(PropertyConfig.getPropertyValue("client"),PropertyConfig.getPropertyValue("env"),Long.valueOf(jso.get("dataId").toString()),jso.get("type").toString(), (boolean) jso.get("isPassed"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void putPreqExecutionData(long dataId,String type,boolean isPassed){
-        PreqExecutionHistory preqExecutionHistory=new PreqExecutionHistory();
-        PrequisiteData prequisiteData =preqDataService.getPrequisiteDataByDataIdAndType(dataId,type);
-        preqExecutionHistory.setClientId(clientId);
-        preqExecutionHistory.setEnvironment(environment);
-        preqExecutionHistory.setCreationTime(LocalDateTime.now());
-        preqExecutionHistory.setPreqId(prequisiteData.getPreqId());
-        preqExecutionHistory.setPassed(isPassed);
-        preqExecutionHistoryService.createOrUpdatePreqExecutionHistory(preqExecutionHistory);
-    }
+
 
     public List<Map> getData(String type,String tcId) {
         if(type.toLowerCase().equals("property"))

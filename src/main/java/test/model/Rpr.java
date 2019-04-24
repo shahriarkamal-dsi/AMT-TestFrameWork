@@ -14,7 +14,7 @@ public class Rpr {
     private long id;
     @Column(name="space_name" , length = 30)
     private String spaceName;
-    @Column(name="charge_type" , length = 30)
+    @Column(name="charge_type" , length = 40)
     private String chargeType ;
     @Column(name="charge_name" , length = 30)
     private String chargeName ;
