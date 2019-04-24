@@ -18,6 +18,7 @@ public class PropertyConfig {
     public static String TCID= "TCID" ;
     public static String TC_ID= "TC_ID" ;
     public static String TEST_CASE_NAME= "TestCaseName" ;
+    public static String TEST_Categories_Name= "CategoriesName" ;
     public static String STEP_NO = "StepNo" ;
     public static String  TEST_STEP_DESCRIPTION = "TestStepDescription" ;
     public static String FIELD_NAME = "FieldName" ;

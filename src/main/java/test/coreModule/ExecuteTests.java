@@ -11,6 +11,7 @@ import test.keywordScripts.UIBase;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
+import test.coreModule.TestCase;
 
 import javax.swing.text.StyledEditorKit;
 import java.lang.reflect.Constructor;
@@ -27,12 +28,13 @@ public class ExecuteTests {
         webDriver = driver ;
     }
     public void readAndExecute(String fileName,String sheetName) {
+        TestCase TC = new TestCase();
         ClassLoader classLoader = getClass().getClassLoader();
         long start = System.currentTimeMillis();
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/" + fileName + ".xlsx").getPath());
         List<Map> records = readExcel.read(sheetName);
         CreateLog createLog = new CreateLog("sampleReport");
-        createLog.createLogger("sample test");
+        createLog.createLogger("sample test",TC.getcategoriesName());
         for(Map map : records) {
             ArrayList<Object> objects = new ArrayList<Object>();
            // objects.add(webDriver);
