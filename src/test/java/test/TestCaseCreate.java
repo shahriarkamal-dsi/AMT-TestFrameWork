@@ -15,12 +15,7 @@ public class TestCaseCreate {
     public static void login(){
         driver = DriverFactory.createDriver("chrome", false);
         new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
-
-    }
-    @Test(priority = 2)
-    public static void runTestCase(){
         MainController mainController= new MainController(driver);
         mainController.createAndExecute();
-
     }
 }

@@ -5,22 +5,27 @@ import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
+import test.keywordScripts.UtilDate;
 
 public class UtilRevision {
 
     private WebDriver webDriver ;
-
+    UtilDate utildate = new UtilDate();
     public UtilRevision() {
 
     }
 
     public UtilRevision(WebDriver webDriver) {
         this.webDriver = webDriver ;
+
     }
 
     public LogMessage validateProcessing(){
@@ -33,23 +38,23 @@ public class UtilRevision {
             UIBase uiBase = new UIBase(webDriver);
             UIPanel uiPanel = new UIPanel(webDriver);
             LogMessage subLog = uiText.WaitForVisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete,60");
-            log.setSubLogMessage(subLog);
+            log.addSubLogMessage(subLog);
             subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processInfoPanel","Position in Queue:");
-            log.setSubLogMessage(subLog);
+            log.addSubLogMessage(subLog);
             WebElement element = WebObjectSearch.getWebElement(webDriver, objectlocatorPrefix + "queueCount");
             String countString = element.getAttribute("textContent");
             subLog = uiBase.compareGreaterThanValue(countString + ",0");
-            log.setSubLogMessage(subLog);
+            log.addSubLogMessage(subLog);
             //subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkContinueWithProcess");
-            log.setSubLogMessage(subLog);
+            log.addSubLogMessage(subLog);
             //subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkPrint");
-            log.setSubLogMessage(subLog);
+            log.addSubLogMessage(subLog);
             //subLog = uiLink.verifyLinkEnabledTrue(objectlocatorPrefix + "lnkCancel");
-            log.setSubLogMessage(subLog);
+            log.addSubLogMessage(subLog);
             subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processCount","Ready To Process 0 Revisions");
-            log.setSubLogMessage(subLog);
+            log.addSubLogMessage(subLog);
             subLog = uiText.WaitForInvisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete ,60");
-            log.setSubLogMessage(subLog);
+            log.addSubLogMessage(subLog);
             if (subLog.isPassed()){
                 log.setPassed(true);
                 log.setLogMessage("Processing done");
@@ -66,6 +71,10 @@ public class UtilRevision {
 
     public LogMessage VerifyNoOfPeriodsInRevision(String objectLocator, String testData){
         try{
+         UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+         if(!utilKeywordScript.validateTestData(testData,2)){
+             return new LogMessage(false, "Not enough data");
+         }
         String[] data = testData.split(",");
         final String columnName = Optional.ofNullable(data[0]).orElse("") ;
         final String columnValue = Optional.ofNullable(data[1]).orElse("") ;
@@ -94,6 +103,10 @@ public class UtilRevision {
     }
     public LogMessage VerifyAmountToCapitalize(String objectLocator,String testData){
         try{
+            UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            if(!utilKeywordScript.validateTestData(testData,2)){
+                return new LogMessage(false, "Not enough data");
+            }
             String[] data = testData.split(",");
             final String columnName = Optional.ofNullable(data[0]).orElse("") ;
             final String columnValue = Optional.ofNullable(data[1]).orElse("") ;
@@ -113,6 +126,43 @@ public class UtilRevision {
         }catch (Exception e){
             e.printStackTrace();
             return new  LogMessage(false,"Exception occer " + e.getMessage());
+        }
+    }
+
+    public LogMessage verifyPeriod(String objectLocator,String testData){
+        try{
+            UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            if(!utilKeywordScript.validateTestData(testData,2)){
+                return new LogMessage(false, "Not enough data");
+            }
+            String date1 = testData.split(",")[0].trim() ;
+            String date2 = testData.split(",")[1].trim() ;
+            long period1 = utildate.getDateGap(date1,date2,"M");
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            long period2 = Long.parseLong(element.getAttribute("textContent").trim());
+            if(null==element) return new LogMessage(false, "Element is not Present");
+            if(period1==period2) return new LogMessage(true, "Value matches with the referred value");
+            else return new LogMessage(false, "Value does not match with the referred value");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
+
+    public LogMessage verifyTotalPeriodPayments(String testData){
+        try{
+            UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            if(!utilKeywordScript.validateTestData(testData,4)){
+                return new LogMessage(false, "Not enough data");
+            }
+            double payments1 = Double.parseDouble(testData.split(",")[0].trim()) ;
+            double payments2 = Double.parseDouble(testData.split(",")[1].trim()) ;
+            String date1 = testData.split(",")[2].trim() ;
+            String date2 = testData.split(",")[3].trim() ;
+            payments2 = payments2 * utildate.getDateGap(date1,date2,"M");
+            if(payments1==payments2) return new LogMessage(true, "Value matches with the referred value");
+            else return new LogMessage(false, "Value does not match with the referred value");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur");
         }
     }
 

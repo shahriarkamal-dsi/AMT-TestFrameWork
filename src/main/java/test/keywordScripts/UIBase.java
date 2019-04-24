@@ -300,4 +300,39 @@ public class UIBase {
         }
     }
 
+    public LogMessage storeUIValue(String objectLocatorData, String varName) {
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+            if (null == element)
+                return new LogMessage(false, "UI element is not found");
+            else {
+                String varValue = element.getAttribute("textContent").trim();
+                TestPlan.getInstance().setStoreData(varName, varValue);
+                return new LogMessage(true, "UI value :" + varValue + " is stored");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred in StoreUIValue  " + ex.getMessage());
+        }
+    }
+
+
+    public LogMessage compareValue(String testData) {
+        try {
+            UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            if(!utilKeywordScript.validateTestData(testData,2)){
+                return new LogMessage(false, "Not enough data");
+            }
+            String value = testData.split(",")[0].trim();
+            String compareTovalue = testData.split(",")[1].trim();
+            if (value.equals(compareTovalue))
+                return new LogMessage(true, "Value matches with the referred value");
+            else
+                return new LogMessage(false, "Value does not match with the referred value");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred in compare  " + ex.getMessage());
+        }
+    }
+
 }
