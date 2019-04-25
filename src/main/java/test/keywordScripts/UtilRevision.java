@@ -139,8 +139,9 @@ public class UtilRevision {
             String date2 = testData.split(",")[1].trim() ;
             long period1 = utildate.getDateGap(date1,date2,"M");
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
-            long period2 = Long.parseLong(element.getAttribute("textContent").trim());
             if(null==element) return new LogMessage(false, "Element is not Present");
+            String text=element.getAttribute("textContent").trim();
+            long period2 = Math.round(Double.valueOf(text));
             if(period1==period2) return new LogMessage(true, "Value matches with the referred value");
             else return new LogMessage(false, "Value does not match with the referred value");
         }catch (Exception e){
