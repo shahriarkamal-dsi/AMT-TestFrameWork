@@ -14,6 +14,7 @@ import test.utility.PropertyConfig;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class UIDropDown {
 
@@ -84,6 +85,39 @@ public class UIDropDown {
         } catch ( Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "exception occured: " + ex.getMessage()) ;
+        }
+    }
+    public String getDropDownValue(String objectLocator){
+        try {
+            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
+            String objectLocatorPath= (String) objectLocatorData.get(PropertyConfig.OBJECT_LOCATORS);
+            if(null != objectLocatorData.get(PropertyConfig.PARENT_LOCATOR)) {
+                WebElement webElement=webDriver.findElement(By.xpath(objectLocatorPath+"//*[@class='k-input']"));
+                if(null == webElement)
+                    return "";
+                return Optional.ofNullable(webElement.getAttribute("textContent")).orElse("").trim();
+            }
+            WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            if (null == dropDownElement)
+                return "";
+            Select dropDown = new Select(dropDownElement);
+            return Optional.ofNullable(dropDown.getFirstSelectedOption().getAttribute("textContent")).orElse("");
+
+        }catch (Exception e){
+            return "";
+        }
+
+    }
+    public LogMessage compareDropDownValue(String objectLocator,String testData){
+        try{
+            String[] splittedTestData=testData.split(",");
+            String attribute = getDropDownValue(objectLocator);
+            if(attribute.equals(splittedTestData[0].trim()))
+                return new LogMessage(true, "Value is verified");
+            else
+                return new LogMessage(false, "Value is not verified");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur" + e.getMessage());
         }
     }
 

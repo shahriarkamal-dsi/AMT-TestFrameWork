@@ -108,7 +108,7 @@ public class UIText {
             if (null == webElement) {
                 return "";
             }
-            return Optional.ofNullable(webElement.getAttribute("textContent").trim()).orElse("");
+            return Optional.ofNullable(webElement.getAttribute("textContent")).orElse("").trim();
         }catch (Exception e){
             return "";
         }
