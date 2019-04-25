@@ -2,6 +2,7 @@ package test.coreModule;
 
 import test.utility.PropertyConfig;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class TestStep {
@@ -13,6 +14,10 @@ public class TestStep {
     }
 
     private boolean isPassed = true  ;
+    public TestStep(){
+
+    }
+
     public TestStep(Map step){
         this.step = step;
     }
@@ -110,5 +115,14 @@ public class TestStep {
 
     public void setPassed(Boolean value) {
          isPassed = value ;
+    }
+
+    public Map getStep() {
+        return step;
+    }
+
+    public void setStep(Map step) {
+       // this.step = step;
+        this.step = new HashMap<>(step);
     }
 }
