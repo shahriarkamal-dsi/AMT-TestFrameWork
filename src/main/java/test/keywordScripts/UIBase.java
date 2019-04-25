@@ -224,8 +224,11 @@ public class UIBase {
     public LogMessage waitForRevision(String objectLocatorData){
         try{
             UITable uiTable = new UITable(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
             for (int i = 0; i<10; i++){
-                webDriver.findElement(By.xpath("//*[@title='Refresh']")).click();
+                WebElement element = webDriver.findElement(By.xpath("//*[@title='Refresh']"));
+                uiBase.Click(element);
+                WaitingForPageLoad();
                 List<Map<String,WebElement>> rows = uiTable.getAllValuesfromTable(objectLocatorData);
                 if (null == rows || rows.isEmpty()){
                     UtilKeywordScript.delay(60);
@@ -306,7 +309,8 @@ public class UIBase {
             if (null == element)
                 return new LogMessage(false, "UI element is not found");
             else {
-                String varValue = element.getAttribute("textContent").trim();
+                //String varValue = element.getAttribute("textContent").trim();
+                String varValue = element.getAttribute("value").trim();
                 TestPlan.getInstance().setStoreData(varName, varValue);
                 return new LogMessage(true, "UI value :" + varValue + " is stored");
             }
