@@ -9,7 +9,7 @@ public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(unique = true)
+    @Column(name = "property_name")
     private String propertyName;
     @Column(unique = true)
     private String propertyCode;

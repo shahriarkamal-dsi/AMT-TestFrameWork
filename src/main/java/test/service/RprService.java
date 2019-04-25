@@ -21,6 +21,9 @@ public class RprService {
         if(isNew)
             preqDataService.createPrequisiteData("rpr",rpr.getId());
     }
+    public Rpr getRprBySpaceNameAndChargeType(String spaceName, String chargeType){
+        return rprRepo.findOneBySpaceNameAndChargeType(spaceName,chargeType).orElse(null);
+    }
 
     public Rpr getRpr(Long id) {
         return rprRepo.findById(id).orElse(null) ;

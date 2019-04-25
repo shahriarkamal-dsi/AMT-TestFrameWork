@@ -1,5 +1,6 @@
 package test.beforeTest;
 
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -40,6 +41,11 @@ public class RecurringPaymentCreateandSearch {
             for(Map data: datas)
             {
                 LogMessage lm=addRecurringPayment(data);
+                JSONObject jso = new JSONObject();
+                jso.put("dataId",data.get("dataId") );
+                jso.put("type","rpr" );
+                jso.put("isPassed",lm.isPassed() );
+                lm.addJsonObject(jso);
                 logMessageList.add(lm);
             }
             utilKeywordScript.redirectHomePage();
