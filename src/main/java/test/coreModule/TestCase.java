@@ -6,6 +6,7 @@ import java.util.*;
 public class TestCase {
     private String testCaseNumber;
     private String testCaseName;
+    private String categoryName;
     private List<TestStep> testSteps ;
     private boolean passed ;
 
@@ -33,6 +34,12 @@ public class TestCase {
     public void setTestCaseName(String name){
         this.testCaseName= name;
     }
+    public void setcategoryName(String name){
+        this.categoryName= name;
+    }
+    public String getcategoryName(){
+        return categoryName;
+    }
     public void addTestStep(TestStep testStep ){
         testSteps.add(testStep);
     }
@@ -41,8 +48,15 @@ public class TestCase {
         return  testSteps ;
     }
 
-    public void setTestSteps(List<TestStep> testSteps){
-        this.testSteps = new ArrayList<>(testSteps);
+    public void setTestSteps(List<TestStep> tsteps){
+         List<TestStep> steps = new ArrayList<TestStep>() ;
+         for(TestStep tstp : tsteps) {
+             TestStep testStep = new TestStep();
+             testStep.setStep(tstp.getStep());
+             steps.add(testStep) ;
+         }
+         this.testSteps = steps;
+
     }
 
     public boolean isPassed() {

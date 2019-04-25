@@ -115,8 +115,6 @@ public class LeaseCreateAndSearch {
             uiBase.Click(objectlocatorPrefix + "saveButton");
 
             LogMessage lm = uiBase.WaitingForSuccessfullPopup();
-
-            UtilKeywordScript.delay( 5);
             if(lm.isPassed())
                 return new LogMessage(lm.isPassed(),"Lease "+data.get("dbaName") +" is created successfully under "+data.get("propertyName"));
             else

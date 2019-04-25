@@ -32,7 +32,7 @@ public class UIInput {
             if (null == webElement) {
                 return "";
             }
-            return Optional.ofNullable(webElement.getAttribute("value").trim()).orElse("");
+            return Optional.ofNullable(webElement.getAttribute("value")).orElse("").trim();
         }catch (Exception e){
             return "";
         }

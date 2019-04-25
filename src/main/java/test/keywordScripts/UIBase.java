@@ -224,8 +224,11 @@ public class UIBase {
     public LogMessage waitForRevision(String objectLocatorData){
         try{
             UITable uiTable = new UITable(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
             for (int i = 0; i<10; i++){
-                webDriver.findElement(By.xpath("//*[@title='Refresh']")).click();
+                WebElement element = webDriver.findElement(By.xpath("//*[@title='Refresh']"));
+                uiBase.Click(element);
+                WaitingForPageLoad();
                 List<Map<String,WebElement>> rows = uiTable.getAllValuesfromTable(objectLocatorData);
                 if (null == rows || rows.isEmpty()){
                     UtilKeywordScript.delay(60);
@@ -297,6 +300,45 @@ public class UIBase {
         } catch (Exception ex) {
             ex.printStackTrace();
             return new LogMessage( false, "exception occurred in StoreUIValue " + ex.getMessage()) ;
+        }
+    }
+
+    public LogMessage storeUIValue(String objectLocatorData, String varName) {
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+            if (null == element)
+                return new LogMessage(false, "UI element is not found");
+            else {
+                String varValue = Optional.ofNullable(element.getAttribute("value")).orElse("").trim();
+                if(null==varValue || varValue.isEmpty()) {
+                    varValue = Optional.ofNullable(element.getAttribute("textContent")).orElse("").trim();
+                }
+                TestPlan.getInstance().setStoreData(varName, varValue);
+
+                return new LogMessage(true, "UI value :" + varValue + " is stored");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred in StoreUIValue  " + ex.getMessage());
+        }
+    }
+
+
+    public LogMessage compareValue(String testData) {
+        try {
+            UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            if(!utilKeywordScript.validateTestData(testData,2)){
+                return new LogMessage(false, "Not enough data");
+            }
+            String value = testData.split(",")[0].trim();
+            String compareTovalue = testData.split(",")[1].trim();
+            if (value.equals(compareTovalue))
+                return new LogMessage(true, "Value matches with the referred value");
+            else
+                return new LogMessage(false, "Value does not match with the referred value");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred in compare  " + ex.getMessage());
         }
     }
 

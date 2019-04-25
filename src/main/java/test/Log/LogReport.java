@@ -24,12 +24,13 @@ public class LogReport {
         CreateLog createLog = PassedLogReport;
         CreateLog createFailedLog = null;
         String logName = testCase.getTestCaseNumber() + "--" + testCase.getTestCaseName() ;
-        createLog.createLogger(logName );
+        createLog.createLogger(logName ,testCase.getcategoryName());
+
         String failedLogName;
         if(!testCase.isPassed()) {
             createFailedLog = FailedLogReport;
             failedLogName = testCase.getTestCaseNumber() + "--" + testCase.getTestCaseName() ;
-            createFailedLog.createLogger(failedLogName);
+            createFailedLog.createLogger(failedLogName,testCase.getcategoryName());
         }
         
         for(LogMessage logMessage : logmessages) {

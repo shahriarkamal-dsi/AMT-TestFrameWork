@@ -29,7 +29,11 @@ public class LogMessage {
     public void setPassed(Boolean passedValue) {
         this.passed = passedValue ;
     }
-    public void setSubLogMessage(LogMessage logMessage){ this.subLogMessages.add(logMessage); }
+    public void addSubLogMessage(LogMessage logMessage){ this.subLogMessages.add(logMessage); }
+    public boolean isAnySubLogFailed(){
+        return subLogMessages.stream().anyMatch(o -> o.isPassed().equals(false));
+    }
+
     public List<LogMessage> getSubLogMessage(){ return this.subLogMessages; }
     public String getLogMessage(){
         return logMessage ;

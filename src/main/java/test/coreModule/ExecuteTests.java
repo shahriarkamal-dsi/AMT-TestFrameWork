@@ -13,6 +13,7 @@ import test.keywordScripts.UIBase;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
+import test.coreModule.TestCase;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -42,8 +43,6 @@ public class ExecuteTests {
         long start = System.currentTimeMillis();
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/" + fileName + ".xlsx").getPath());
         List<Map> records = readExcel.read(sheetName);
-        CreateLog createLog = new CreateLog("sampleReport");
-        createLog.createLogger("sample test");
         for(Map map : records) {
             ArrayList<Object> objects = new ArrayList<Object>();
            // objects.add(webDriver);
@@ -65,7 +64,7 @@ public class ExecuteTests {
                 numberOfParams++;
             }
             LogMessage logMessage =  invokeMethod(actionName.split("\\.")[0],actionName.split("\\.")[1],numberOfParams,objects.toArray());
-            createLog.writeLog("sample test",logMessage.getLogMessage(),logMessage.isPassed());
+
         }
 
     }
