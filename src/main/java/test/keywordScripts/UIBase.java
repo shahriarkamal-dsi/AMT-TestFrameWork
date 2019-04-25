@@ -306,8 +306,12 @@ public class UIBase {
             if (null == element)
                 return new LogMessage(false, "UI element is not found");
             else {
-                String varValue = element.getAttribute("textContent").trim();
+                String varValue = Optional.ofNullable(element.getAttribute("value")).orElse("").trim();
+                if(null==varValue || varValue.isEmpty()) {
+                    varValue = Optional.ofNullable(element.getAttribute("textContent")).orElse("").trim();
+                }
                 TestPlan.getInstance().setStoreData(varName, varValue);
+
                 return new LogMessage(true, "UI value :" + varValue + " is stored");
             }
         } catch (Exception ex) {
