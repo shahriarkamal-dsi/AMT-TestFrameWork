@@ -273,7 +273,7 @@ public class DbDataInsertion {
 
     private List<Map> getData(String sheetName) {
         ClassLoader classLoader = TestData.class.getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate_temp.xlsx").getPath());
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
         return readExcel.read(sheetName);
     }
 }
