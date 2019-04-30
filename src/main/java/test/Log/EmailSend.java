@@ -1,29 +1,34 @@
 package test.Log;
 
 import org.apache.commons.mail.*;
+import test.coreModule.TestPlan;
 import test.utility.PropertyConfig;
-
 import java.io.File;
+import java.time.LocalDateTime;
 
 public class EmailSend {
+
+    private static String env = PropertyConfig.getPropertyValue("env");
+    private static String version = PropertyConfig.getPropertyValue("version");
+
 
     public static void sendLogReport(){
         File file = new File("./Report/" + PropertyConfig.getPropertyValue("passedReprtName"));
         if (file.exists()) {
-            sendEmail(PropertyConfig.getPropertyValue("passedReprtName"),PropertyConfig.getPropertyValue("successfullTCrecipeints"));
+            sendEmail(PropertyConfig.getPropertyValue("passedReprtName"),PropertyConfig.getPropertyValue("successfullTCrecipeints"),true);
         }
         file = new File("./Report/" + PropertyConfig.getPropertyValue("failedReprtName"));
         if (file.exists()) {
-            sendEmail(PropertyConfig.getPropertyValue("failedReprtName"),PropertyConfig.getPropertyValue("failedTCrecipeints"));
+            sendEmail(PropertyConfig.getPropertyValue("failedReprtName"),PropertyConfig.getPropertyValue("failedTCrecipeints"),false);
         }
     }
-    private static void sendEmail(String reportName,String receivers) {
+    private static void sendEmail(String reportName,String receivers, boolean reportType) {
         try {
             EmailAttachment attachment = new EmailAttachment();
             attachment.setPath("./Report/" + reportName);
             attachment.setDisposition(EmailAttachment.ATTACHMENT);
             attachment.setDescription("Log Report");
-            attachment.setName("LogReport.html");
+            attachment.setName(reportName);
 
             // Create the email message
             MultiPartEmail email = new MultiPartEmail();
@@ -35,17 +40,62 @@ public class EmailSend {
             for(String recepient : recepients)
                 email.addTo(recepient);
             email.setFrom(PropertyConfig.getPropertyValue("testingEmailAddress"), "Testing");
-            email.setSubject("Log Report");
-            email.setMsg("Please find the attachment of the log report and download it");
+            if (reportType){
+                email.setSubject(getPassedEmailSubject());
+                email.setMsg(getPassedEmailBody());
 
-            // add the attachment
+            }else {
+                email.setSubject(getFailedEmailSubject());
+                email.setMsg(getFailedEmailBody());
+
+            }
             email.attach(attachment);
-
-            // send the email
             email.send();
 
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+    }
+    private static String getPassedEmailBody(){
+
+        String BODY = String.join(
+                System.getProperty("line.separator"),
+                "Hi all,",
+                " ",
+                "Please find the attached results of the Automated Smoke Test performed around FASB/IASB in " + env.toUpperCase()+ " Version: " + version,
+                " ",
+                "NOTE: To view the report please download the HTML file.",
+                " ",
+                "Thank you!"
+        );
+        return BODY;
+    }
+
+    private static String getFailedEmailBody(){
+
+        String BODY = String.join(
+                System.getProperty("line.separator"),
+                "Hi all,",
+                " ",
+                "Please find the attached summary of Failed test cases as part of Automated Smoke Test around FASB/IASB in " + env.toUpperCase() +" Version: " + version ,
+                " ",
+                "NOTE: To view the report please download the HTML file.",
+                " ",
+                "Thank you!"
+        );
+        return BODY;
+    }
+    private static String getFailedEmailSubject(){
+
+        LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
+        String Subject = env.toUpperCase() + " - FASB/IASB Smoke Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        return Subject;
+    }
+
+    private static String getPassedEmailSubject(){
+
+        LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
+        String Subject = env.toUpperCase() + " - FASB/IASB Smoke Test  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        return Subject;
     }
 }
