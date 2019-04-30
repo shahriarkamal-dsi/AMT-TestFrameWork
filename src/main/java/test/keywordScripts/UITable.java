@@ -557,4 +557,30 @@ public class UITable extends  UtilKeywordScript{
 
     }
 
+    public LogMessage storeUITableValue(String objectLocator, String testData) {
+        try {
+            System.out.println("here");
+            UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+            if (!utilKeywordScript.validateTestData(testData, 4)) {
+                return new LogMessage(false, "Not enough data");
+            }
+            String[] data = testData.split(",");
+            final String columnName = Optional.ofNullable(data[0]).orElse("");
+            final String columnValue = Optional.ofNullable(data[1]).orElse("");
+            final String columnName2=Optional.ofNullable(data[2]).orElse("");
+            final String varName=Optional.ofNullable(data[3]).orElse("");
+            UITable uiTable = new UITable(webDriver);
+            Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocator, columnName, columnValue, null);
+            if (null == row || row.isEmpty()) {
+                return new LogMessage(false, "no table data found");
+            }
+            String varValue = Optional.ofNullable(row.get(columnName2).getAttribute("textContent")).orElse("");
+            TestPlan.getInstance().setStoreData(varName, varValue);
+            return new LogMessage(true, "UI value :" + varValue + " is stored");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred in StoreUIValue  " + ex.getMessage());
+        }
+    }
+
 }

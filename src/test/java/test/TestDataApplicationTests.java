@@ -292,7 +292,7 @@ public class TestDataApplicationTests {
 			testDataMap.setTestCaseId("6517456");
 			testDataMap.setPreqId(preqDataService.getPrequisiteDataByDataIdAndType(rpr.getId(),"rpr").getPreqId());
 			testDataMapService.createOrUpdateTestDataMap(testDataMap);
-            PreqExecutionHistory preqExecutionHistory=new PreqExecutionHistory();
+            /*PreqExecutionHistory preqExecutionHistory=new PreqExecutionHistory();
 			preqExecutionHistory.setPassed(false);
 			preqExecutionHistory.setPreqId(preqDataService.getPrequisiteDataByDataIdAndType(property.getId(),"property").getPreqId());
 			preqExecutionHistory.setEnvironment("app");
@@ -319,7 +319,7 @@ public class TestDataApplicationTests {
 			preqExecutionHistory.setEnvironment("app");
 			preqExecutionHistory.setClientId("201480");
 			preqExecutionHistory.setCreationTime(LocalDateTime.now());
-			preqExecutionHistoryService.createOrUpdatePreqExecutionHistory(preqExecutionHistory);
+			preqExecutionHistoryService.createOrUpdatePreqExecutionHistory(preqExecutionHistory);*/
         }catch (Exception e){
             e.printStackTrace();
         }

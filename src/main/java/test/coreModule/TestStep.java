@@ -80,7 +80,7 @@ public class TestStep {
     }
     public boolean isCritical(){
         try {
-            return  step.get(PropertyConfig.CRITICAL).toString().toLowerCase().equals("yes") ? true : false;
+            return  step.get(PropertyConfig.CRITICAL).toString().toLowerCase().equals("no") ? false : true;
         }catch(Exception ex) {
             return false;
         }
