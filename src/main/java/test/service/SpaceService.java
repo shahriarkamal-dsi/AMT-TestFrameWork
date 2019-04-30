@@ -16,7 +16,6 @@ public class SpaceService {
     private SpaceRepo spaceRepo ;
     @Autowired
     private PreqDataService preqDataService ;
-
     public void createOrUpdateSpace(Space space) {
         boolean isNew = space.getId() ==0 ? true : false ;
         spaceRepo.save(space) ;

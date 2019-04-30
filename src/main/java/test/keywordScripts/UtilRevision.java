@@ -84,6 +84,7 @@ public class UtilRevision {
         if (null == row || row.isEmpty()){
             return new LogMessage(false,"no table data found");
         }
+
         WebElement startDateElement=row.get("FASB/IASB Start Date");
         LocalDate startDate=LocalDate.parse(startDateElement.getAttribute("textContent").trim(),formatter);
         WebElement endDateElement=row.get("FASB/IASB End Date");
@@ -91,7 +92,7 @@ public class UtilRevision {
 
         double noOfMonths =(double) (ChronoUnit.MONTHS.between(startDate,endDate)+1);
         WebElement noOfPeriodsElement=row.get("# of Periods");
-        if(Double.parseDouble(noOfPeriodsElement.getAttribute("textContent"))==noOfMonths){
+        if(Math.round(Double.parseDouble(noOfPeriodsElement.getAttribute("textContent")))==noOfMonths){
             return new  LogMessage(true,"No of periods verified");
         }
         else
@@ -104,21 +105,28 @@ public class UtilRevision {
     public LogMessage VerifyAmountToCapitalize(String objectLocator,String testData){
         try{
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
-            if(!utilKeywordScript.validateTestData(testData,2)){
+            if(!utilKeywordScript.validateTestData(testData,3)){
                 return new LogMessage(false, "Not enough data");
             }
             String[] data = testData.split(",");
             final String columnName = Optional.ofNullable(data[0]).orElse("") ;
             final String columnValue = Optional.ofNullable(data[1]).orElse("") ;
+            final double rentalAmount=Double.parseDouble(Optional.ofNullable(data[2]).orElse(""));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             UITable uiTable=new UITable(webDriver);
             Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocator,columnName,columnValue,null);
             if (null == row || row.isEmpty()){
                 return new LogMessage(false,"no table data found");
             }
-            double noOfPeriods=Double.parseDouble(row.get("# of Periods").getAttribute("textContent"));
+            WebElement startDateElement=row.get("FASB/IASB Start Date");
+            LocalDate startDate=LocalDate.parse(startDateElement.getAttribute("textContent").trim(),formatter);
+            WebElement endDateElement=row.get("FASB/IASB End Date");
+            LocalDate endDate=LocalDate.parse(endDateElement.getAttribute("textContent").trim(),formatter);
+
+            double noOfMonths =(double) (ChronoUnit.MONTHS.between(startDate,endDate)+1);
             double amountToCapitalize=Double.parseDouble(UtilKeywordScript.convertStringToNumber(row.get("Total Amount to Be Capitalized").getAttribute("textContent")));
-            double rentalAmount=Double.parseDouble(UtilKeywordScript.convertStringToNumber(row.get("Straight Line").getAttribute("textContent")));
-            if(amountToCapitalize==(noOfPeriods*rentalAmount)){
+
+            if(amountToCapitalize==(noOfMonths*rentalAmount)){
                 return new  LogMessage(true,"Amount to capitalize verified");
             }
             else
@@ -129,23 +137,34 @@ public class UtilRevision {
         }
     }
 
-    public LogMessage verifyPeriod(String objectLocator,String testData){
+    public LogMessage verifyPeriodof13Period(String objectLocator,String testData){
         try{
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            UITable uiTable=new UITable(webDriver);
             if(!utilKeywordScript.validateTestData(testData,2)){
                 return new LogMessage(false, "Not enough data");
             }
-            String date1 = testData.split(",")[0].trim() ;
-            String date2 = testData.split(",")[1].trim() ;
-            long period1 = utildate.getDateGap(date1,date2,"M");
-            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
-            if(null==element) return new LogMessage(false, "Element is not Present");
-            String text=element.getAttribute("textContent").trim();
-            long period2 = Math.round(Double.valueOf(text));
-            if(period1==period2) return new LogMessage(true, "Value matches with the referred value");
-            else return new LogMessage(false, "Value does not match with the referred value");
+            String[] data = testData.split(",");
+            final String columnName = Optional.ofNullable(data[0]).orElse("") ;
+            final String columnValue = Optional.ofNullable(data[1]).orElse("") ;
+            Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocator,columnName,columnValue,null);
+            if (null == row || row.isEmpty()){
+                return new LogMessage(false,"no table data found");
+            }
+            WebElement startDateElement=row.get("FASB/IASB Start Date");
+            String startDate=startDateElement.getAttribute("textContent").trim();
+            WebElement endDateElement=row.get("FASB/IASB End Date");
+            String endDate=endDateElement.getAttribute("textContent").trim();
+            long noOfMonths = utildate.getDateGap(startDate,endDate,"M")+utildate.getDateGap(startDate,endDate,"Y");
+            WebElement noOfPeriodsElement=row.get("# of Periods");
+            if(Math.round(Double.parseDouble(noOfPeriodsElement.getAttribute("textContent")))==noOfMonths){
+                return new  LogMessage(true,"No of periods verified");
+            }
+            else
+                return new  LogMessage(false,"No of periods not verified");
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur " + e.getMessage());
+            e.printStackTrace();
+            return new  LogMessage(false,"Exception occer " + e.getMessage());
         }
     }
 
@@ -159,7 +178,7 @@ public class UtilRevision {
             double payments2 = Double.parseDouble(testData.split(",")[1].trim()) ;
             String date1 = testData.split(",")[2].trim() ;
             String date2 = testData.split(",")[3].trim() ;
-            payments2 = payments2 * utildate.getDateGap(date1,date2,"M");
+            payments2 =payments2 * utildate.getDateGap(date1,date2,"M");
             if(payments1==payments2) return new LogMessage(true, "Value matches with the referred value");
             else return new LogMessage(false, "Value does not match with the referred value");
         }catch (Exception e){
