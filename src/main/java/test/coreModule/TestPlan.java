@@ -9,9 +9,12 @@ import java.util.*;
 public class TestPlan {
     private static TestPlan TEST_PLAN = new TestPlan() ;
     private String testPlanName ;
+    private List<TestEnvironment> testEnvironments ;
     private List<TestModule> testModules;
     private LocalDateTime creationTime  ;
     private Map storeData = new HashMap<String,String>() ;
+
+    private Integer testEnvId = 0;
 
     public String getStoreData(String key) {
         return (String) storeData.get(key);
@@ -24,6 +27,7 @@ public class TestPlan {
     private TestPlan() {
         creationTime = LocalDateTime.now();
         testModules = new ArrayList<TestModule>();
+        testEnvironments = new ArrayList<TestEnvironment>();
     }
 
    public static  TestPlan getInstance() {
@@ -42,6 +46,10 @@ public class TestPlan {
 
     public void addTestModule(TestModule  testModule){
         testModules.add(testModule);
+    }
+
+    public void addTestEnvironment(TestEnvironment testEnvironment){
+        testEnvironments.add(testEnvironment);
     }
 
     public TestModule getTestModule(String moduleName){
@@ -65,5 +73,23 @@ public class TestPlan {
         return  testModules ;
     }
 
+    public List<TestEnvironment> getTestEnvironments() {
+        return testEnvironments;
+    }
 
+    public void setTestEnvironments(List<TestEnvironment> testEnvironments) {
+        this.testEnvironments = testEnvironments;
+    }
+
+    public Integer getTestEnvId() {
+        return testEnvId;
+    }
+
+    public void setTestEnvId(Integer testEnvId) {
+        this.testEnvId = testEnvId;
+    }
+
+    public TestEnvironment getCurrentTestEnvironment() {
+        return testEnvironments.get(this.testEnvId) ;
+    }
 }

@@ -7,6 +7,7 @@ import test.Log.EmailSend;
 import test.Log.LogMessage;
 import test.Log.LogReport;
 import test.beforeTest.TestData;
+import test.driver.DriverFactory;
 import test.keywordScripts.UtilKeywordScript;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
@@ -48,6 +49,7 @@ public class MainController {
                     String testCaseID = (String) record.get(PropertyConfig.TCID);
                     String testCaseName = (String) record.get(PropertyConfig.TEST_CASE_NAME);
                     String categoryName = (String) record.get(PropertyConfig.TEST_Category_Name);
+                    String testEnvName = (String) record.get(PropertyConfig.TEST_ENV_NAME);
                     TestSuite testSuite = module.getTestSuite(sheetName);
                     if(null ==  testSuite){
                         testSuite = new TestSuite(sheetName);
@@ -57,6 +59,7 @@ public class MainController {
                     TestCase testCase = new TestCase(testCaseID);
                     testCase.setTestCaseName(testCaseName);
                     testCase.setcategoryName(categoryName);
+                    testCase.setTestEnvName(testEnvName);
                     testSuite.addTestCase(testCase);
                 }
                 module.setState(PropertyConfig.CREATED);
@@ -69,15 +72,25 @@ public class MainController {
         deleteLogReports();
         TestPlan testPlan = createTestPlanAndModule();
         List<TestModule> modules = testPlan.getAllTesModules() ;
-        for(TestModule testModule : modules){
-            if(testModule.getModuleName().equals("Preq") || testModule.getModuleName().equals("CommonTC"))
-                continue;
-            List<TestSuite>  testSuites = testModule.getAllTestSuits();
-            testSuites.stream().forEach(testSuite ->
-            {
-                readTestSuite(testSuite,testModule.getModuleName());
-                executeTestesInTestSuite(testSuite);
-            });
+        List<TestEnvironment> testEnvironments = testPlan.getTestEnvironments() ;
+        int testEnvIndex = 0 ;
+        for(TestEnvironment testEnvironment : testEnvironments) {
+             testPlan.setTestEnvId(testEnvIndex);
+             testEnvIndex++;
+            WebDriver driver = DriverFactory.createDriver(testEnvironment.getBrowser(), false);
+            this.setDriver(driver);
+            new UtilKeywordScript(driver).login(testEnvironment.getLoginUrl(),testEnvironment.getUserName(),testEnvironment.getPassword(),testEnvironment.getClient());
+            for(TestModule testModule : modules){
+                if(testModule.getModuleName().equals("Preq") || testModule.getModuleName().equals("CommonTC"))
+                    continue;
+                List<TestSuite>  testSuites = testModule.getAllTestSuits();
+                testSuites.stream().forEach(testSuite ->
+                {
+                    readTestSuite(testSuite,testModule.getModuleName());
+                    executeTestesInTestSuite(testSuite);
+                });
+            }
+            driver.quit();
         }
         EmailSend.sendLogReport();
         }
@@ -104,6 +117,8 @@ public class MainController {
                List<TestCase> testCases = testSuite.getAllTestCases();
                executeTests.setDriver(webDriver);
                for (TestCase testCase : testCases) {
+                   if(!testCase.getTestEnvName().contains(TestPlan.getInstance().getCurrentTestEnvironment().getEnvName()))
+                       continue;
                    List<LogMessage> logMessages = new ArrayList<>();
                    logMessages.addAll(_testData.createTestData(testCase.getTestCaseNumber(),"na"));
                    if(validateLogMessages(logMessages))
@@ -148,11 +163,31 @@ public class MainController {
 
     public TestPlan createTestPlan() {
         long start = System.currentTimeMillis();
-        ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("testPlan/" + PropertyConfig.MODULE_CONTROLLER + ".xlsx").getPath());
-        List<Map> records = readExcel.read(PropertyConfig.MODULE_CONTROLLER);
         TestPlan testPlan = TestPlan.getInstance() ;
         testPlan.setTestPlanName(LocalDateTime.now().toString());
+        ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("testPlan/" + PropertyConfig.TEST_ENVIRONMENT + ".xlsx").getPath());
+        List<Map> records = readExcel.read(PropertyConfig.CONTROLLER);
+        for (Map map : records) {
+            TestEnvironment testEnvironment = new TestEnvironment() ;
+            testEnvironment.setEnvName((String) map.get("EnvName"));
+            testEnvironment.setActive((String) map.get(PropertyConfig.EXECUTION_FLAG));
+            testEnvironment.setUserName((String) map.get("UserName"));
+            testEnvironment.setPassword((String) map.get("Password"));
+            testEnvironment.setClient((String) map.get("Client"));
+            testEnvironment.setEnvName((String) map.get("Env"));
+            testEnvironment.setBrowser((String) map.get("Browser"));
+            testEnvironment.setLoginUrl((String) map.get("LoginUrl"));
+            testEnvironment.setHomeUrl((String) map.get("HomeUrl"));
 
+            if (null == testEnvironment.getEnvName() || testEnvironment.getEnvName().isEmpty())
+                continue;
+            if (null == testEnvironment.getActive() || !testEnvironment.getActive().toLowerCase().equals("yes"))
+                continue;
+            testPlan.addTestEnvironment(testEnvironment);
+        }
+
+         readExcel = new ReadExcel(CLASS_LOADER.getResource("testPlan/" + PropertyConfig.MODULE_CONTROLLER + ".xlsx").getPath());
+         records = readExcel.read(PropertyConfig.MODULE_CONTROLLER);
         for (Map map : records) {
             String moduleName = (String) map.get(PropertyConfig.MODULE_NAME);
             String executionFlag = (String) map.get(PropertyConfig.EXECUTION_FLAG);

@@ -37,8 +37,26 @@ public class UnitTesting {
     @Test
     public void readExcelsheetTest(){
         ClassLoader classLoader = getClass().getClassLoader();
-        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/sample.xlsx").getPath());
-        List<Map> records = readExcel.read("TC001_TC050");
+        long start = System.currentTimeMillis();
+        ReadExcel readExcel = new ReadExcel(classLoader.getResource("modules/SMOKE.xlsx").getPath());
+        List<Map> records = readExcel.read("EditRevision");
+        List<Map> records2 = readExcel.read("RevisionTrigger");
+        List<Map> records3 = readExcel.read("UpdateRevision");
+
+        for(Map rec : records) {
+
+        }
+        for(Map rec : records2) {
+
+        }
+        for(Map rec : records3) {
+
+        }
+
+
+
+        long end = System.currentTimeMillis();
+        System.out.println((end-start)/1000);
         assertTrue(records.size() > 1 );
         Map  data = records.get(0);
         assertTrue(data.containsKey(TC_ID));
