@@ -168,13 +168,16 @@ public class MainController {
         ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("testPlan/" + PropertyConfig.TEST_ENVIRONMENT + ".xlsx").getPath());
         List<Map> records = readExcel.read(PropertyConfig.CONTROLLER);
         for (Map map : records) {
+            String envName = (String) map.get("EnvName") ;
+            if(null == envName || envName.isEmpty())
+                break;
             TestEnvironment testEnvironment = new TestEnvironment() ;
             testEnvironment.setEnvName((String) map.get("EnvName"));
             testEnvironment.setActive((String) map.get(PropertyConfig.EXECUTION_FLAG));
             testEnvironment.setUserName((String) map.get("UserName"));
             testEnvironment.setPassword((String) map.get("Password"));
-            testEnvironment.setClient((String) map.get("Client"));
-            testEnvironment.setEnvName((String) map.get("Env"));
+            testEnvironment.setClient(((String) map.get("Client")).replaceAll("\\.0*$", "") );
+            testEnvironment.setEnv((String) map.get("Env"));
             testEnvironment.setBrowser((String) map.get("Browser"));
             testEnvironment.setLoginUrl((String) map.get("LoginUrl"));
             testEnvironment.setHomeUrl((String) map.get("HomeUrl"));

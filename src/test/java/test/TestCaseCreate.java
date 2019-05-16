@@ -30,7 +30,7 @@ public class TestCaseCreate {
 
     @Test
     public void login() throws  Exception{
-        driver = DriverFactory.createDriver("chrome", false);
+        //driver = DriverFactory.createDriver("chrome", false);
 
         /*
          String username = "ITLicensing%40amtdirect.com"; // Your username
@@ -51,10 +51,10 @@ public class TestCaseCreate {
         RemoteWebDriver driver = new RemoteWebDriver(new URL("http://" + username + ":" + authkey +"@hub.crossbrowsertesting.com:80/wd/hub"), caps);
         System.out.println(driver.getSessionId());
         */
-        new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
-        mainController.setDriver(driver);
+        //new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
+      //  mainController.setDriver(driver);
         mainController.createAndExecute();
-        driver.quit();
+    //    driver.quit();
 
     }
     /*

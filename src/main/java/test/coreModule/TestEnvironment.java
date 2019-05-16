@@ -6,6 +6,7 @@ public class TestEnvironment {
     private String userName;
     private String password;
     private String client;
+    private String env;
     private String browser;
     private String active;
     private String loginUrl;
@@ -77,5 +78,13 @@ public class TestEnvironment {
 
     public void setHomeUrl(String homeUrl) {
         this.homeUrl = homeUrl;
+    }
+
+    public String getEnv() {
+        return env;
+    }
+
+    public void setEnv(String env) {
+        this.env = env;
     }
 }

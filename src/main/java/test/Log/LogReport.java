@@ -1,6 +1,7 @@
 package test.Log;
 
 import test.coreModule.TestCase;
+import test.coreModule.TestPlan;
 
 import java.awt.*;
 import java.nio.file.LinkOption;
@@ -23,27 +24,27 @@ public class LogReport {
     public void addTestcaseLogreport(TestCase testCase, List<LogMessage> logmessages ) {
         CreateLog createLog = PassedLogReport;
         CreateLog createFailedLog = null;
-        String logName = testCase.getTestCaseNumber() + "--" + testCase.getTestCaseName() ;
+        String logName = testCase.getTestCaseNumber() + "-" + testCase.getTestCaseName() + "-" + TestPlan.getInstance().getCurrentTestEnvironment().getEnvName();
         createLog.createLogger(logName ,testCase.getcategoryName());
 
         String failedLogName;
-        if(!testCase.isPassed()) {
-            createFailedLog = FailedLogReport;
-            failedLogName = testCase.getTestCaseNumber() + "--" + testCase.getTestCaseName() ;
-            createFailedLog.createLogger(failedLogName,testCase.getcategoryName());
-        }
-        
-        for(LogMessage logMessage : logmessages) {
-            List<LogMessage> subLogMessages=logMessage.getSubLogMessage();
-            if(!subLogMessages.isEmpty())
-            {
-                for(LogMessage subLogMessage: subLogMessages)
-                {
-                    createLog.writeLog(logName,subLogMessage.getLogMessage(),subLogMessage.isPassed(),subLogMessage.isSkipped());
+                if(!testCase.isPassed()) {
+                    createFailedLog = FailedLogReport;
+                    failedLogName = testCase.getTestCaseNumber() + "--" + testCase.getTestCaseName() ;
+                    createFailedLog.createLogger(failedLogName,testCase.getcategoryName());
                 }
-            }
-            createLog.writeLog(logName,logMessage.getLogMessage(),logMessage.isPassed(),logMessage.isSkipped());
-            if(!testCase.isPassed()){
+
+                for(LogMessage logMessage : logmessages) {
+                    List<LogMessage> subLogMessages=logMessage.getSubLogMessage();
+                    if(!subLogMessages.isEmpty())
+                    {
+                        for(LogMessage subLogMessage: subLogMessages)
+                        {
+                            createLog.writeLog(logName,subLogMessage.getLogMessage(),subLogMessage.isPassed(),subLogMessage.isSkipped());
+                        }
+                    }
+                    createLog.writeLog(logName,logMessage.getLogMessage(),logMessage.isPassed(),logMessage.isSkipped());
+                    if(!testCase.isPassed()){
                 createFailedLog.writeLog(logName,logMessage.getLogMessage(),logMessage.isPassed(),logMessage.isSkipped());
             }
         }
