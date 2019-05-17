@@ -1,10 +1,13 @@
 package test.utility;
 
+import test.coreModule.TestPlan;
+
 import java.io.FileInputStream;
 import java.util.Properties;
 
 public class PropertyConfig {
     public static String  MODULE_CONTROLLER = "ModuleController" ;
+    public static String  TEST_ENVIRONMENT = "TestEnvironment" ;
     public static String  CONTROLLER = "Controller" ;
     public static String OBJECT_REFERENCE = "ObjReference" ;
     public static String  MODULE_NAME = "ModuleName" ;
@@ -19,6 +22,7 @@ public class PropertyConfig {
     public static String TC_ID= "TC_ID" ;
     public static String TEST_CASE_NAME= "TestCaseName" ;
     public static String TEST_Category_Name= "CategoryName" ;
+    public static String TEST_ENV_NAME = "TestEnvName" ;
     public static String STEP_NO = "StepNo" ;
     public static String  TEST_STEP_DESCRIPTION = "TestStepDescription" ;
     public static String FIELD_NAME = "FieldName" ;
@@ -58,9 +62,12 @@ public class PropertyConfig {
     public static String  getLoginUrl(){
 
         try {
+            /*
             String loginUrl = getPropertyValue("loginUrl");
             String env = getPropertyValue("env");
             return loginUrl.replaceAll("#env",env);
+            */
+            return TestPlan.getInstance().getCurrentTestEnvironment().getLoginUrl() ;
         }catch (Exception ex) {
             ex.printStackTrace();
             return null ;
@@ -70,9 +77,12 @@ public class PropertyConfig {
     public static String  getHomeLoginUrl(){
 
         try {
+            /*
             String homeUrl = getPropertyValue("homeUrl");
             String env = getPropertyValue("env");
             return homeUrl.replaceAll("#env",env);
+            */
+            return TestPlan.getInstance().getCurrentTestEnvironment().getHomeUrl();
         }catch (Exception ex) {
             ex.printStackTrace();
             return null ;
