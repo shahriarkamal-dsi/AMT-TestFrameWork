@@ -95,7 +95,7 @@ public enum DriverType implements Driver {
         public WebDriver getDriver(DesiredCapabilities desiredCapabilities, Boolean headless) {
 
             WebDriver driver = null;
-            WebDriverManager.iedriver().setup();
+            WebDriverManager.iedriver().arch32().setup();
             driver = new InternetExplorerDriver();
 
             return  driver ;
