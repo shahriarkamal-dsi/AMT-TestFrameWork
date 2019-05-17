@@ -46,6 +46,7 @@ public enum DriverType implements Driver {
     CHROME {
         @Override
         public WebDriver getDriver(DesiredCapabilities desiredCapabilities, Boolean headless) {
+
             WebDriver driver = null;
             List<String> versions =   WebDriverManager.chromedriver().arch64().getVersions() ;
             ListIterator li = versions.listIterator(versions.size());

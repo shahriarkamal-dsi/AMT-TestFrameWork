@@ -1,12 +1,15 @@
 package test.coreModule;
 
 
+import org.assertj.core.api.OptionalAssert;
+
 import java.util.*;
 
 public class TestCase {
     private String testCaseNumber;
     private String testCaseName;
     private String categoryName;
+    private String testEnvName ;
     private List<TestStep> testSteps ;
     private boolean passed ;
 
@@ -74,4 +77,11 @@ public class TestCase {
         return this.preqUtilData ;
     }
 
+    public String getTestEnvName() {
+        return Optional.ofNullable(testEnvName).orElse("");
+    }
+
+    public void setTestEnvName(String testEnvName) {
+        this.testEnvName = testEnvName;
+    }
 }
