@@ -151,6 +151,7 @@ public class MainController {
         ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("testPlan/" + PropertyConfig.MODULE_CONTROLLER + ".xlsx").getPath());
         List<Map> records = readExcel.read(PropertyConfig.MODULE_CONTROLLER);
         TestPlan testPlan = TestPlan.getInstance() ;
+        testPlan.resetTestPlan();
         testPlan.setTestPlanName(LocalDateTime.now().toString());
 
         for (Map map : records) {
