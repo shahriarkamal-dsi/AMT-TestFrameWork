@@ -96,6 +96,8 @@ public class MainController {
         }
 
         public static void readTestSuite(TestSuite testSuite,String moduleName) {
+                if(testSuite.getState().equals(PropertyConfig.CREATED))
+                    return;
                 ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("modules/" + moduleName + ".xlsx").getPath());
                 List<Map> records = readExcel.read(testSuite.getTestSuiteName());
                 for(Map record : records) {
