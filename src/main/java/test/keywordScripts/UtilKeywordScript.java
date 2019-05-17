@@ -285,7 +285,7 @@ public class UtilKeywordScript {
             return String.valueOf(digit) ;
 
         } catch (Exception ex) {
-            return null ;
+            return "" ;
         }
     }
     public static String getUniqueNumber(String data){
@@ -299,3 +299,4 @@ public class UtilKeywordScript {
     }
 
 }
+

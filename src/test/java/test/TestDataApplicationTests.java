@@ -50,7 +50,7 @@ public class TestDataApplicationTests {
 
 	}
 
-	@Test
+	/*@Test
 	public void checkingTestData() {
 		Property property = new Property();
 		property.setPropertyCode("test");
@@ -207,15 +207,15 @@ public class TestDataApplicationTests {
 		assert (notExecutedPreqData.getLeaseList().size()==1);
 		assert (notExecutedPreqData.getSpaceList().size()==1);
 		assert (notExecutedPreqData.getRprList().size()==1);
-	}
+	}*/
 
 
-	@Test
+	/*@Test
 	public void testDBInsertion() {
 		dbDataInsertion.dataInsertion();
-	}
+	}*/
 
-    @Test
+   /* @Test
     public void checkPreqExecutiom(){
         try {
         	Property property=new Property();
@@ -319,13 +319,13 @@ public class TestDataApplicationTests {
 			preqExecutionHistory.setEnvironment("app");
 			preqExecutionHistory.setClientId("201480");
 			preqExecutionHistory.setCreationTime(LocalDateTime.now());
-			preqExecutionHistoryService.createOrUpdatePreqExecutionHistory(preqExecutionHistory);*/
+			preqExecutionHistoryService.createOrUpdatePreqExecutionHistory(preqExecutionHistory);
         }catch (Exception e){
             e.printStackTrace();
         }
 
 
-    }
+    }*/
 
 
 }

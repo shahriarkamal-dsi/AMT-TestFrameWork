@@ -28,7 +28,7 @@ public class UICheckBox {
         }
     }
 
-    public LogMessage IsCheckboxChecked(String objectLocatorData) {
+    public LogMessage VerifyCheckboxCheckedFalse(String objectLocatorData) {
         try {
             WebElement element = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
             if (null == element)
@@ -36,7 +36,22 @@ public class UICheckBox {
             else {
                 if (!element.isSelected())
                     return new LogMessage(true, "Checkbox is not Checked");
-                else return new LogMessage(true, "Checkbox is Checked");
+                else return new LogMessage(false, "Checkbox is Checked");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred : " + ex.getMessage());
+        }
+    }
+    public LogMessage VerifyCheckboxCheckedTrue(String objectLocatorData) {
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
+            if (null == element)
+                return new LogMessage(false, "UI element is not found");
+            else {
+                if (element.isSelected())
+                    return new LogMessage(true, "Checkbox is Checked");
+                else return new LogMessage(false, "Checkbox is not Checked");
             }
         } catch (Exception ex) {
             ex.printStackTrace();

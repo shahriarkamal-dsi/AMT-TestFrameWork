@@ -13,6 +13,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.LogManager;
+
 import test.keywordScripts.UtilDate;
 
 public class UtilRevision {
@@ -169,6 +171,7 @@ public class UtilRevision {
     }
 
     public LogMessage verifyTotalPeriodPayments(String testData){
+        System.out.println("Test data: "+ testData);
         try{
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
             if(!utilKeywordScript.validateTestData(testData,4)){
@@ -185,5 +188,55 @@ public class UtilRevision {
             return new LogMessage(false,"Exception occur");
         }
     }
+    public LogMessage checkAvailabilityofColumnInSchedule(String objectLocator){
+        try{
+            WebElement webElement = WebObjectSearch.getWebElement(webDriver, objectLocator);
+            if (null == webElement){
+                return new LogMessage(false, " Elemnet not found");
+            }
+            if(!webElement.getAttribute("style").contains("display: none"))
+                return new LogMessage(true, "Column found");
+            return new LogMessage(false, "Column not found");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur"+e.getMessage());
+        }
+    }
+    public LogMessage checkLastRevision(String objectLocator,String testData)
+    {
+        UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+        UITable uiTable=new UITable(webDriver);
+        try{
+            if(!utilKeywordScript.validateTestData(testData,2)) {
+                return new LogMessage(false, "test data invalid");
+            }
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            String varName = String.valueOf(Integer.parseInt(data[1])+1);
+            if(uiTable.getLastRowColumnValue(objectLocator,columnName).equals(varName))
+                return new LogMessage( true, "Last row column value verified") ;
+            else
+                return new LogMessage( false, "Last row column value not verified") ;
+        }catch (Exception e){
+            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+        }
+    }
+    public LogMessage verifyRevisionAdjustmentPeriod(String objectLocator,String testData){
+        try{
+            UIText uiText = new UIText(webDriver);
+            String data[] = testData.split("/");
+            if(!(data.length ==3))
+                return new LogMessage(false,"Wrong test data");
 
+            String period = uiText.getText(objectLocator);
+            testData = data[0] + "/" +data[2];
+
+            if (period.equals(testData))
+                return new LogMessage(true,"Revision Adjustment Period verified");
+
+            return new LogMessage(false,"Wrong Revision Adjustment Period");
+
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur"+e.getMessage());
+        }
+    }
 }
