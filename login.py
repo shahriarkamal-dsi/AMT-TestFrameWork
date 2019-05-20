@@ -15,7 +15,7 @@ def job():
     f.close()
 
 
-schedule.every(5).minutes.do(job)
+schedule.every(10).minutes.do(job)
 
 while True:
     schedule.run_pending()
