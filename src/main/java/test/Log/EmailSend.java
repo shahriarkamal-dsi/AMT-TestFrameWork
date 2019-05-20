@@ -88,14 +88,14 @@ public class EmailSend {
     private static String getFailedEmailSubject(){
 
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = env.toUpperCase() + " - FASB/IASB Smoke Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        String Subject = env.toUpperCase() + " - Login Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
         return Subject;
     }
 
     private static String getPassedEmailSubject(){
 
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = env.toUpperCase() + " - FASB/IASB Smoke Test  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        String Subject = env.toUpperCase() + " - Login Test  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
         return Subject;
     }
 }
