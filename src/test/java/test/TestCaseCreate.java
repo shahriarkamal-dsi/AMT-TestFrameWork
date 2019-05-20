@@ -28,11 +28,20 @@ public class TestCaseCreate {
     private static WebDriver driver;
     private ClassLoader classLoader = getClass().getClassLoader();;
 
+
+    /*@Test
+    public void runInChrome(){
+        driver = DriverFactory.createDriver("chrome", false);
+        //new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
+        mainController.setDriver(driver);
+        mainController.createAndExecute();
+        driver.quit();
+    }*/
     @Test
-    public void login() throws  Exception{
+    public void login() throws  Exception {
         //driver = DriverFactory.createDriver("chrome", false);
 
-        /*
+/*
          String username = "ITLicensing%40amtdirect.com"; // Your username
          String authkey = "u21a9b4e09bad6f5";  // Your authkey
          String testScore = "unset";
@@ -50,18 +59,38 @@ public class TestCaseCreate {
 
         RemoteWebDriver driver = new RemoteWebDriver(new URL("http://" + username + ":" + authkey +"@hub.crossbrowsertesting.com:80/wd/hub"), caps);
         System.out.println(driver.getSessionId());
-        */
+*/
         //new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
-      //  mainController.setDriver(driver);
+        //  mainController.setDriver(driver);
         mainController.createAndExecute();
-    //    driver.quit();
-
+        //    driver.quit();
     }
-    /*
-    @Test(priority = 2)
-    public  void runTestCase(){
+
+    /*@Test
+    public void runInFirefox(){
+        driver = DriverFactory.createDriver("FIREFOX", false);
+        //new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
         mainController.setDriver(driver);
         mainController.createAndExecute();
+        driver.quit();
+    }
 
+    @Test
+    public void runInEdge(){
+        driver = DriverFactory.createDriver("EDGE", false);
+        //new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
+        mainController.setDriver(driver);
+        mainController.createAndExecute();
+        driver.quit();
+
+    }
+
+    @Test
+    public void runInIE(){
+        driver = DriverFactory.createDriver("IE", false);
+        //new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
+        mainController.setDriver(driver);
+        mainController.createAndExecute();
+        driver.quit();
     }*/
 }

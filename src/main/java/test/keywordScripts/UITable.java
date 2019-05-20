@@ -1,5 +1,6 @@
 package test.keywordScripts;
 
+import com.google.common.collect.Ordering;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -351,19 +352,27 @@ public class UITable extends  UtilKeywordScript{
             if(!validateTestData(testData,4)){
                 return  new LogMessage(false, "test data invalid");
             }
-           String[] data = testData.split(",");
-           final String columnName1 = Optional.ofNullable(data[0]).orElse("") ;
-           final String columnValue1 = Optional.ofNullable(data[1].trim()).orElse("") ;
-           final  String columnName2 = Optional.ofNullable(data[2]).orElse("") ;
-           final String columnValue2 = Optional.ofNullable(data[3].trim()).orElse("") ;
+            boolean isMatched=false;
+            String[] data = testData.split(",");
+            final String columnName1 = Optional.ofNullable(data[0]).orElse("") ;
+            final String columnValue1 = Optional.ofNullable(data[1].trim()).orElse("") ;
+            final  String columnName2 = Optional.ofNullable(data[2]).orElse("") ;
+            final String columnValue2 = Optional.ofNullable(data[3].trim()).orElse("") ;
             List<Map<String,WebElement>> rows = getAllValuesfromTable(objectLocatorData);
+
             if (null == rows || rows.isEmpty()){
                 return new LogMessage(false,"no table data found");
             }
-            boolean isMatched =  rows.stream().anyMatch(row ->
-                    Optional.ofNullable(row.get(columnName1).getAttribute("textContent").trim()).orElse("").equals(columnValue1) &&
-                    Optional.ofNullable(row.get(columnName2).getAttribute("textContent").trim()).orElse("").equals(columnValue2)
-            ) ;
+            if(columnValue2.toUpperCase().equals("NA"))
+                isMatched =  rows.stream().anyMatch(row ->
+                        Optional.ofNullable(row.get(columnName1).getAttribute("textContent")).orElse("").trim().equals(columnValue1) &&
+                                !Optional.ofNullable(row.get(columnName2).getAttribute("textContent")).orElse("").trim().isEmpty()
+                ) ;
+            else
+                isMatched =  rows.stream().anyMatch(row ->
+                        Optional.ofNullable(row.get(columnName1).getAttribute("textContent")).orElse("").trim().equals(columnValue1) &&
+                                Optional.ofNullable(row.get(columnName2).getAttribute("textContent")).orElse("").trim().equals(columnValue2)
+                ) ;
             return  isMatched  ? new LogMessage(true,"Corresponding column data verified") :  new LogMessage(false,"Proper cell is not present");
         }catch (Exception e){
             e.printStackTrace();
@@ -559,7 +568,6 @@ public class UITable extends  UtilKeywordScript{
 
     public LogMessage storeUITableValue(String objectLocator, String testData) {
         try {
-            System.out.println("here");
             UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
             if (!utilKeywordScript.validateTestData(testData, 4)) {
                 return new LogMessage(false, "Not enough data");
@@ -580,6 +588,103 @@ public class UITable extends  UtilKeywordScript{
         } catch (Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "exception occurred in StoreUIValue  " + ex.getMessage());
+        }
+    }
+    public LogMessage CheckAllColumnInOrder(String objectLocator,String testData)
+    {
+        try{
+            if(!validateTestData(testData,2)) {
+                return new LogMessage(false, "test data invalid");
+            }
+            boolean sorted=false;
+            String[] data=testData.split(",");
+            String columnName=data[0];
+            String order=data[1];
+            List<Map<String,WebElement>> rows = getAllValuesfromTable(objectLocator);
+            List<String> columnValues=new ArrayList<>();
+            for(Map<String,WebElement> row:rows){
+                columnValues.add(row.get(columnName).getAttribute("textContent"));
+            }
+            if(order.toUpperCase().contains("ASC"))
+                sorted= Ordering.natural().isOrdered(columnValues);
+            else if(order.toUpperCase().contains("DES"))
+                sorted= Ordering.natural().reverse().isOrdered(columnValues);
+            return sorted?new LogMessage(sorted,"All column values are sorted"): new LogMessage(sorted,"Column values are unsorted");
+        }catch (Exception e){
+            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+        }
+    }
+    public LogMessage StoreLastRowColumnValue(String objectLocator,String testData){
+        try {
+            if(!validateTestData(testData,2)) {
+                return new LogMessage(false, "test data invalid");
+            }
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            String varName = data[1];
+            TestPlan.getInstance().setStoreData(varName,getLastRowColumnValue(objectLocator,columnName));
+            return new LogMessage(true, "Last Column value is stored");
+        }catch (Exception e){
+            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+        }
+    }
+    public String getLastRowColumnValue(String objectLocator,String columnName){
+        try {
+            List<Map<String, WebElement>> rows = getAllValuesfromTable(objectLocator);
+            if (null == rows || rows.isEmpty()){
+                return "";
+            }
+            return Optional.ofNullable(rows.get(rows.size() - 1).get(columnName).getAttribute("textContent")).orElse("");
+        }catch (Exception e){
+            return "" ;
+        }
+    }
+    public String getSpecificRowColumnValue(String objectLocator,String testData){
+        try {
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            int rowNumber= Integer.parseInt(data[1]);
+            List<Map<String, WebElement>> rows = getAllValuesfromTable(objectLocator);
+            //System.out.println(rows.size());
+            if (null == rows || rows.isEmpty()){
+                return "";
+            }
+            return Optional.ofNullable(rows.get(rowNumber).get(columnName).getAttribute("textContent")).orElse("");
+        }catch (Exception e){
+            return "" ;
+        }
+    }
+    public LogMessage compareSpecificRowColumnValue(String objectLocator,String testData)
+    {
+        try{
+            if(!validateTestData(testData,3)) {
+                return new LogMessage(false, "test data invalid");
+            }
+            String[] data = testData.split(",");
+            if(getSpecificRowColumnValue(objectLocator,data[0]+","+data[1]).equals(data[2]))
+                return new LogMessage( true, "column value verified") ;
+            else
+                return new LogMessage( false, "Column value not verified") ;
+        }catch (Exception e){
+            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+        }
+    }
+    public LogMessage compareLastRowColumnValue(String objectLocator,String testData)
+    {
+        UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+        UITable uiTable=new UITable(webDriver);
+        try{
+            if(!utilKeywordScript.validateTestData(testData,2)) {
+                return new LogMessage(false, "test data invalid");
+            }
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            if(uiTable.getLastRowColumnValue(objectLocator,columnName).equals(data[1]))
+                return new LogMessage( true, "Last row column value verified") ;
+            else
+                return new LogMessage( false, "Last row column value not verified") ;
+        }catch (Exception e){
+            return new LogMessage( false, "exception occured " + e.getMessage()) ;
         }
     }
 

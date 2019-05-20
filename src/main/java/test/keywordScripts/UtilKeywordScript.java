@@ -159,7 +159,11 @@ public class UtilKeywordScript {
             uiText.SetText("Common.Login.txtPassword",password);
             uiText.SetText("Common.Login.txtClientID",client);
             uiBase.Click("Common.Login.btnLogIn");
-            return new LogMessage(true,"Login successfully");
+            uiText.WaitForVisibilityOfText("Common.Login.navDashboard","Dashboard");
+            LogMessage log = uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome");
+            if (log.isPassed())
+                return new LogMessage(true,"Login successfully");
+            return new LogMessage(false,"Login fail");
         }catch (Exception e){
             e.printStackTrace();
             return new LogMessage(false,"Login fail " + e.getMessage());
@@ -285,7 +289,7 @@ public class UtilKeywordScript {
             return String.valueOf(digit) ;
 
         } catch (Exception ex) {
-            return null ;
+            return "" ;
         }
     }
     public static String getUniqueNumber(String data){
@@ -299,3 +303,4 @@ public class UtilKeywordScript {
     }
 
 }
+

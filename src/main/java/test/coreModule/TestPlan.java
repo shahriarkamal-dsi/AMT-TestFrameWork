@@ -29,6 +29,10 @@ public class TestPlan {
         testModules = new ArrayList<TestModule>();
         testEnvironments = new ArrayList<TestEnvironment>();
     }
+    public void resetTestPlan(){
+        this.creationTime = LocalDateTime.now();
+        this.testModules = new ArrayList<TestModule>();
+    }
 
    public static  TestPlan getInstance() {
         return TEST_PLAN;

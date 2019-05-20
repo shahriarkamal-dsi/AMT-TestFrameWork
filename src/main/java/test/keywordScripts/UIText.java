@@ -17,9 +17,11 @@ import org.openqa.selenium.JavascriptExecutor;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.LogManager;
 
 public class UIText {
     private WebDriver webDriver;
+
     public UIText(){
 
     }
@@ -36,6 +38,7 @@ public class UIText {
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", userWeb);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiBase.Click(userWeb);
+            userWeb.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.sendKeys(textData);
             return new LogMessage(true,"text is set up");
@@ -124,6 +127,42 @@ public class UIText {
         }catch (Exception e){
             return new LogMessage(false,"Exception occur" + e.getMessage());
         }
+    }
+    public LogMessage compareNumericText(String objectLocator, String testData){
+        try{
+            String[] splittedTestData=testData.split(",");
+            String attribute = UtilKeywordScript.convertStringToNumber(getText(objectLocator));
+            if(attribute.equals(UtilKeywordScript.convertStringToNumber(splittedTestData[0].trim())))
+                return new LogMessage(true, "Value is verified");
+            else
+                return new LogMessage(false, "Value is not verified");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur" + e.getMessage());
+        }
+    }
+
+    public LogMessage compareNumberAfterIncrement(String testData){
+
+         UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
+        try{
+            if(!utilKeywordScript.validateTestData(testData,3)) {
+                return new LogMessage(false, "test data invalid");
+            }
+            String[] splittedTestData = testData.split(",");
+            Integer data = Integer.valueOf(splittedTestData[0].trim()) + Integer.valueOf(splittedTestData[1].trim());
+            String numberToInc = UtilKeywordScript.convertStringToNumber(String.valueOf(data));
+            String numberToCompare = UtilKeywordScript.convertStringToNumber(splittedTestData[2].trim());
+
+            if (numberToCompare.equals(numberToInc)){
+                return new LogMessage(true,"Value is verified");
+            }
+            else {
+                return new LogMessage(false,"Value is not verified");
+            }
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur");
+        }
+
     }
 
 
