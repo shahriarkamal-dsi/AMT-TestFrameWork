@@ -36,12 +36,6 @@ public class EmailSend {
             dashboard.setDescription("Dashboard");
             dashboard.setName("Dashboard");
 
-            EmailAttachment category = new EmailAttachment();
-            category.setPath("./Report/PassedImage/Category.png");
-            category.setDisposition(EmailAttachment.ATTACHMENT);
-            category.setDescription("Category");
-            category.setName("Category");
-
             // Create the email message
             MultiPartEmail email = new MultiPartEmail();
             email.setHostName("smtp.gmail.com");
@@ -62,7 +56,6 @@ public class EmailSend {
 
             }
             email.attach(dashboard);
-            email.attach(category);
             email.attach(attachment);
             email.send();
 

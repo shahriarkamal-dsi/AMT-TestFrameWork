@@ -221,8 +221,6 @@ public class MainController {
         file.delete();
         file = new File("./Report/PassedImage/" + PropertyConfig.getPropertyValue("passedReportDashboardName"));
         file.delete();
-        file = new File("./Report/PassedImage/" + PropertyConfig.getPropertyValue("passedReportCategoryboardName"));
-        file.delete();
     }
     public static Boolean validateLogMessages(List<LogMessage> logMessages){
         return logMessages.stream().noneMatch(o -> o.isPassed().equals(false));

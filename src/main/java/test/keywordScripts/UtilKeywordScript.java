@@ -323,10 +323,6 @@ public class UtilKeywordScript {
             openTCReport(fileName);
             UIBase uiBase = new UIBase(webDriver);
 
-            WebElement elementCategory = webDriver.findElement(By.linkText("label_outline"));
-            uiBase.Click(elementCategory);
-            takeSnapShot("./Report/PassedImage/","Category");
-
             WebElement elementDashboard = webDriver.findElement(By.linkText("track_changes"));
             uiBase.Click(elementDashboard);
             takeSnapShot("./Report/PassedImage/","Dashboard");
