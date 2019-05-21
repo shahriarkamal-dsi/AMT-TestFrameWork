@@ -71,6 +71,7 @@ public class MainController {
     public void  createAndExecute() {
         deleteLogReports();
         TestPlan testPlan = createTestPlanAndModule();
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         List<TestModule> modules = testPlan.getAllTesModules() ;
         List<TestEnvironment> testEnvironments = testPlan.getTestEnvironments() ;
         int testEnvIndex = 0 ;
@@ -92,6 +93,7 @@ public class MainController {
             }
             driver.quit();
         }
+        utilKeywordScript.captureReportSnap("PassedTCReport.html");
         EmailSend.sendLogReport();
         }
 
@@ -211,6 +213,10 @@ public class MainController {
         File file = new File("./Report/" + PropertyConfig.getPropertyValue("passedReprtName"));
         file.delete();
          file = new File("./Report/" + PropertyConfig.getPropertyValue("failedReprtName"));
+        file.delete();
+        file = new File("./Report/PassedImage/" + PropertyConfig.getPropertyValue("passedReportDashboardName"));
+        file.delete();
+        file = new File("./Report/PassedImage/" + PropertyConfig.getPropertyValue("passedReportCategoryboardName"));
         file.delete();
     }
     public static Boolean validateLogMessages(List<LogMessage> logMessages){
