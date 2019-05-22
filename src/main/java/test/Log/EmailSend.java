@@ -30,6 +30,12 @@ public class EmailSend {
             attachment.setDescription("Log Report");
             attachment.setName(reportName);
 
+            EmailAttachment dashboard = new EmailAttachment();
+            dashboard.setPath("./Report/PassedImage/Dashboard.png");
+            dashboard.setDisposition(EmailAttachment.ATTACHMENT);
+            dashboard.setDescription("Dashboard");
+            dashboard.setName("Dashboard");
+
             // Create the email message
             MultiPartEmail email = new MultiPartEmail();
             email.setHostName("smtp.gmail.com");
@@ -49,6 +55,7 @@ public class EmailSend {
                 email.setMsg(getFailedEmailBody());
 
             }
+            email.attach(dashboard);
             email.attach(attachment);
             email.send();
 
@@ -88,14 +95,14 @@ public class EmailSend {
     private static String getFailedEmailSubject(){
 
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = env.toUpperCase() + " - FASB/IASB Smoke Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        String Subject = env.toUpperCase() + " - Login Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
         return Subject;
     }
 
     private static String getPassedEmailSubject(){
 
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = env.toUpperCase() + " - FASB/IASB Smoke Test  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        String Subject = env.toUpperCase() + " - Login Test  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
         return Subject;
     }
 }

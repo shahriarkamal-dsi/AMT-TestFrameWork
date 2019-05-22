@@ -143,6 +143,7 @@ public class UIText {
 
     public LogMessage compareNumberAfterIncrement(String testData){
 
+        System.out.println("TestDat: " + testData);
          UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
             if(!utilKeywordScript.validateTestData(testData,3)) {
@@ -152,6 +153,10 @@ public class UIText {
             Integer data = Integer.valueOf(splittedTestData[0].trim()) + Integer.valueOf(splittedTestData[1].trim());
             String numberToInc = UtilKeywordScript.convertStringToNumber(String.valueOf(data));
             String numberToCompare = UtilKeywordScript.convertStringToNumber(splittedTestData[2].trim());
+
+            System.out.println("numberToInc: " + numberToInc);
+            System.out.println("numberToCompare: " + numberToCompare);
+
 
             if (numberToCompare.equals(numberToInc)){
                 return new LogMessage(true,"Value is verified");

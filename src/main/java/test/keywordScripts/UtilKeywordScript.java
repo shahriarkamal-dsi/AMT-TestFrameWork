@@ -1,18 +1,20 @@
 package test.keywordScripts;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
+import com.assertthat.selenium_shutterbug.core.Shutterbug;
+import com.assertthat.selenium_shutterbug.utils.web.ScrollStrategy;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import test.Log.LogMessage;
 import test.coreModule.TestPlan;
+import test.driver.DriverFactory;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObject;
 import test.utility.PropertyConfig;
 
 
-
+import java.io.File;
 import java.util.*;
 
 
@@ -300,6 +302,45 @@ public class UtilKeywordScript {
             return "$Unq";
         }
 
+    }
+
+    public void openTCReport(String fileName){
+        try{
+            webDriver  = DriverFactory.createDriver("chrome", false);
+            webDriver.manage().window().maximize();
+            File reportFile = new File("./Report/PassedTCReport.html");
+            String path = reportFile.getAbsolutePath();
+            webDriver.get(path);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+
+    public void captureReportSnap(String fileName){
+        try{
+            openTCReport(fileName);
+            UIBase uiBase = new UIBase(webDriver);
+
+            WebElement elementDashboard = webDriver.findElement(By.linkText("track_changes"));
+            uiBase.Click(elementDashboard);
+            takeSnapShot("./Report/PassedImage/","Dashboard");
+
+            webDriver.quit();
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+
+        }
+    }
+
+    public void takeSnapShot(String filepath, String fileName){
+        try{
+            Shutterbug.shootPage(webDriver,ScrollStrategy.BOTH_DIRECTIONS).withName(fileName).save(filepath);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
 }
