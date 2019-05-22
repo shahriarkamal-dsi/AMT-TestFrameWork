@@ -94,6 +94,9 @@ public class MainController {
                     });
                 }
                 driver.quit();
+                if(testEnvironment.getBrowser().toLowerCase().equals("ie")) {
+                    closeIeBrowser() ;
+                }
             } catch(Exception ex) {
                     ex.printStackTrace();
                 }
@@ -224,6 +227,14 @@ public class MainController {
     }
     public static Boolean validateLogMessages(List<LogMessage> logMessages){
         return logMessages.stream().noneMatch(o -> o.isPassed().equals(false));
+    }
+
+    private void closeIeBrowser() {
+        try {
+            Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -60,7 +60,12 @@ public class UIBase {
     public LogMessage  navigateToAPage(String testData) {
         try {
             webDriver.navigate().to(testData);
-            webDriver.manage().window().maximize();
+            try {
+                webDriver.manage().window().maximize();
+            } catch (Exception ex) {
+                System.out.println("error occured during maximize");
+                ex.printStackTrace();
+            }
             return new LogMessage(true,"page is navigated");
         }catch(Exception ex){
             ex.printStackTrace();
