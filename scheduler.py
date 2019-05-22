@@ -6,7 +6,7 @@ import os
 sched = BlockingScheduler()
 
 
-@sched.scheduled_job('interval', minutes=7)
+@sched.scheduled_job('interval', minutes=20)
 def timed_job():
     print("Logging in again..." + str(datetime.datetime.now()))
     f = open('ScheduleLog.txt', "a")
@@ -19,5 +19,7 @@ def timed_job():
     os.system("mvn test -Dtest=TestCaseCreate test")
     f.close()
 
+os.system("mvn clean")
+os.system("mvn test -Dtest=TestCaseCreate test")
 
 sched.start()
