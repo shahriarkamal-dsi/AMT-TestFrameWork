@@ -24,7 +24,7 @@ public class LogReport {
     public void addTestcaseLogreport(TestCase testCase, List<LogMessage> logmessages ) {
         CreateLog createLog = PassedLogReport;
         CreateLog createFailedLog = null;
-        String logName = testCase.getTestCaseNumber() + "-" + testCase.getTestCaseName() + "-" + TestPlan.getInstance().getCurrentTestEnvironment().getEnvName();
+        String logName = testCase.getTestCaseNumber() + "-" + testCase.getTestCaseName() + "-" + TestPlan.getInstance().getCurrentTestEnvironment().getEnvName() + "(" + TestPlan.getInstance().getCurrentTestEnvironment().getBrowser() + ")"  ;
         createLog.createLogger(logName ,testCase.getcategoryName());
 
         String failedLogName;

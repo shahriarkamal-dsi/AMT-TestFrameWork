@@ -71,31 +71,43 @@ public class MainController {
     public void  createAndExecute() {
         deleteLogReports();
         TestPlan testPlan = createTestPlanAndModule();
+        UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         List<TestModule> modules = testPlan.getAllTesModules() ;
         List<TestEnvironment> testEnvironments = testPlan.getTestEnvironments() ;
         int testEnvIndex = 0 ;
-        for(TestEnvironment testEnvironment : testEnvironments) {
-             testPlan.setTestEnvId(testEnvIndex);
-             testEnvIndex++;
-            WebDriver driver = DriverFactory.createDriver(testEnvironment.getBrowser(), false);
-            this.setDriver(driver);
-            new UtilKeywordScript(driver).login(testEnvironment.getLoginUrl(),testEnvironment.getUserName(),testEnvironment.getPassword(),testEnvironment.getClient());
-            for(TestModule testModule : modules){
-                if(testModule.getModuleName().equals("Preq") || testModule.getModuleName().equals("CommonTC"))
-                    continue;
-                List<TestSuite>  testSuites = testModule.getAllTestSuits();
-                testSuites.stream().forEach(testSuite ->
-                {
-                    readTestSuite(testSuite,testModule.getModuleName());
-                    executeTestesInTestSuite(testSuite);
-                });
-            }
-            driver.quit();
+
+            for (TestEnvironment testEnvironment : testEnvironments) {
+                testPlan.setTestEnvId(testEnvIndex);
+                testEnvIndex++;
+                try {
+                WebDriver driver = DriverFactory.createDriver(testEnvironment.getBrowser(), false);
+                this.setDriver(driver);
+                new UtilKeywordScript(driver).login(testEnvironment.getLoginUrl(), testEnvironment.getUserName(), testEnvironment.getPassword(), testEnvironment.getClient());
+                for (TestModule testModule : modules) {
+                    if (testModule.getModuleName().equals("Preq") || testModule.getModuleName().equals("CommonTC"))
+                        continue;
+                    List<TestSuite> testSuites = testModule.getAllTestSuits();
+                    testSuites.stream().forEach(testSuite ->
+                    {
+                        readTestSuite(testSuite, testModule.getModuleName());
+                        executeTestesInTestSuite(testSuite);
+                    });
+                }
+                driver.quit();
+                if(testEnvironment.getBrowser().toLowerCase().equals("ie")) {
+                    closeIeBrowser() ;
+                }
+            } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
         }
+        utilKeywordScript.captureReportSnap("PassedTCReport.html");
         EmailSend.sendLogReport();
         }
 
         public static void readTestSuite(TestSuite testSuite,String moduleName) {
+                if(testSuite.getState().equals(PropertyConfig.CREATED))
+                    return;
                 ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("modules/" + moduleName + ".xlsx").getPath());
                 List<Map> records = readExcel.read(testSuite.getTestSuiteName());
                 for(Map record : records) {
@@ -164,6 +176,7 @@ public class MainController {
     public TestPlan createTestPlan() {
         long start = System.currentTimeMillis();
         TestPlan testPlan = TestPlan.getInstance() ;
+        testPlan.resetTestPlan();
         testPlan.setTestPlanName(LocalDateTime.now().toString());
         ReadExcel readExcel = new ReadExcel(CLASS_LOADER.getResource("testPlan/" + PropertyConfig.TEST_ENVIRONMENT + ".xlsx").getPath());
         List<Map> records = readExcel.read(PropertyConfig.CONTROLLER);
@@ -209,9 +222,19 @@ public class MainController {
         file.delete();
          file = new File("./Report/" + PropertyConfig.getPropertyValue("failedReprtName"));
         file.delete();
+        file = new File("./Report/PassedImage/" + PropertyConfig.getPropertyValue("passedReportDashboardName"));
+        file.delete();
     }
     public static Boolean validateLogMessages(List<LogMessage> logMessages){
         return logMessages.stream().noneMatch(o -> o.isPassed().equals(false));
+    }
+
+    private void closeIeBrowser() {
+        try {
+            Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
