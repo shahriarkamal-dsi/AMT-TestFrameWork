@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import test.Log.LogMessage;
 import test.coreModule.PreRequiste;
+import test.coreModule.TestPlan;
 import test.model.*;
 import test.repository.PreqExecutionHistoryRepo;
 import test.service.NotExecutedPreqData;
@@ -145,8 +146,11 @@ public class TestData {
             for (LogMessage lm : logMessages) {
                 JSONArray jsonArray = lm.getUitlData() ;
                 JSONObject jso = (JSONObject) Optional.ofNullable(jsonArray.get(0)).orElse(new JSONObject());
-              if(null !=jso.get("dataId"))
-                  preqExecutionHistoryService.putPreqExecutionData(PropertyConfig.getPropertyValue("client"),PropertyConfig.getPropertyValue("env"),Long.valueOf(jso.get("dataId").toString()),jso.get("type").toString(), (boolean) jso.get("isPassed"));
+              if(null !=jso.get("dataId")) {
+                  String client = TestPlan.getInstance().getCurrentTestEnvironment().getClient() ;
+                  String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
+                  preqExecutionHistoryService.putPreqExecutionData(client, env, Long.valueOf(jso.get("dataId").toString()), jso.get("type").toString(), (boolean) jso.get("isPassed"));
+              }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
