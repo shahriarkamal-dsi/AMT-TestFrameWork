@@ -70,7 +70,7 @@ public class EmailSend {
             dashboard.setPath("./Report/PassedImage/Dashboard.png");
             dashboard.setDisposition(EmailAttachment.ATTACHMENT);
             dashboard.setDescription("Dashboard");
-            dashboard.setName("Dashboard");
+            dashboard.setName("Dashboard.png");
 
             // Create a multipart message
             Multipart multipart = new MimeMultipart();
