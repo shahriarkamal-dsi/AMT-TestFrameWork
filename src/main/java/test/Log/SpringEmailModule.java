@@ -39,8 +39,8 @@ public class SpringEmailModule {
             helper.setText(
                     "<html>"
                             + "<body>"
-                            + "<div> <br> Hi All,"
-                            + "<div>Following is the summary of Automated Test run in  <b>APP</b> Version: <b>" + version + " </b></div>"  + "<div>"
+                            + "<div>Hi All,"
+                            + "<div> <br> Following is the summary of Automated Test run in  <b>APP</b> Version: <b>" + version + " </b></div>"  + "<div>"
                             + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
                             + "<div> <p> Additionally, please find the attached detailed report. "
                              +" <br> <strong> NOTE: To view the report please download the HTML file. </strong> </p> </div> "
