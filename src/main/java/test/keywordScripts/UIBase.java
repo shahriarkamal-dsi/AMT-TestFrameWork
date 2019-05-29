@@ -318,6 +318,9 @@ public class UIBase {
                 if(null==varValue || varValue.isEmpty()) {
                     varValue = Optional.ofNullable(element.getAttribute("textContent")).orElse("").trim();
                 }
+                if (null == varValue || varValue.isEmpty()){
+                    varValue = " ";
+                }
                 TestPlan.getInstance().setStoreData(varName, varValue);
 
                 return new LogMessage(true, "UI value :" + varValue + " is stored");
