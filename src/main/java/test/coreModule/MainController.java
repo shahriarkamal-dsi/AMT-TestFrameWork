@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import test.Log.EmailSend;
 import test.Log.LogMessage;
 import test.Log.LogReport;
+import test.Log.SpringEmailModule;
 import test.beforeTest.TestData;
 import test.driver.DriverFactory;
 import test.keywordScripts.UtilKeywordScript;
@@ -21,6 +22,8 @@ public class MainController {
 
         @Autowired
         private ExecuteTests executeTests ;
+        @Autowired
+         SpringEmailModule springEmailModule ;
         @Autowired
         private TestData _testData;
         final static ClassLoader CLASS_LOADER = MainController.class.getClassLoader();
@@ -102,7 +105,7 @@ public class MainController {
                 }
         }
         utilKeywordScript.captureReportSnap("PassedTCReport.html");
-        EmailSend.sendLogReport();
+        springEmailModule.emailSend();
         }
 
         public static void readTestSuite(TestSuite testSuite,String moduleName) {
