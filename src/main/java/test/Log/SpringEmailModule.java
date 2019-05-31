@@ -35,7 +35,7 @@ public class SpringEmailModule {
             File dashBoard = new File("./Report/PassedImage/Dashboard.png");
             File extentReportUserManual = new File("./Report/User Manual.pdf");
             helper.addAttachment("LogReport.html",logFile);
-            helper.addAttachment("User Manual.pdf",extentReportUserManual);
+            helper.addAttachment("ReadMe.pdf",extentReportUserManual);
             helper.setSubject(getPassedEmailSubject());
             helper.setText(
                     "<html>"
@@ -43,8 +43,9 @@ public class SpringEmailModule {
                             + "<div>Hi All,"
                             + "<div> <br> Please find below the Snapshot of the Automated Login Smoke Test executed against Production  <b>APP</b> Version: <b>" + version + " </b></div>"  + "<div>"
                             + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
-                            + "<div> <p> Attached a detailed script execution report in html format. "
-                             +" <br> <strong> NOTE : Please use the attached ReadMe file for help with the dashboard elements. </strong> </p> </div> "
+                            + "<div> <p> Attached a detailed script execution report in html format."
+                            + "<br> Please use the attached ReadMe file for help with the dashboard elements."
+                             +"<br> NOTE : Note: The attached html file might NOT render properly if viewed from any mobile device. We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
                             + "<div>Thanks,</div>"
                             + "</div></body>"
                             + "</html>", true);
