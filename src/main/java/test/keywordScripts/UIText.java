@@ -34,17 +34,17 @@ public class UIText {
             UIBase uiBase = new UIBase(webDriver);
             WebElement userWeb = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == userWeb )
-                return new LogMessage(false,"webElement is not founding");
+                return new LogMessage(false,"Web element is not found");
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", userWeb);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiBase.Click(userWeb);
             userWeb.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.sendKeys(textData);
-            return new LogMessage(true,"text is set up");
+            return new LogMessage(true,"Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured:- " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class UIText {
             return new LogMessage(true, "Text is visible");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false, "Exception occur " + e.getMessage());
+            return new LogMessage(false, "Exception occurred " + e.getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ public class UIText {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(objectLocatorPath + "//*[contains(text(),'" + textData + "')]")));
             return new LogMessage(true, "Text is invisible");
         }catch (Exception e){
-            return new LogMessage(false, "Exception occur " + e.getMessage());
+            return new LogMessage(false, "Exception occurred " + e.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public class UIText {
         try {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == element )
-                return new LogMessage(false,"Element not found");
+                return new LogMessage(false,"Element is not found");
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             UIBase uiBase = new UIBase(webDriver);
@@ -101,7 +101,7 @@ public class UIText {
             return new LogMessage(true,"Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured:- " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
         }
     }
 
@@ -125,7 +125,7 @@ public class UIText {
             else
                 return new LogMessage(false, "Value is not verified");
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur" + e.getMessage());
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
     }
     public LogMessage compareNumericText(String objectLocator, String testData){
@@ -137,7 +137,7 @@ public class UIText {
             else
                 return new LogMessage(false, "Value is not verified");
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur" + e.getMessage());
+            return new LogMessage(false,"Exception occured" + e.getMessage());
         }
     }
 
@@ -147,7 +147,7 @@ public class UIText {
          UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
             if(!utilKeywordScript.validateTestData(testData,3)) {
-                return new LogMessage(false, "test data invalid");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] splittedTestData = testData.split(",");
             Integer data = Integer.valueOf(splittedTestData[0].trim()) + Integer.valueOf(splittedTestData[1].trim());
@@ -165,7 +165,7 @@ public class UIText {
                 return new LogMessage(false,"Value is not verified");
             }
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur");
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
 
     }
