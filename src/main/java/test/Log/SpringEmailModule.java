@@ -33,17 +33,18 @@ public class SpringEmailModule {
             helper.setTo(recipeints);
             File logFile = new File("./Report/" + PropertyConfig.getPropertyValue("passedReprtName"));
             File dashBoard = new File("./Report/PassedImage/Dashboard.png");
+            File extentReportUserManual = new File("./Report/User Manual.pdf");
             helper.addAttachment("LogReport.html",logFile);
-
+            helper.addAttachment("User Manual.pdf",extentReportUserManual);
             helper.setSubject(getPassedEmailSubject());
             helper.setText(
                     "<html>"
                             + "<body>"
                             + "<div>Hi All,"
-                            + "<div> <br> Following is the summary of Automated Test run in  <b>APP</b> Version: <b>" + version + " </b></div>"  + "<div>"
+                            + "<div> <br> Please find below the Snapshot of the Automated Login Smoke Test executed against Production  <b>APP</b> Version: <b>" + version + " </b></div>"  + "<div>"
                             + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
-                            + "<div> <p> Additionally, please find the attached detailed report. "
-                             +" <br> <strong> NOTE: To view the report please download the HTML file. </strong> </p> </div> "
+                            + "<div> <p> Attached a detailed script execution report in html format. "
+                             +" <br> <strong> NOTE : Please use the attached ReadMe file for help with the dashboard elements. </strong> </p> </div> "
                             + "<div>Thanks,</div>"
                             + "</div></body>"
                             + "</html>", true);
