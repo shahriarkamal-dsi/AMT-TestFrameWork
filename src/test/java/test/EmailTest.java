@@ -22,10 +22,11 @@ public class EmailTest {
       @Test
       public void test() {
         try {
+            String[] recipeints =  PropertyConfig.getPropertyValue("successfullTCrecipeints").split(",") ;
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom("testing4010@gmail.com");
-            helper.setTo("shahriarcsedu@gmail.com");
+            helper.setTo(recipeints);
             File file = new File("./Report/" + PropertyConfig.getPropertyValue("passedReprtName"));
             helper.addAttachment("log.html",file);
 
