@@ -36,12 +36,12 @@ public class UIDropDown {
 
             WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if (null == dropDownElement)
-                return new LogMessage(false," element is not found.");
+                return new LogMessage(false,"Web element is not found.");
             Select dropDown = new Select(dropDownElement);
                dropDown.selectByVisibleText(testData);
-            return new LogMessage(true, "drop down item is selected") ;
+            return new LogMessage(true, "Dropdown item is selected") ;
         } catch (Exception ex) {
-           return  new LogMessage(false, "exception occured: " + ex.getMessage()) ;
+           return  new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
         }
     }
 
@@ -51,40 +51,40 @@ public class UIDropDown {
             UIBase uiBase = new UIBase(webDriver);
             WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if (null == dropDownElement)
-                return new LogMessage(false," drop down element is not found.");
+                return new LogMessage(false," Dropdown element is not found.");
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             uiBase.Click(dropDownElement);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[contains(text() , '" + testData + "')]"));
             if (null == dropDownDataElements || dropDownDataElements.isEmpty())
-                return new LogMessage(false," drop down list element is not found.");
+                return new LogMessage(false," Dropdown list element is not found.");
             WebElement dropDownDataElement = dropDownDataElements.get(dropDownDataElements.size()-1);
             uiBase.Click(dropDownDataElement);
-            return new LogMessage(true, "drop down item is selected") ;
+            return new LogMessage(true, "Dropdown item is selected") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occured: " + ex.getMessage()) ;
+            return new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
         }
     }
     public LogMessage searchAndSelectItem(String objectLocatorData,String dropDownObjectLocatorData,String testData) {
         try {
             WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if (null == dropDownElement)
-                return new LogMessage(false," drop down element is not found.");
+                return new LogMessage(false," Dropdown element is not found.");
             dropDownElement.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             dropDownElement.sendKeys(testData);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[text() = '" + testData + "']"));
             if (null == dropDownDataElements || dropDownDataElements.isEmpty())
-                return new LogMessage(false," drop down list element is not found.");
+                return new LogMessage(false," Dropdown list element is not found.");
             dropDownDataElements.get(dropDownDataElements.size()-1).click();
             //UIBase uiBase = new UIBase(webDriver);
             // uiBase.Click(dropDownDataElement);
-            return new LogMessage(true, "drop down item is selected") ;
+            return new LogMessage(true, "Dropdown item is selected") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occured: " + ex.getMessage()) ;
+            return new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
         }
     }
     public String getDropDownValue(String objectLocator){
@@ -117,7 +117,7 @@ public class UIDropDown {
             else
                 return new LogMessage(false, "Value is not verified");
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur" + e.getMessage());
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
     }
 

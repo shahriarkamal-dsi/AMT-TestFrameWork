@@ -65,10 +65,10 @@ public class UtilKeywordScript {
                     if(!webDriver.getCurrentUrl().equals(homeUrl)) {
                         webDriver.navigate().to(homeUrl);
                     }
-                    return new LogMessage(true , "redirect home page successsfully");
+                    return new LogMessage(true , "Redirect home page successfully");
         } catch ( Exception ex) {
                 ex.printStackTrace();
-              return new LogMessage(false , "exception occured: " + ex.getMessage());
+              return new LogMessage(false , "Exception occurred: " + ex.getMessage());
         }
     }
 
@@ -93,9 +93,9 @@ public class UtilKeywordScript {
             webDriver.switchTo().window(winNames[0]);
             webDriver.close();
 
-            return new LogMessage(true , "redirect home page successsfully");
+            return new LogMessage(true , "All pages close successfully");
         } catch ( Exception ex) {
-            return new LogMessage(false , "exception occured: " + ex.getMessage());
+            return new LogMessage(false , "Exception occurred: " + ex.getMessage());
         }
     }
 
@@ -168,7 +168,7 @@ public class UtilKeywordScript {
             return new LogMessage(false,"Login fail");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false,"Login fail " + e.getMessage());
+            return new LogMessage(false,"Exception occurred " + e.getMessage());
         }
 
     }
@@ -187,10 +187,10 @@ public class UtilKeywordScript {
             UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
             UtilKeywordScript.switchLastTab(webDriver);
 
-            return new LogMessage(true, "Search complete");
+            return new LogMessage(true, "Search completed");
 
         }catch (Exception e){
-            return new LogMessage(false, "Exception occur " + e.getMessage());
+            return new LogMessage(false, "Exception occurred " + e.getMessage());
         }
     }
 
@@ -228,7 +228,7 @@ public class UtilKeywordScript {
             return new LogMessage(true,"Switch to last tab successfully");
         } catch ( Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,"Exception occur "+ ex.getMessage());
+            return new LogMessage(false,"Exception occurred "+ ex.getMessage());
         }
     }
     public LogMessage switchToIframe(String objectLocator){
@@ -238,7 +238,7 @@ public class UtilKeywordScript {
             return new LogMessage(true,"Switch to iframe successful");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false,"Cannot switch to iframe"+e.getMessage());
+            return new LogMessage(false,"Cannot switch to iframe " + e.getMessage());
         }
     }
     public LogMessage backFromIframe(){
@@ -247,7 +247,7 @@ public class UtilKeywordScript {
             return new LogMessage(true,"Returned from iframe successful");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false,"Cannot return from iframe"+e.getMessage());
+            return new LogMessage(false,"Cannot return from iframe " + e.getMessage());
         }
 
     }

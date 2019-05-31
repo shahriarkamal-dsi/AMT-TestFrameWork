@@ -158,6 +158,7 @@ public class DbDataInsertion {
                             space.setFloor((String) item.get("Floor"));
                             space.setStartDate((String) item.get("startDate"));
                             space.setEndDate((String) item.get("endDate"));
+                            space.setRentableLease((String) item.get("rentableLease") );
                             spaceService.createOrUpdateSpace(space);
                             PrequisiteData prequisiteData =  preqDataService.getPrequisiteDataByDataIdAndType(space.getId(),"space") ;
                             TestDataMap testDataMap =  testDataMapService.getTestDataMapByPreqIdAndTcId(prequisiteData.getPreqId(),(String) item.get("TC_ID"));

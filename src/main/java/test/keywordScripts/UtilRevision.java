@@ -75,7 +75,7 @@ public class UtilRevision {
         try{
          UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
          if(!utilKeywordScript.validateTestData(testData,2)){
-             return new LogMessage(false, "Not enough data");
+             return new LogMessage(false, "Test data invalid");
          }
         String[] data = testData.split(",");
         final String columnName = Optional.ofNullable(data[0]).orElse("") ;
@@ -84,7 +84,7 @@ public class UtilRevision {
         UITable uiTable=new UITable(webDriver);
         Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocator,columnName,columnValue,null);
         if (null == row || row.isEmpty()){
-            return new LogMessage(false,"no table data found");
+            return new LogMessage(false,"No table data found");
         }
 
         WebElement startDateElement=row.get("FASB/IASB Start Date");
@@ -101,14 +101,14 @@ public class UtilRevision {
             return new  LogMessage(false,"No of periods not verified");
         }catch (Exception e){
             e.printStackTrace();
-            return new  LogMessage(false,"Exception occer " + e.getMessage());
+            return new  LogMessage(false,"Exception occurred " + e.getMessage());
         }
     }
     public LogMessage VerifyAmountToCapitalize(String objectLocator,String testData){
         try{
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
             if(!utilKeywordScript.validateTestData(testData,3)){
-                return new LogMessage(false, "Not enough data");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] data = testData.split(",");
             final String columnName = Optional.ofNullable(data[0]).orElse("") ;
@@ -118,7 +118,7 @@ public class UtilRevision {
             UITable uiTable=new UITable(webDriver);
             Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocator,columnName,columnValue,null);
             if (null == row || row.isEmpty()){
-                return new LogMessage(false,"no table data found");
+                return new LogMessage(false,"No table data found");
             }
             WebElement startDateElement=row.get("FASB/IASB Start Date");
             LocalDate startDate=LocalDate.parse(startDateElement.getAttribute("textContent").trim(),formatter);
@@ -132,10 +132,10 @@ public class UtilRevision {
                 return new  LogMessage(true,"Amount to capitalize verified");
             }
             else
-                return new  LogMessage(false,"Amount to capitalize not verified");
+                return new  LogMessage(false,"Amount to capitalize is not verified");
         }catch (Exception e){
             e.printStackTrace();
-            return new  LogMessage(false,"Exception occer " + e.getMessage());
+            return new  LogMessage(false,"Exception occurred " + e.getMessage());
         }
     }
 
@@ -144,14 +144,14 @@ public class UtilRevision {
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
             UITable uiTable=new UITable(webDriver);
             if(!utilKeywordScript.validateTestData(testData,2)){
-                return new LogMessage(false, "Not enough data");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] data = testData.split(",");
             final String columnName = Optional.ofNullable(data[0]).orElse("") ;
             final String columnValue = Optional.ofNullable(data[1]).orElse("") ;
             Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocator,columnName,columnValue,null);
             if (null == row || row.isEmpty()){
-                return new LogMessage(false,"no table data found");
+                return new LogMessage(false,"No table data found");
             }
             WebElement startDateElement=row.get("FASB/IASB Start Date");
             String startDate=startDateElement.getAttribute("textContent").trim();
@@ -166,7 +166,7 @@ public class UtilRevision {
                 return new  LogMessage(false,"No of periods not verified");
         }catch (Exception e){
             e.printStackTrace();
-            return new  LogMessage(false,"Exception occer " + e.getMessage());
+            return new  LogMessage(false,"Exception occurred " + e.getMessage());
         }
     }
 
@@ -175,7 +175,7 @@ public class UtilRevision {
         try{
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
             if(!utilKeywordScript.validateTestData(testData,4)){
-                return new LogMessage(false, "Not enough data");
+                return new LogMessage(false, "Test data invalid");
             }
             double payments1 = Double.parseDouble(testData.split(",")[0].trim()) ;
             double payments2 = Double.parseDouble(testData.split(",")[1].trim()) ;
@@ -185,20 +185,20 @@ public class UtilRevision {
             if(payments1==payments2) return new LogMessage(true, "Value matches with the referred value");
             else return new LogMessage(false, "Value does not match with the referred value");
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur");
+            return new LogMessage(false,"Exception occurred");
         }
     }
     public LogMessage checkAvailabilityofColumnInSchedule(String objectLocator){
         try{
             WebElement webElement = WebObjectSearch.getWebElement(webDriver, objectLocator);
             if (null == webElement){
-                return new LogMessage(false, " Elemnet not found");
+                return new LogMessage(false, " Element is not found");
             }
             if(!webElement.getAttribute("style").contains("display: none"))
                 return new LogMessage(true, "Column found");
-            return new LogMessage(false, "Column not found");
+            return new LogMessage(false, "Column is not found");
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur"+e.getMessage());
+            return new LogMessage(false,"Exception occurred"+e.getMessage());
         }
     }
     public LogMessage checkLastRevision(String objectLocator,String testData)
@@ -207,7 +207,7 @@ public class UtilRevision {
         UITable uiTable=new UITable(webDriver);
         try{
             if(!utilKeywordScript.validateTestData(testData,2)) {
-                return new LogMessage(false, "test data invalid");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] data = testData.split(",");
             String columnName = data[0];
@@ -217,7 +217,7 @@ public class UtilRevision {
             else
                 return new LogMessage( false, "Last row column value not verified") ;
         }catch (Exception e){
-            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+            return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
         }
     }
     public LogMessage verifyRevisionAdjustmentPeriod(String objectLocator,String testData){
@@ -225,7 +225,7 @@ public class UtilRevision {
             UIText uiText = new UIText(webDriver);
             String data[] = testData.split("/");
             if(!(data.length ==3))
-                return new LogMessage(false,"Wrong test data");
+                return new LogMessage(false,"Test data invalid");
 
             String period = uiText.getText(objectLocator);
             testData = data[0] + "/" +data[2];
@@ -236,7 +236,7 @@ public class UtilRevision {
             return new LogMessage(false,"Wrong Revision Adjustment Period");
 
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur"+e.getMessage());
+            return new LogMessage(false,"Exception occurred"+e.getMessage());
         }
     }
 }

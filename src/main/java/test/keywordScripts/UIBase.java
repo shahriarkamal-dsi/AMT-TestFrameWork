@@ -35,7 +35,7 @@ public class UIBase {
     public LogMessage Click(WebElement webElement) {
         try {
             if(null == webElement)
-                return new LogMessage(false,"web element not fouding");
+                return new LogMessage(false,"Web element is not found");
             try
             {
                 webElement.click();
@@ -69,7 +69,7 @@ public class UIBase {
             return new LogMessage(true,"page is navigated");
         }catch(Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured:- " + ex.getMessage());
+            return new LogMessage(false,"exception occur:- " + ex.getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ public class UIBase {
                 return new LogMessage(false,"page is not loaded");
             }
         } catch (Exception ex) {
-            return new LogMessage(false,"exception occured:- " + ex.getMessage());
+            return new LogMessage(false,"Exception occur:- " + ex.getMessage());
         }
     }
     public LogMessage ClickDbClickRClick(WebElement element, String action) {
@@ -123,10 +123,10 @@ public class UIBase {
     public LogMessage Delay(String delayTime) {
         try {
             Thread.sleep(Integer.valueOf(delayTime).intValue()*1000);
-            return new LogMessage(true,"wait for delay succesffull");
+            return new LogMessage(true,"Wait for delay successful");
         } catch(Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,  "excepption occured: " + ex.getMessage());
+            return new LogMessage(false,  "Exception occur: " + ex.getMessage());
         }
     }
 
@@ -134,12 +134,12 @@ public class UIBase {
         try {
                WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
                if(null == element)
-                   return  new LogMessage(false, "element is not found");
-               String logMessage = element.isDisplayed() == true ? "element is displayed " : "element is not displayed " ;
+                   return  new LogMessage(false, "Web element is not found");
+               String logMessage = element.isDisplayed() == true ? "Element is displayed " : "Element is not displayed " ;
                return new LogMessage( !element.isDisplayed(),logMessage);
         } catch ( Exception ex) {
             ex.printStackTrace();
-            return  new LogMessage(false, "exception occured " + ex.getMessage());
+            return  new LogMessage(false, "Exception occur " + ex.getMessage());
         }
     }
 
@@ -147,14 +147,14 @@ public class UIBase {
         try {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if(null == element)
-                return  new LogMessage(false, "element is not found");
+                return  new LogMessage(false, "Web element is not found");
             WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
             wait.until(ExpectedConditions.visibilityOf(element));
-            String logMessage = element.isDisplayed() == true ? "element is displayed " : "element is not displayed" ;
+            String logMessage = element.isDisplayed() == true ? "Element is displayed " : "Element is not displayed" ;
             return new LogMessage( element.isDisplayed(),logMessage);
         } catch ( Exception ex) {
             ex.printStackTrace();
-            return  new LogMessage(false, "exception occured " + ex.getMessage());
+            return  new LogMessage(false, "Exception occur " + ex.getMessage());
         }
     }
 
@@ -182,17 +182,17 @@ public class UIBase {
             WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(@class,'alert-success')]")));
-            return new LogMessage(true,"Page load successfully");
+            return new LogMessage(true,"Popup load successfully");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false, "Exception occurred during loading page");
+            return new LogMessage(false, "Exception occur");
         }
     }
     public LogMessage VerifyEnabledTrue(String objectLocatorData){
         try{
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
             if(null == element)
-                return  new LogMessage(false, "Element is not found");
+                return  new LogMessage(false, "web element is not found");
             String logMessage = element.isEnabled() ? "Element is enabled " : "Element is not enabled" ;
             return new LogMessage(element.isEnabled(), logMessage);
 
@@ -211,7 +211,7 @@ public class UIBase {
            return  num1.compareTo(num2) == 1 ? new LogMessage(true,  "given value greater than  " + compareTovalue) :  new LogMessage(false,  "given value is not greater than  " + compareTovalue) ;
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occured " + ex.getMessage());
+            return new LogMessage(false, "Exception occurred " + ex.getMessage());
 
         }
 
@@ -242,7 +242,7 @@ public class UIBase {
                     return new LogMessage(true,"Revision found");
                 }
             }
-            return new LogMessage(false,"Revision not found");
+            return new LogMessage(false,"Revision is not found");
         }catch (Exception e){
             return new LogMessage(false,"Exception occur " + e.getMessage());
         }
@@ -253,7 +253,7 @@ public class UIBase {
             Boolean enable=false;
             webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
             if (null == webElement){
-                return new LogMessage(false, " Element not found");
+                return new LogMessage(false, " Web element is not found");
             }
             if(!VerifyEnabledTrue(objectLocatorData).isPassed())
                 enable=false;
@@ -275,7 +275,7 @@ public class UIBase {
             Boolean disable=false;
             webElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
             if (null == webElement){
-                return new LogMessage(false, " Elemnet not found");
+                return new LogMessage(false, " Web element not found");
             }
             if(!VerifyEnabledTrue(objectLocatorData).isPassed())
                 disable=true;
@@ -304,7 +304,7 @@ public class UIBase {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage( false, "exception occurred in StoreUIValue " + ex.getMessage()) ;
+            return new LogMessage( false, "Exception occurred in StoreUIValue " + ex.getMessage()) ;
         }
     }
 
@@ -318,13 +318,16 @@ public class UIBase {
                 if(null==varValue || varValue.isEmpty()) {
                     varValue = Optional.ofNullable(element.getAttribute("textContent")).orElse("").trim();
                 }
+                if (null == varValue || varValue.isEmpty()){
+                    varValue = " ";
+                }
                 TestPlan.getInstance().setStoreData(varName, varValue);
 
                 return new LogMessage(true, "UI value :" + varValue + " is stored");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occurred in StoreUIValue  " + ex.getMessage());
+            return new LogMessage(false, "Exception occurred in StoreUIValue  " + ex.getMessage());
         }
     }
 
@@ -343,7 +346,7 @@ public class UIBase {
                 return new LogMessage(false, "Value does not match with the referred value");
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occurred in compare  " + ex.getMessage());
+            return new LogMessage(false, "Exception occurred in compare  " + ex.getMessage());
         }
     }
 

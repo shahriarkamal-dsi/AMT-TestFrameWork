@@ -19,8 +19,9 @@ public class UICheckBox {
 
     public LogMessage CheckChkBox(String objectLocator){
         try{
+            UIBase uiBase = new UIBase(webDriver);
             WebElement webElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
-            webElement.click();
+            uiBase.Click(webElement);
             return new LogMessage(true,"CheckBox click successfully");
         }catch (Exception e){
             e.printStackTrace();
@@ -40,7 +41,7 @@ public class UICheckBox {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occurred : " + ex.getMessage());
+            return new LogMessage(false, "Exception occurred : " + ex.getMessage());
         }
     }
     public LogMessage VerifyCheckboxCheckedTrue(String objectLocatorData) {
@@ -55,7 +56,7 @@ public class UICheckBox {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occurred : " + ex.getMessage());
+            return new LogMessage(false, "Exception occurred : " + ex.getMessage());
         }
     }
 }
