@@ -63,7 +63,7 @@ public class SpaceCreateAndSearch {
         try{
             String  objectLocatorPrefix = "Common.Space." ;
             UILink uiLink = new UILink(webDriver);
-
+            UIInput uiInput = new UIInput(webDriver);
             UIText uiText = new UIText(webDriver);
 
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
@@ -84,6 +84,8 @@ public class SpaceCreateAndSearch {
             uiText.SetText(objectLocatorPrefix+"startDate", (String) data.get("startDate"));
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiText.SetText(objectLocatorPrefix+"endDate", (String) data.get("endDate"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            uiInput.setValue(objectLocatorPrefix + "txtRentableLease",(String)data.get("rentableLease"));
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiBase.Click(objectLocatorPrefix + "btnSave");
 

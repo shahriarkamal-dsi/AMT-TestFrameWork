@@ -37,10 +37,10 @@ public class UILink {
                 webElement = webDriver.findElement(By.linkText(Linkname));
             }
             uiBase.Click(webElement);
-            return new LogMessage(true,"web element is clicked");
+            return new LogMessage(true,"Web element clicked");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false,"Exception occured"+e.getMessage());
+            return new LogMessage(false,"Exception occurred"+e.getMessage());
         }
     }
 

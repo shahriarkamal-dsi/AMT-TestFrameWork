@@ -52,7 +52,7 @@ public class UtilDate {
         try{
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
            if(!utilKeywordScript.validateTestData(testData,3)){
-                return new LogMessage(false, "Not enough data");
+                return new LogMessage(false, "Test data invalid");
             }
 
             String day1 = testData.split(",")[0].trim() ;
@@ -69,7 +69,7 @@ public class UtilDate {
 
 
         }catch (Exception e){
-            return new LogMessage( false, "exception occurred " + e.getMessage());
+            return new LogMessage( false, "Exception occurred " + e.getMessage());
         }
     }
 

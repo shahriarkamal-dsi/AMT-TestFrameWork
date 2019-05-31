@@ -23,6 +23,8 @@ public class Space {
     private String startDate;
     @Column(name = "end_date")
     private String endDate;
+    @Column(name = "rentable_lease")
+    private String rentableLease;
 
 
     public Space() {
@@ -92,6 +94,14 @@ public class Space {
         this.endDate = endDate;
     }
 
+    public String getRentableLease() {
+        return rentableLease;
+    }
+
+    public void setRentableLease(String rentableLease) {
+        this.rentableLease = rentableLease;
+    }
+
     public Map<String,String > getSpaceMap(){
 
         Map<String,String> SpaceMap=new HashMap<>();
@@ -104,6 +114,7 @@ public class Space {
         SpaceMap.put("Floor",floor);
         SpaceMap.put("startDate",startDate);
         SpaceMap.put("endDate",endDate);
+        SpaceMap.put("rentableLease",rentableLease);
 
         return SpaceMap;
     }
