@@ -1,5 +1,6 @@
 package test.Log;
 
+import com.aventstack.extentreports.Status;
 import com.google.gson.JsonArray;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import java.util.List;
 public class LogMessage {
     private Boolean passed = false ;  ;
     private String logMessage = "" ;
+    private Status status;
     private Boolean skipped = false;
     private List<LogMessage> subLogMessages= new ArrayList<LogMessage>();
     private JSONArray utilData = new JSONArray();
@@ -56,5 +58,18 @@ public class LogMessage {
     }
     public JSONArray getUitlData() {
         return  utilData ;
+    }
+
+    public Status getStatus() {
+        if(null == status) {
+            if (this.passed)
+                return  Status.PASS ;
+            return Status.FAIL ;
+        }
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

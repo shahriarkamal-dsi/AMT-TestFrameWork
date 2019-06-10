@@ -1,5 +1,6 @@
 package test.coreModule;
 
+import com.aventstack.extentreports.Status;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -108,7 +109,11 @@ public class ExecuteTests {
                     List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep,false);
                     logMessages.addAll(preqLogMessages);
                     testCase.setPassed(preqLogMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
+                    //if there is any blocked status we do not go further
+                   if( preqLogMessages.stream().anyMatch(logMessage -> logMessage.getStatus().equals(Status.ERROR)))
+                       return logMessages;
                 } else {
+
                     logMessages.add(runSingleStep(testStep, testCase));
                     if (!testStep.isPassed() && testStep.isCritical()) {
                         testCase.setPassed(false);
@@ -170,8 +175,11 @@ public class ExecuteTests {
                 UtilKeywordScript.delay(delayTime);
             if(logMessage.isPassed())
                 logMessage.setLogMessage(passedLogMessage.isEmpty()? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage(): passedLogMessage);
-            else
-                logMessage.setLogMessage(failedLogMessage.isEmpty()? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage(): failedLogMessage);
+            else {
+                if(testStep.isCritical())
+                    logMessage.setStatus(Status.ERROR);
+                logMessage.setLogMessage(failedLogMessage.isEmpty() ? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage() : failedLogMessage);
+            }
 
             testStep.setPassed(logMessage.isPassed());
 
