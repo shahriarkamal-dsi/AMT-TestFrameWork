@@ -173,10 +173,17 @@ public class ExecuteTests {
             int delayTime=delayTime(testStep.delayTime());
             if(!(delayTime<=0))
                 UtilKeywordScript.delay(delayTime);
-            if(logMessage.isPassed())
-                logMessage.setLogMessage(createLogMessage(passedLogMessage,testStep,logMessage));
-            else
-                logMessage.setLogMessage(createLogMessage(failedLogMessage,testStep,logMessage));
+            if(logMessage.isPassed()) {
+                logMessage.setStatus(Status.PASS);
+                logMessage.setLogMessage(createLogMessage(passedLogMessage, testStep, logMessage));
+            }
+            else {
+                if(critical)
+                    logMessage.setStatus(Status.ERROR);
+                else
+                    logMessage.setStatus(Status.FAIL);
+                logMessage.setLogMessage(createLogMessage(failedLogMessage, testStep, logMessage));
+            }
             testStep.setPassed(logMessage.isPassed());
 
             if (pageRefresh){
