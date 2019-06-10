@@ -17,12 +17,12 @@ public class UIRadio {
             if(null == element)
                 return  new LogMessage(false, "Element is not found");
             element.click();
-            return new LogMessage(true, "Radio Button is clicked");
+            return new LogMessage(true, "Radio button clicked");
 
         }catch (Exception e)
         {
             e.printStackTrace();
-            return new LogMessage(false, "Radio Button is not clicked");
+            return new LogMessage(false, "Radio button is not clicked");
         }
     }
 

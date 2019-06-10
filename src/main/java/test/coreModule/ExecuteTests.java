@@ -174,13 +174,9 @@ public class ExecuteTests {
             if(!(delayTime<=0))
                 UtilKeywordScript.delay(delayTime);
             if(logMessage.isPassed())
-                logMessage.setLogMessage(passedLogMessage.isEmpty()? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage(): passedLogMessage);
-            else {
-                if(testStep.isCritical())
-                    logMessage.setStatus(Status.ERROR);
-                logMessage.setLogMessage(failedLogMessage.isEmpty() ? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage() : failedLogMessage);
-            }
-
+                logMessage.setLogMessage(createLogMessage(passedLogMessage,testStep,logMessage));
+            else
+                logMessage.setLogMessage(createLogMessage(failedLogMessage,testStep,logMessage));
             testStep.setPassed(logMessage.isPassed());
 
             if (pageRefresh){
@@ -301,6 +297,30 @@ public class ExecuteTests {
 
         }catch (Exception e){
             return PropertyConfig.SHORT_WAIT_TIME_SECONDS;
+        }
+    }
+
+    private String createLogMessage(String message, TestStep testStep,LogMessage log){
+        String logMessage = "";
+        if (!( null == message || message.isEmpty())){
+            return message;
+        }else {
+            if ((testStep.getTestStepDescription().isEmpty()) && (testStep.getFieldName().isEmpty())){
+                logMessage = log.getLogMessage();
+            }
+            else if ((testStep.getTestStepDescription().isEmpty()) && !(testStep.getFieldName().isEmpty())){
+                logMessage = testStep.getFieldName() + "--" + log.getLogMessage();
+            }
+            else if ((testStep.getTestStepDescription().isEmpty()) && !(testStep.getFieldName().isEmpty())){
+                logMessage = testStep.getFieldName() + "--" + log.getLogMessage();
+            }
+            else if (!(testStep.getTestStepDescription().isEmpty()) && (testStep.getFieldName().isEmpty())){
+                logMessage = testStep.getTestStepDescription() + "--" + log.getLogMessage();
+            }
+            else {
+                logMessage = testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + log.getLogMessage();
+            }
+            return logMessage;
         }
     }
 }

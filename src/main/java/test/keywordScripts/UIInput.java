@@ -44,7 +44,7 @@ public class UIInput {
 
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == element )
-                return new LogMessage(false,"webElement is not founding");
+                return new LogMessage(false,"Web element is not found");
             jse.executeScript("arguments[0].scrollIntoView(true);", element);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             jse.executeScript("arguments[0].value='" + value + "';",element);
