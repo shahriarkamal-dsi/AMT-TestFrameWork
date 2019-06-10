@@ -81,6 +81,20 @@ public class CreateLog {
 
     }
 
+    public void writeLog(String header, LogMessage logMessage){
+
+        String key = header.trim();
+
+        if (storeAllLogger.containsKey(key)){
+
+            ExtentTest objExistLogger = storeAllLogger.get(key);
+            objExistLogger.log(logMessage.getStatus(),logMessage.getLogMessage());
+            extent.flush();
+        }
+
+
+    }
+
 
 }
 
