@@ -83,7 +83,7 @@ public class TestStep {
         try {
             return  step.get(PropertyConfig.CRITICAL).toString().toLowerCase().equals("no") ? false : true;
         }catch(Exception ex) {
-            return false;
+            return true;
         }
     }
 
@@ -91,7 +91,7 @@ public class TestStep {
         try {
             return  step.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes") ? true : false;
         }catch(Exception ex) {
-            return false;
+            return true;
         }
     }
     public String delayTime(){

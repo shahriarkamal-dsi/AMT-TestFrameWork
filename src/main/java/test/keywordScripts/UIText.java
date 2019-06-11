@@ -1,5 +1,6 @@
 package test.keywordScripts;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -41,6 +42,22 @@ public class UIText {
             userWeb.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.sendKeys(textData);
+            return new LogMessage(true,"Text is set up");
+        } catch(Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
+        }
+    }
+    public LogMessage SetText(WebElement element, String textData){
+        try {
+            UIBase uiBase = new UIBase(webDriver);
+            if(null == element )
+                return new LogMessage(false,"Web element is not found");
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            uiBase.Click(element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            element.sendKeys(textData);
             return new LogMessage(true,"Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();

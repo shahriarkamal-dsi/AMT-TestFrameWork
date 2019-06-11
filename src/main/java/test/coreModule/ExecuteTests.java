@@ -1,5 +1,6 @@
 package test.coreModule;
 
+import com.aventstack.extentreports.Status;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -108,7 +109,11 @@ public class ExecuteTests {
                     List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep,false);
                     logMessages.addAll(preqLogMessages);
                     testCase.setPassed(preqLogMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
+                    //if there is any blocked status we do not go further
+                   if( preqLogMessages.stream().anyMatch(logMessage -> logMessage.getStatus().equals(Status.ERROR)))
+                       return logMessages;
                 } else {
+
                     logMessages.add(runSingleStep(testStep, testCase));
                     if (!testStep.isPassed() && testStep.isCritical()) {
                         testCase.setPassed(false);
@@ -168,11 +173,17 @@ public class ExecuteTests {
             int delayTime=delayTime(testStep.delayTime());
             if(!(delayTime<=0))
                 UtilKeywordScript.delay(delayTime);
-            if(logMessage.isPassed())
-                logMessage.setLogMessage(createLogMessage(passedLogMessage,testStep,logMessage));
-            else
-                logMessage.setLogMessage(createLogMessage(failedLogMessage,testStep,logMessage));
-
+            if(logMessage.isPassed()) {
+                logMessage.setStatus(Status.PASS);
+                logMessage.setLogMessage(createLogMessage(passedLogMessage, testStep, logMessage));
+            }
+            else {
+                if(critical)
+                    logMessage.setStatus(Status.ERROR);
+                else
+                    logMessage.setStatus(Status.FAIL);
+                logMessage.setLogMessage(createLogMessage(failedLogMessage, testStep, logMessage));
+            }
             testStep.setPassed(logMessage.isPassed());
 
             if (pageRefresh){
