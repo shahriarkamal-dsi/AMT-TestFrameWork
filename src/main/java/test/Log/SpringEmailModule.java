@@ -43,12 +43,14 @@ public class SpringEmailModule {
                             + "<div>Hi All,"
                             + "<div> <br> Please find below the Snapshot of the Automated Login Smoke Test executed against Production  <b>APP</b> Version: <b>" + version + " </b></div>"  + "<div>"
                             + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
-                            + "<div> <p> Attached a detailed script execution report in html format."
+                            + "<div> <p> Attached a detailed script execution report in html format.In bottom there is a Theme Selector button. We used Black Theme Here."
                             + "<br> Please use the attached ReadMe file for help with the dashboard elements."
-                            +"<br> NOTE : The attached html file might NOT render properly if viewed from any mobile device."
+                            + "<br> "
+                            + "<br> "
+                            +"<br> <b><i>NOTE: </i></b> The attached html file might not render properly if viewed from any mobile device."
                             +"<br> We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
                             + "<div>Thanks,</div>"
-                            + "<div>QA Automation Team</div>"
+                            + "<div><b>QA Automation Team</b></div>"
                             + "</div></body>"
                             + "</html>", true);
             // helper.addInline("rightSideImage",
@@ -75,7 +77,7 @@ public class SpringEmailModule {
 
         String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = "Automated Login Smoke Test in Production " + dateTime.getMonthValue()+"." + dateTime.getDayOfMonth()+ "." +dateTime.getYear()+ "_" +dateTime.getHour()+ ":" +dateTime.getMinute()+ ":" +dateTime.getSecond();
+        String Subject = "Automated Login Smoke Test in "+ env.toUpperCase() +"   "+ dateTime.getMonthValue()+"." + dateTime.getDayOfMonth()+ "." +dateTime.getYear()+ "_" +dateTime.getHour()+ ":" +dateTime.getMinute()+ ":" +dateTime.getSecond();
         return Subject;
     }
 
