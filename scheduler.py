@@ -6,7 +6,7 @@ import os
 sched = BlockingScheduler()
 
 
-@sched.scheduled_job('interval', minutes=60)
+@sched.scheduled_job('interval', minutes=30)
 def timed_job():
     print("Logging in again..." + str(datetime.datetime.now()))
     f = open('ScheduleLog.txt', "a")

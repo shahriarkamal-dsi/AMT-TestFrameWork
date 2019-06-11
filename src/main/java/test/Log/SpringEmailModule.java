@@ -45,8 +45,10 @@ public class SpringEmailModule {
                             + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
                             + "<div> <p> Attached a detailed script execution report in html format."
                             + "<br> Please use the attached ReadMe file for help with the dashboard elements."
-                             +"<br> NOTE : Note: The attached html file might NOT render properly if viewed from any mobile device. We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
+                            +"<br> NOTE : The attached html file might NOT render properly if viewed from any mobile device."
+                            +"<br> We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
                             + "<div>Thanks,</div>"
+                            + "<div>QA Automation Team</div>"
                             + "</div></body>"
                             + "</html>", true);
             // helper.addInline("rightSideImage",
@@ -73,7 +75,7 @@ public class SpringEmailModule {
 
         String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = env.toUpperCase() + " - Login Test  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        String Subject = "Automated Login Smoke Test in Production " + dateTime.getMonthValue()+"." + dateTime.getDayOfMonth()+ "." +dateTime.getYear()+ "_" +dateTime.getHour()+ ":" +dateTime.getMinute()+ ":" +dateTime.getSecond();
         return Subject;
     }
 
