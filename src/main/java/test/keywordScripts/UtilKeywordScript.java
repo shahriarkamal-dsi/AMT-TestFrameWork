@@ -322,7 +322,8 @@ public class UtilKeywordScript {
         try{
             openTCReport(fileName);
             UIBase uiBase = new UIBase(webDriver);
-
+            WebElement themeSelector = webDriver.findElement(By.id("theme-selector"));
+            uiBase.Click(themeSelector);
             WebElement elementDashboard = webDriver.findElement(By.linkText("track_changes"));
             uiBase.Click(elementDashboard);
             takeSnapShot("./Report/PassedImage/","Dashboard");
