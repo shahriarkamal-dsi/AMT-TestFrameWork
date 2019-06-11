@@ -29,7 +29,7 @@ public class SpringEmailModule {
             String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
             String version = PropertyConfig.getPropertyValue("version");
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom("ehsanulaiub15@outlook.com");
+            helper.setFrom("testing4010@gmail.com");
             helper.setTo(recipeints);
             File logFile = new File("./Report/" + PropertyConfig.getPropertyValue("passedReprtName"));
             File dashBoard = new File("./Report/PassedImage/Dashboard.png");

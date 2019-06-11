@@ -210,10 +210,10 @@ public class TestDataApplicationTests {
 	}*/
 
 
-	/*@Test
+	@Test
 	public void testDBInsertion() {
 		dbDataInsertion.dataInsertion();
-	}*/
+	}
 
    /* @Test
     public void checkPreqExecutiom(){

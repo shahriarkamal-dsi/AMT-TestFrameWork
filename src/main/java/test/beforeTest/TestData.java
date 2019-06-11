@@ -46,8 +46,8 @@ public class TestData {
     private PreqExecutionHistoryService preqExecutionHistoryService ;
 
     private WebDriver driver;
-    private String clientId=PropertyConfig.getPropertyValue("client");
-    private String environment=PropertyConfig.getPropertyValue("env");
+   // private String clientId=PropertyConfig.getPropertyValue("client");
+  //  private String environment=PropertyConfig.getPropertyValue("env");
     public TestData() {
 
     }
@@ -58,8 +58,11 @@ public class TestData {
 
         List<LogMessage> logMessageList =new ArrayList<>();
         try {
+            String clientId = TestPlan.getInstance().getCurrentTestEnvironment().getClient();
+            String environment = TestPlan.getInstance().getCurrentTestEnvironment().getEnv();
             List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
-            NotExecutedPreqData notExecutedPreqData =  testDataMapService.getNotExecutedPreqData(testCaseId,clientId,environment,100);
+            //NotExecutedPreqData notExecutedPreqData =  testDataMapService.getNotExecutedPreqData(testCaseId,clientId,environment,100);
+            NotExecutedPreqData notExecutedPreqData =  new NotExecutedPreqData();
             PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ;
             List<Map> propertyRecords=notExecutedPreqData.getPropertyList().stream().map( e -> e.getPropertyMap()).collect(Collectors.toList());
            for(Map propertyRecord: propertyRecords){

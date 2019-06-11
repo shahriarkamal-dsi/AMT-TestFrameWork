@@ -59,4 +59,11 @@ public class UICheckBox {
             return new LogMessage(false, "Exception occurred : " + ex.getMessage());
         }
     }
+
+
+    public LogMessage IsCheckboxChecked(String objectLocatorData) {
+        return VerifyCheckboxCheckedFalse(objectLocatorData);
+    }
+
+
 }
