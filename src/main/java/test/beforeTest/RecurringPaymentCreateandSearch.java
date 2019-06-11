@@ -89,13 +89,17 @@ public class RecurringPaymentCreateandSearch {
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
 
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0,"+ (String)data.get("effDate"));
-
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
-
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
 
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "Annual,0,0");
 
