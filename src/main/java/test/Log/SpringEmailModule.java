@@ -25,7 +25,7 @@ public class SpringEmailModule {
         try {
             String[] recipeints =  PropertyConfig.getPropertyValue("successfullTCrecipeints").split(",") ;
             MimeMessage message = mailSender.createMimeMessage();
-            String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
+            String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv().toUpperCase() ;
             String version = PropertyConfig.getPropertyValue("version");
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom("testing4010@gmail.com");
@@ -40,7 +40,7 @@ public class SpringEmailModule {
                     "<html>"
                             + "<body>"
                             + "<div>Hi All,"
-                            + "<div> <br> Please find below the Snapshot of the Automated Login Smoke Test executed against Production  <b>APP</b> Version: <b>" + version + " </b></div>"  + "<div>"
+                            + "<div> <br> Please find below the Snapshot of the Automated Login Smoke Test executed against Production  <b> " + env + "</b> Version: <b>" + version + " </b></div>"  + "<div>"
                             + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
                             + "<div> <p> Attached a detailed script execution report in html format.In bottom there is a Theme Selector button. We used Black Theme Here."
                             + "<br> Please use the attached ReadMe file for help with the dashboard elements."

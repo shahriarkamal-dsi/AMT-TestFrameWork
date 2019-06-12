@@ -230,7 +230,7 @@ public class UIBase {
         try{
             UITable uiTable = new UITable(webDriver);
             UIBase uiBase = new UIBase(webDriver);
-            for (int i = 0; i<10; i++){
+            for (int i = 0; i<15; i++){
                 WebElement element = webDriver.findElement(By.xpath("//*[@title='Refresh']"));
                 uiBase.Click(element);
                 WaitingForPageLoad();
@@ -242,7 +242,7 @@ public class UIBase {
                     return new LogMessage(true,"Revision found");
                 }
             }
-            return new LogMessage(false,"Revision is not found");
+            return new LogMessage(false,"Revision is not found in 15 minutes");
         }catch (Exception e){
             return new LogMessage(false,"Exception occur " + e.getMessage());
         }
