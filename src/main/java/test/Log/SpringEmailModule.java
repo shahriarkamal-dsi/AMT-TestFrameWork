@@ -1,6 +1,5 @@
 package test.Log;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -69,7 +68,7 @@ public class SpringEmailModule {
 
         String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = env.toUpperCase() + " - Login Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        String Subject = env.toUpperCase() + " -Automated Smoke Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
         return Subject;
     }
 
@@ -77,7 +76,7 @@ public class SpringEmailModule {
 
         String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = "Automated Login Smoke Test in "+ env.toUpperCase() +"   "+ dateTime.getMonthValue()+"." + dateTime.getDayOfMonth()+ "." +dateTime.getYear()+ "_" +dateTime.getHour()+ ":" +dateTime.getMinute()+ ":" +dateTime.getSecond();
+        String Subject = "Automated Smoke Test in "+ env.toUpperCase() +"   "+ dateTime.getMonthValue()+"." + dateTime.getDayOfMonth()+ "." +dateTime.getYear()+ "_" +dateTime.getHour()+ ":" +dateTime.getMinute()+ ":" +dateTime.getSecond();
         return Subject;
     }
 
