@@ -29,6 +29,7 @@ public class UITable extends  UtilKeywordScript{
     /*
     a. there is multiple type table type data, like:  in single table contails header and data, multiple table contains header and data, etc
     try to differentiate from here and call other method or code here accordingly.
+
     b. from calling method from  excel sheet, please use this method to get all table data, then code what need to be done,
     thats how any type table can be worked properly from excel sheet.
      */
@@ -48,13 +49,19 @@ public class UITable extends  UtilKeywordScript{
            tableData =  rows.stream().map(row -> {
                AtomicInteger index = new AtomicInteger();
                List<WebElement> bodyCells = row.findElements(By.tagName("td"));
+               /*
+               * Convert to Map using toMap() method
+               * the -> separates the parameters (left-side) from the actual expression (right side).
+               * */
                Map<String,WebElement> data = bodyCells.stream().collect(Collectors.toMap( bodycell ->
-               {
-                   int count = index.getAndIncrement() ;
+               { int count = index.getAndIncrement() ;
                  return UtilKeywordScript.isEmpty(headCells.get(count).getAttribute("textContent")) ? String.valueOf(count) :  headCells.get(count).getAttribute("textContent") ;
                }, bodycell -> bodycell));
                return data;
            }).collect(Collectors.toList());
+
+           /* Returns a Collector that accumulates the input elements into a new  List.
+           There are no guarantees on the type, mutability, serializability, or thread-safety of the List returned */
 
             return tableData;
         } catch(Exception ex) {
@@ -63,16 +70,19 @@ public class UITable extends  UtilKeywordScript{
         }
     }
 
-
-
     /*
   a. there is multiple type table type data, like:  in single table contails header and data, multiple table contains header and data, etc
   try to differentiate from here and call other method or code here accordingly.
+
   b. from calling method from  excel sheet, please use this method to get all table data, then code what need to be done,
   thats how any type table can be worked properly from excel sheet.
+
   c. either send columnName and columnValue or rowIndex
+
   d. return perticular columnName-columnVale cell and whole row
+
   e. row index start with 0
+
    */
 
     public Map getSingleRowfromTable(String objectLocatorData,String columnName,String columnValue, Integer rowIndex ) {
@@ -257,6 +267,7 @@ public class UITable extends  UtilKeywordScript{
             return new LogMessage(false,"Exception occurred: " + ex.getMessage());
         }
     }
+
     public LogMessage ClickCellInTable(String objectLocatorData, String testData) {
         try {
             String columnName = "" ;
@@ -284,9 +295,6 @@ public class UITable extends  UtilKeywordScript{
             return new LogMessage(false,"Exception occurred: " + ex.getMessage());
         }
     }
-
-
-
 
     public LogMessage ClickLinkInTable(String objectLocatorData, String testData) {
         try {
