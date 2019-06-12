@@ -8,7 +8,7 @@ sched = BlockingScheduler()
 
 @sched.scheduled_job('interval', hours=4)
 def timed_job():
-    print("Logging in again..." + str(datetime.datetime.now()))
+    print("Srarting Execution Again..." + str(datetime.datetime.now()))
     f = open('ScheduleLog.txt', "a")
     if os.path.getsize("ScheduleLog.txt") > 0:
         f.write("\n" + (str(datetime.datetime.now())) + "  Test Started \n")
