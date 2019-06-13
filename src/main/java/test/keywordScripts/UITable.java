@@ -10,6 +10,7 @@ import test.coreModule.TestPlan;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -623,6 +624,28 @@ public class UITable extends  UtilKeywordScript{
             String columnName = data[0];
             String varName = data[1];
             TestPlan.getInstance().setStoreData(varName,getLastRowColumnValue(objectLocator,columnName));
+            return new LogMessage(true, "Last column value is stored");
+        }catch (Exception e){
+            return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
+        }
+    }
+
+    public LogMessage StoreLastowIncreasedDateValue(String objectLocator,String testData){
+        try {
+            SimpleDateFormat dateFormat =   new SimpleDateFormat("MM/yyyy") ;
+            if(!validateTestData(testData,2)) {
+                return new LogMessage(false, "Test data invalid");
+            }
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            String varName = data[1];
+            String date = getLastRowColumnValue(objectLocator,columnName) ;
+            Date lastDate =  dateFormat.parse(date);
+            Calendar cal =  Calendar.getInstance() ;
+            cal.setTime(lastDate);
+            cal.add(Calendar.MONTH, 1);
+            date = dateFormat.format(cal.getTime()) ;
+            TestPlan.getInstance().setStoreData(varName,date);
             return new LogMessage(true, "Last column value is stored");
         }catch (Exception e){
             return new LogMessage( false, "Exception occurred " + e.getMessage()) ;

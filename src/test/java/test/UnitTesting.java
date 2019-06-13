@@ -21,11 +21,9 @@ import test.utility.ReadExcel;
 
 import java.io.File;
 import java.io.SerializablePermission;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -241,6 +239,16 @@ public class UnitTesting {
         assertTrue(m.get("p").equals("0"));
         assertTrue(m.get("s").equals("2"));
 
+    }
+    @Test
+    public void checkAddDate() throws ParseException {
+        SimpleDateFormat dateFormat =   new SimpleDateFormat("MM/yyyy") ;
+        Date lastDate =  dateFormat.parse("12/2015");
+        Calendar cal =  Calendar.getInstance() ;
+        cal.setTime(lastDate);
+        cal.add(Calendar.MONTH, 1);
+       String date = dateFormat.format(cal.getTime()) ;
+       assertTrue(date.equals("01/2016"));
     }
 
 
