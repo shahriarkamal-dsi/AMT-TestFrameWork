@@ -1,11 +1,9 @@
 package test;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import test.Log.CreateLog;
-import test.beforeTest.LeaseCreateAndSearch;
-import test.beforeTest.PropertyCreateAndSearch;
-import test.beforeTest.SpaceCreateAndSearch;
-import test.beforeTest.TestData;
+import test.beforeTest.*;
 import test.coreModule.*;
 
 import test.Log.EmailSend;
@@ -250,6 +248,21 @@ public class UnitTesting {
        String date = dateFormat.format(cal.getTime()) ;
        assertTrue(date.equals("01/2016"));
     }
+
+    /*@Test
+    public void deleteRPR(){
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
+
+        Map data = new HashMap<String, String>();
+        data.put("LeaseName","KM FASB Test 1");
+        data.put("chargeName","BRN");
+
+        RecurringPaymentCreateandSearch recurringPaymentCreateandSearch = new RecurringPaymentCreateandSearch(driver);
+        //recurringPaymentCreateandSearch.setWebDriver(driver);
+        recurringPaymentCreateandSearch.deleteRecurringPayment(data);
+
+    }*/
 
 
 }

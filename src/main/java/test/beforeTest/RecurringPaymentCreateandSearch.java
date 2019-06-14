@@ -3,6 +3,7 @@ package test.beforeTest;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class RecurringPaymentCreateandSearch {
     @Autowired
     LeaseCreateAndSearch _leaseCreateAndSearch ;
     public RecurringPaymentCreateandSearch(){
+
 
     }
 
@@ -165,6 +167,50 @@ public class RecurringPaymentCreateandSearch {
         }catch (Exception e){
             e.printStackTrace();
             return new LogMessage(false,"Exception occur");
+        }
+    }
+
+    public LogMessage deleteRecurringPayment(Map data){
+        try{
+            String  objectLocatorPrefix = "Common.RecurringPayment.";
+            UIBase uiBase = new UIBase(webDriver);
+            UIText uiText = new UIText(webDriver);
+            WebElement element = null;
+            LeaseCreateAndSearch leaseCreateAndSearch = _leaseCreateAndSearch;
+            //LeaseCreateAndSearch leaseCreateAndSearch = new LeaseCreateAndSearch(webDriver);
+            LogMessage log = leaseCreateAndSearch.searchLease(data);
+            if (log.isPassed()){
+                try{
+                    element = webDriver.findElement(By.partialLinkText((String)data.get("chargeName")));
+                }catch (Exception e){
+                    return new LogMessage(false,"No such RPR found");
+                }
+                LogMessage rprLog = uiBase.Click(element);
+                if (rprLog.isPassed()){
+                    UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS *PropertyConfig.NUMBER_OF_ITERATIONS);
+                    UtilKeywordScript.switchLastTab(webDriver);
+                    UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS );
+                    uiBase.Click(objectLocatorPrefix + "btnDelete");
+                    webDriver.switchTo().alert().accept();
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+                    webDriver.switchTo().alert().accept();
+                    LogMessage successLog = uiText.WaitForVisibilityOfText(objectLocatorPrefix + "grdRentalActivity","No items to display,120");
+                    if (successLog.isPassed()){
+                        return new LogMessage(true,"RPR remove successfully");
+                    }else{
+                        return new LogMessage(false," RPR remove fail");
+                    }
+
+                }else{
+                    return new LogMessage(false,"No such RPR found");
+                }
+
+            }else{
+                return new LogMessage(false,"No such lease found");
+            }
+
+        }catch (Exception ex){
+            return new LogMessage(false, "Exception occurred " + ex.getMessage());
         }
     }
 }
