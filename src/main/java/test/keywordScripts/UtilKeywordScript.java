@@ -161,8 +161,8 @@ public class UtilKeywordScript {
             uiText.SetText("Common.Login.txtPassword",password);
             uiText.SetText("Common.Login.txtClientID",client);
             uiBase.Click("Common.Login.btnLogIn");
-            uiText.WaitForVisibilityOfText("Common.Login.navDashboard","Dashboard");
-            LogMessage log = uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome");
+            LogMessage log = uiText.WaitForVisibilityOfText("Common.Login.navDashboard","Dashboard");
+            //LogMessage log = uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome");
             if (log.isPassed())
                 return new LogMessage(true,"Login successfully");
             return new LogMessage(false,"Login fail");
