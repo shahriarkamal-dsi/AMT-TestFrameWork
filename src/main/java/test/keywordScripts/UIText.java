@@ -135,12 +135,15 @@ public class UIText {
     }
     public LogMessage compareText(String objectLocator, String testData){
         try{
+            System.out.println(" UIText.compareText Mthod is executing... ");
+
             String[] splittedTestData=testData.split(",");
             String attribute = getText(objectLocator);
+
             if(attribute.equals(splittedTestData[0].trim()))
                 return new LogMessage(true, "Value is verified");
             else
-                return new LogMessage(false, "Value is not verified");
+                return new LogMessage(false, "Value is not verified"+ splittedTestData.toString()+attribute);
         }catch (Exception e){
             return new LogMessage(false,"Exception occurred" + e.getMessage());
         }

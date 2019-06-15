@@ -1,6 +1,7 @@
 package test.keywordScripts;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
@@ -49,6 +50,16 @@ public class UIInput {
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             jse.executeScript("arguments[0].value='" + value + "';",element);
             return new LogMessage(true,"Value set successfully");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur" + e.getMessage());
+        }
+    }
+
+    public LogMessage pressEnterAfterSetValue(String objectLocator){
+        try{
+            WebElement webElement = WebObjectSearch.getWebElement(webDriver, objectLocator);
+            webElement.sendKeys(Keys.ENTER);
+            return new LogMessage(true, "Information Entered Successfully");
         }catch (Exception e){
             return new LogMessage(false,"Exception occur" + e.getMessage());
         }

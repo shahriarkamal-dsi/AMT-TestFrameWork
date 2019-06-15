@@ -2,15 +2,9 @@ browser=firefox
 headless=false
 testingEmailAddress=testing4010@gmail.com
 testingEmailPassword=12345678amt
-<<<<<<< HEAD
-successfullTCrecipeints = sanjoy.mitra@outlook.com,mstrohm@amtdirect.com,mminarik@amtdirect.com,chuck.harshey@centricconsulting.com,ehsanulhaque.dsi@gmail.com,asifurrouf.dsi@gmail.com,psalimath@amtdirect.com,skour@amtdirect.com,shahriarkamal.dsi@gmail.com
-failedTCrecipeints = sanjoy.mitra@outlook.com,mstrohm@amtdirect.com,mminarik@amtdirect.com,chuck.harshey@centricconsulting.com,ehsanulhaque.dsi@gmail.com,asifurrouf.dsi@gmail.com,psalimath@amtdirect.com,skour@amtdirect.com,shahriarkamal.dsi@gmail.com
-passedReprtName = PassedTCReport.html
-=======
-successfullTCrecipeints = asifurrouf.dsi@gmail.com,asif.rouf@dsinnovators.com,ehsanulhaque.dsi@gmail.com,sanjoy.mitra@dsinnovators.com
-failedTCrecipeints = asifurrouf.dsi@gmail.com,ehsanulhaque.dsi@gmail.com,sanjoy.mitra@dsinnovators.com,asif.rouf@dsinnovators.com
+successfullTCrecipeints = rouf.asifur@outlook.com,asifurrouf.dsi@gmail.com
+failedTCrecipeints = rouf.asifur@outlook.com,asifurrouf.dsi@gmail
 passedReprtName =PassedTCReport.html
->>>>>>> f74d1089bd3348d4585e5c2304be553b1e0e8ca4
 passedReportDashboardName = Dashboard.png
 passedReportCategoryboardName = Category.png
 failedReprtName =FailedTCReport.html
