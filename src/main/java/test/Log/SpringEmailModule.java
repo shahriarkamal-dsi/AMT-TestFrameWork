@@ -1,5 +1,6 @@
 package test.Log;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -28,35 +29,48 @@ public class SpringEmailModule {
             String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
             String version = PropertyConfig.getPropertyValue("version");
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom("testing4010@gmail.com");
+            helper.setFrom("ehsanulaiub15@outlook.com");
             helper.setTo(recipeints);
             File logFile = new File("./Report/" + PropertyConfig.getPropertyValue("passedReprtName"));
-            File dashBoard = new File("./Report/PassedImage/Dashboard.png");
             File extentReportUserManual = new File("./Report/User Manual.pdf");
             helper.addAttachment("LogReport.html",logFile);
             helper.addAttachment("ReadMe.pdf",extentReportUserManual);
             helper.setSubject(getPassedEmailSubject());
-            helper.setText(
+            File dashBoard = new File("./Report/PassedImage/Dashboard.png");
+            if(dashBoard.exists() && !dashBoard.isDirectory()) { 
+                helper.setText(
                     "<html>"
                             + "<body>"
                             + "<div>Hi All,"
                             + "<div> <br> Please find below the Snapshot of the Automated Login Smoke Test executed against Production  <b>APP</b> Version: <b>" + version + " </b></div>"  + "<div>"
                             + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
-                            + "<div> <p> Attached a detailed script execution report in html format.In bottom there is a Theme Selector button. We used Black Theme Here."
+                            + "<div> <p> Attached a detailed script execution report in html format."
                             + "<br> Please use the attached ReadMe file for help with the dashboard elements."
-                            + "<br> "
-                            + "<br> "
-                            +"<br> <b><i>NOTE: </i></b> The attached html file might not render properly if viewed from any mobile device."
+                            +"<br> NOTE : The attached html file might NOT render properly if viewed from any mobile device."
                             +"<br> We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
                             + "<div>Thanks,</div>"
-                            + "<div><b>QA Automation Team</b></div>"
+                            + "<div>QA Automation Team</div>"
                             + "</div></body>"
                             + "</html>", true);
             // helper.addInline("rightSideImage",
-            //     new File("C:/images/SpringSource-logo.jpg"));
+            // new File("C:/images/SpringSource-logo.jpg"));
 
             helper.addInline("leftSideImage", dashBoard);
-
+            } else {
+                helper.setText(
+                        "<html>"
+                                + "<body>"
+                                + "<div>Hi All,"
+                                + "<div> <p> Attached a detailed script execution report in html format."
+                                + "<br> Please use the attached ReadMe file for help with the dashboard elements."
+                                +"<br> NOTE : The attached html file might NOT render properly if viewed from any mobile device."
+                                +"<br> We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
+                                + "<div>Thanks,</div>"
+                                + "<div>QA Automation Team</div>"
+                                + "</div></body>"
+                                + "</html>", true);
+                
+            }
             mailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -68,7 +82,7 @@ public class SpringEmailModule {
 
         String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = env.toUpperCase() + " -Automated Smoke Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
+        String Subject = env.toUpperCase() + " - Login Test Failed Scenarios  " + dateTime.getMonthValue()+"-" + dateTime.getDayOfMonth()+ "-" +dateTime.getYear();
         return Subject;
     }
 
@@ -76,7 +90,7 @@ public class SpringEmailModule {
 
         String env = TestPlan.getInstance().getCurrentTestEnvironment().getEnv() ;
         LocalDateTime dateTime = TestPlan.getInstance().getCreationTime();
-        String Subject = "Automated Smoke Test in "+ env.toUpperCase() +"   "+ dateTime.getMonthValue()+"." + dateTime.getDayOfMonth()+ "." +dateTime.getYear()+ "_" +dateTime.getHour()+ ":" +dateTime.getMinute()+ ":" +dateTime.getSecond();
+        String Subject = "Automated Login Smoke Test in Production " + dateTime.getMonthValue()+"." + dateTime.getDayOfMonth()+ "." +dateTime.getYear()+ "_" +dateTime.getHour()+ ":" +dateTime.getMinute()+ ":" +dateTime.getSecond();
         return Subject;
     }
 
