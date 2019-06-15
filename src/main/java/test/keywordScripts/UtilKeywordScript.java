@@ -338,7 +338,7 @@ public class UtilKeywordScript {
 
     public void takeSnapShot(String filepath, String fileName){
         try{
-            Shutterbug.shootPage(webDriver,ScrollStrategy.BOTH_DIRECTIONS).withName(fileName).save(filepath);
+            Shutterbug.shootPage(webDriver,ScrollStrategy.WHOLE_PAGE).withName(fileName).save(filepath);
         }catch (Exception ex){
             ex.printStackTrace();
         }
