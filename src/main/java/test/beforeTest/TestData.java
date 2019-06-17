@@ -60,10 +60,9 @@ public class TestData {
             String clientId = TestPlan.getInstance().getCurrentTestEnvironment().getClient();
             String environment = TestPlan.getInstance().getCurrentTestEnvironment().getEnv();
             List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
-            // This Data is for Test Data Creation >> manually Data create করতে চাইলে এখানে কমেন্ট করে দিলেই চলবে
+            // This Data is for Test Data Creation
             NotExecutedPreqData notExecutedPreqData =  testDataMapService.getNotExecutedPreqData(testCaseId,clientId,environment,100);
-            // NotExecutedPreqData notExecutedPreqData =  new NotExecutedPreqData();
-            // Dummy Object
+            // NotExecutedPreqData notExecutedPreqData =  new NotExecutedPreqData()
             PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ;
             List<Map> propertyRecords=notExecutedPreqData.getPropertyList().stream().map( e -> e.getPropertyMap()).collect(Collectors.toList());
            for(Map propertyRecord: propertyRecords){
