@@ -4,6 +4,8 @@ import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import test.Log.LogMessage;
@@ -86,8 +88,36 @@ public class SpaceCreateAndSearch {
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiText.SetText(objectLocatorPrefix+"endDate", (String) data.get("endDate"));
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-            List<WebElement> elemwnts = webDriver.findElements(By.xpath("//input[contains(@id,'__RENTABLE_SQFT')]/preceding-sibling::input"));
-            uiText.SetText(elemwnts.get(0), (String) data.get("rentableLease"));
+
+            WebElement rentableLease = (webDriver.findElements(By.xpath("//input[contains(@id,'__RENTABLE_SQFT')]/preceding-sibling::input"))).get(0);
+            rentableLease.sendKeys((String) data.get("rentableLease"));
+
+            /*
+            WebDriverWait waitForRentableLease = new WebDriverWait(webDriver, 5);
+            WebElement rentableLeaseAfterWait = waitForRentableLease.until(ExpectedConditions.visibilityOf(rentableLease));
+
+            uiBase.Click(rentableLeaseAfterWait);
+            rentableLeaseAfterWait.clear();
+            rentableLeaseAfterWait.sendKeys("AsifurRouf");
+            uiText.SetText(rentableLeaseAfterWait, (String) data.get("rentableLease"));
+
+            //uiText.SetText(rentableLease, (String) data.get("rentableLease"));
+
+            System.out.println(" uiText.SetText(rentableLeaseAfterWait, (String) data.get");
+
+
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            uiBase.Click(objectLocatorPrefix + "btnSave");
+
+            uiBase.Click(rentableLeaseAfterWait);
+            uiText.SetText(rentableLeaseAfterWait, (String) data.get("rentableLease"));
+
+            //uiText.SetText(rentableLease, (String) data.get("rentableLease"));
+
+            System.out.println(" uiText.SetText(rentableLeaseAfterWait, (String) data.get");
+             */
+
+
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiBase.Click(objectLocatorPrefix + "btnSave");
 
