@@ -92,32 +92,6 @@ public class SpaceCreateAndSearch {
             WebElement rentableLease = (webDriver.findElements(By.xpath("//input[contains(@id,'__RENTABLE_SQFT')]/preceding-sibling::input"))).get(0);
             rentableLease.sendKeys((String) data.get("rentableLease"));
 
-            /*
-            WebDriverWait waitForRentableLease = new WebDriverWait(webDriver, 5);
-            WebElement rentableLeaseAfterWait = waitForRentableLease.until(ExpectedConditions.visibilityOf(rentableLease));
-
-            uiBase.Click(rentableLeaseAfterWait);
-            rentableLeaseAfterWait.clear();
-            rentableLeaseAfterWait.sendKeys("AsifurRouf");
-            uiText.SetText(rentableLeaseAfterWait, (String) data.get("rentableLease"));
-
-            //uiText.SetText(rentableLease, (String) data.get("rentableLease"));
-
-            System.out.println(" uiText.SetText(rentableLeaseAfterWait, (String) data.get");
-
-
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-            uiBase.Click(objectLocatorPrefix + "btnSave");
-
-            uiBase.Click(rentableLeaseAfterWait);
-            uiText.SetText(rentableLeaseAfterWait, (String) data.get("rentableLease"));
-
-            //uiText.SetText(rentableLease, (String) data.get("rentableLease"));
-
-            System.out.println(" uiText.SetText(rentableLeaseAfterWait, (String) data.get");
-             */
-
-
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiBase.Click(objectLocatorPrefix + "btnSave");
 

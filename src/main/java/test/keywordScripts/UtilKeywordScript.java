@@ -267,10 +267,26 @@ public class UtilKeywordScript {
             return new LogMessage(false,"Cannot Navigate to add Lease Page"+e.getMessage());
 
         }
-
-
     }
 
+
+    public LogMessage selectSearchedLease(){
+        try {
+            UIBase uiBase=new UIBase(webDriver);
+            String objectlocatorPrefix= "MENU.QuickLink.";
+            if(uiBase.VerifyVisibleOnScreenTrue(objectlocatorPrefix+"addLeaseCode").isPassed()){
+                return new LogMessage(true,"Navigated to add Lease Page successful");
+            }
+            else if(uiBase.VerifyVisibleOnScreenTrue(objectlocatorPrefix+"addLease").isPassed()){
+                return new LogMessage(true,"Navigated to add Lease Page successful");
+            }
+
+            return new LogMessage(false,"Cannot Navigate to add Lease Page");
+        }catch (Exception e){
+            return new LogMessage(false,"Cannot Navigate to add Lease Page"+e.getMessage());
+
+        }
+    }
 
     public static boolean isItDigit(String value) {
         try {
