@@ -3,6 +3,8 @@ package test.keywordScripts;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import sun.rmi.runtime.Log;
+import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class UIScheduleTable {
+public class UIScheduleTable extends UtilKeywordScript {
     private WebDriver webDriver;
 
     public UIScheduleTable(WebDriver driver) {
@@ -59,7 +61,7 @@ public class UIScheduleTable {
     }
 
 
-    public List getAllSpecificColumnValues(String objectLocatorData,String clName) {
+    public List getAllSpecificColumnValues(String objectLocatorData, String clName) {
 
         try {
            List<Map> scheduleTable =  getAllvaluefromScheduleTable(objectLocatorData) ;
@@ -167,6 +169,55 @@ public class UIScheduleTable {
         return true ;
 
 
+    }
+
+    public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
+        try {
+            List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+             Long distinctValue =  list.stream().distinct().count() ;
+            return list.size() == distinctValue.intValue() ? new LogMessage(true, "no duplicacy value present in " + clName) :  new LogMessage(false, "duplicacy value present in " + clName) ;
+        } catch (Exception ex) {
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+
+    public LogMessage sumCheck(String objectLocatorData,String clName ) {
+        try {
+            List<String> list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+          List<String> values =    list.stream().map(value -> convertStringToNumber( (String) value)).collect(Collectors.toList()) ;
+          String lstValue = values.remove(values.size()-1) ;
+          double totalSum  ;
+          double value = 0;
+          for( String val : values) {
+              if(val.isEmpty())
+                  continue;
+              double d = Double.valueOf(val).doubleValue() ;
+              value += d ;
+          }
+          if(lstValue.isEmpty())
+              return new LogMessage(false, "total value is empty") ;
+          else {
+              double d = Double.valueOf(lstValue).doubleValue() ;
+              return value == d ? new LogMessage(true, "total sum is right"): new LogMessage(false, "total sum is not right") ;
+          }
+        } catch (Exception ex) {
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+
+    public LogMessage  checkClValue(String objectLocatorData,String testData ) {
+        try {
+
+            String[] splits = testData.split(",") ;
+            List<String> list =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+            String value = list.get(Integer.valueOf(splits[1]).intValue());
+          return  value.equals(splits[2]) ? new LogMessage(true, "values are equals") :  new LogMessage(false, "values are not equals");
+
+        } catch (Exception ex) {
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
     }
 
     public void test(String object) {
