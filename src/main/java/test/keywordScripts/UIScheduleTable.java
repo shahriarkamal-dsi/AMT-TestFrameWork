@@ -171,6 +171,25 @@ public class UIScheduleTable extends UtilKeywordScript {
 
     }
 
+    public LogMessage columnNameValidation (String objectLocatorData, String testData){
+
+        List<String> splitTestDatas= Arrays.asList(testData.split(","));
+        List<String> ScheduleTableColumnNames = getScheduleTablecolumnNames(objectLocatorData);
+
+        System.out.println("splitTestDatas :"+splitTestDatas);
+        System.out.println("ScheduleTableColumnNames :"+ScheduleTableColumnNames);
+        System.out.println("Split Test Data :"+splitTestDatas);
+
+        boolean Contains = ScheduleTableColumnNames.containsAll(splitTestDatas);
+        System.out.println("Boolean Contains Value :"+ Contains);
+
+        if(Contains){
+            return new LogMessage(true,"Column Names have been Validated");
+        }else{
+            return new LogMessage(false,"Column Names Have not Validated");
+        }
+    }
+    
     public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
         try {
             List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
