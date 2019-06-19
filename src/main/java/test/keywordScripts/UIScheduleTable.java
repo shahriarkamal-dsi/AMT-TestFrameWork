@@ -1,21 +1,15 @@
 package test.keywordScripts;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
 import test.Log.LogMessage;
-import test.beforeTest.TestData;
 import test.objectLocator.WebObjectSearch;
-import test.utility.PropertyConfig;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Collection;
 
-public class UIScheduleTable {
+public class UIScheduleTable extends UtilKeywordScript {
     private WebDriver webDriver;
 
     public UIScheduleTable(WebDriver driver) {
@@ -25,7 +19,6 @@ public class UIScheduleTable {
     public UIScheduleTable(){
 
     }
-
 
     public List<Map> getAllvaluefromScheduleTable(String objectLocatorData ) {
         try {
@@ -63,7 +56,7 @@ public class UIScheduleTable {
     }
 
 
-    public List getAllSpecificColumnValues(String objectLocatorData,String clName) {
+    public List getAllSpecificColumnValues(String objectLocatorData, String clName) {
 
         try {
             List<Map> scheduleTable =  getAllvaluefromScheduleTable(objectLocatorData) ;
@@ -173,10 +166,6 @@ public class UIScheduleTable {
 
     }
 
-    /*
-    * Checking Column Data Presence in getScheduleTablecolumnNames arraylist
-    *
-    * */
     public LogMessage columnNameValidation (String objectLocatorData, String testData){
 
         List<String> splitTestDatas= Arrays.asList(testData.split(","));
@@ -193,6 +182,59 @@ public class UIScheduleTable {
             return new LogMessage(true,"Column Names have been Validated");
         }else{
             return new LogMessage(false,"Column Names Have not Validated");
+        }
+    }
+
+    public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
+        try {
+            List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+            Long distinctValue =  list.stream().distinct().count() ;
+            return list.size() == distinctValue.intValue() ? new LogMessage(true, "no duplicacy value present in " + clName) :  new LogMessage(false, "duplicacy value present in " + clName) ;
+        } catch (Exception ex) {
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+
+    public LogMessage sumCheck(String objectLocatorData,String clName ) {
+        try {
+            List<String> list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+            List<String> values =    list.stream().map(value -> convertStringToNumber( (String) value)).collect(Collectors.toList()) ;
+            String lstValue = values.remove(values.size()-1) ;
+            double totalSum  ;
+            double value = 0;
+            for( String val : values) {
+                if(val.isEmpty())
+                    continue;
+                double d = Double.valueOf(val).doubleValue() ;
+                value += d ;
+            }
+            if(lstValue.isEmpty())
+                return new LogMessage(false, "total value is empty") ;
+            else {
+                double d = Double.valueOf(lstValue).doubleValue() ;
+                return value == d ? new LogMessage(true, "total sum is right"): new LogMessage(false, "total sum is not right") ;
+            }
+        } catch (Exception ex) {
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+
+    public LogMessage  checkClValue(String objectLocatorData,String testData ) {
+        try {
+            /*
+            * splits[0] = columnName
+            * splits[1] = ListIndexOfColumn
+            * splits[2] = Value of the column
+            * */
+            String[] splits = testData.split(",") ;
+            List<String> list =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+            String value = list.get(Integer.valueOf(splits[1]).intValue());
+            return  value.equals(splits[2]) ? new LogMessage(true, "values are equals") :  new LogMessage(false, "values are not equals");
+
+        } catch (Exception ex) {
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
         }
     }
 
@@ -218,58 +260,17 @@ public class UIScheduleTable {
             return new LogMessage(true,"No Duplicate in Columns "+ columnName);
         }
     }
-    public LogMessage checkDuplicacyInColumnValues (String objectLocatorData, String testData){
-
-        System.out.println("checkDuplicacyInColumnValues:");
-
-        boolean duplicacy = false;
-        List<String> columnNames= Arrays.asList(testData.split(","));
-        List<String> columnValue;
-        ListIterator<String> columnNameIterator = columnNames.listIterator();
-        //List<String> ScheduleTableColumnNames = getScheduleTablecolumnNames(objectLocatorData);
-
-        System.out.println("checkDuplicacyInColumnValues    splitTestDatas :"+columnNames);
-        System.out.println("checkDuplicacyInColumnValues columnNameIterator :"+columnNameIterator);
-
-        while (columnNameIterator.hasNext()) {
-            String columnName = columnNameIterator.next();
-            System.out.println("Checking Duplicacy In : "+ columnName);
-            columnValue = getAllSpecificColumnValues(objectLocatorData,columnName);
-            System.out.println("columnValue" + columnValue);
-            Set<String> set = new HashSet<String>(columnValue);
-            if(set.size() < columnValue.size()){
-                /* There are duplicates */
-                duplicacy = true;
-                System.out.println("There is duplicates in :"+columnName);
-
-            }else{
-                duplicacy = false;
-            }
-        }
-
-        if(duplicacy){
-            return new LogMessage(false,"Duplicate Exists");
-        }else{
-            return new LogMessage(true,"No Duplicate in Columns");
-        }
-    }
-
 
     public void test(String object) {
         try {
-            System.out.println("ObjectLocator :" + object);
-            System.out.println("getAllSpecificColumnValues Method Data:");
-            System.out.println( getAllSpecificColumnValues(object,"JE Posting Period"));
+            System.out.println( getAllSpecificColumnValues(object,"ROU – Base Asset Rollover Amortization"));
             System.out.println("............................................") ;
-            System.out.println("getSingleRowfromScheduleTable Method Data:");
             System.out.println( getSingleRowfromScheduleTable(object,"# of Periods","2"));
             System.out.println("............................................") ;
-            System.out.println("getScheduleTablecolumnNames Method Data:");
             System.out.println( getScheduleTablecolumnNames(object));
             System.out.println("............................................") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
         }
     }
-
 }
