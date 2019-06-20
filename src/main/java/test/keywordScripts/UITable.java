@@ -532,7 +532,7 @@ public class UITable extends  UtilKeywordScript{
             if(!row.containsKey(columnName))
                 return new LogMessage( false, "Column name is not present") ;
             String columnValue = row.get(columnName).getText() ;
-            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnName ;
+            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnValue ;
             TestPlan.getInstance().setStoreData(varName,columnValue);
 
             return new LogMessage( true, "Column value is stored") ;
@@ -630,7 +630,7 @@ public class UITable extends  UtilKeywordScript{
         }
     }
 
-    public LogMessage StoreLastowIncreasedDateValue(String objectLocator,String testData){
+    public LogMessage StoreLastRowIncreasedDateValue(String objectLocator,String testData){
         try {
             SimpleDateFormat dateFormat =   new SimpleDateFormat("MM/yyyy") ;
             if(!validateTestData(testData,2)) {

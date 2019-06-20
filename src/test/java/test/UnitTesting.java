@@ -8,9 +8,7 @@ import test.coreModule.*;
 
 import test.Log.EmailSend;
 import test.driver.DriverFactory;
-import test.keywordScripts.UIBase;
-import test.keywordScripts.UITree;
-import test.keywordScripts.UtilKeywordScript;
+import test.keywordScripts.*;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
 import test.Log.LogMessage;
@@ -263,6 +261,15 @@ public class UnitTesting {
         recurringPaymentCreateandSearch.deleteRecurringPayment(data);
 
     }*/
+
+    @Test
+    public void Test(){
+        //WebDriver driver = DriverFactory.createDriver("chrome", false);
+
+        //UtilKeywordScript.convertStringToNumber("$3,264.04");
+        UIBase uiBase = new UIBase();
+    }
+
 
 
 }

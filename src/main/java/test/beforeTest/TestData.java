@@ -62,7 +62,7 @@ public class TestData {
             String environment = TestPlan.getInstance().getCurrentTestEnvironment().getEnv();
             List<LogMessage> logMessages = new ArrayList<LogMessage>() ;
             NotExecutedPreqData notExecutedPreqData =  testDataMapService.getNotExecutedPreqData(testCaseId,clientId,environment,100);
-           // NotExecutedPreqData notExecutedPreqData =  new NotExecutedPreqData();
+            //NotExecutedPreqData notExecutedPreqData =  new NotExecutedPreqData();
             PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ;
             List<Map> propertyRecords=notExecutedPreqData.getPropertyList().stream().map( e -> e.getPropertyMap()).collect(Collectors.toList());
            for(Map propertyRecord: propertyRecords){

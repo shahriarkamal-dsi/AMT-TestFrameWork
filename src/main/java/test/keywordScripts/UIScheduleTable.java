@@ -3,14 +3,10 @@ package test.keywordScripts;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import sun.rmi.runtime.Log;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UIScheduleTable extends UtilKeywordScript {

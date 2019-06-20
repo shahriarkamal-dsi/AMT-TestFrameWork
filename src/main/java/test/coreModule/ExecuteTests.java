@@ -240,7 +240,7 @@ public class ExecuteTests {
            if(!prerequiste.isPresent()) {
                return new ArrayList<LogMessage>()
                {{
-                   add(new LogMessage(false,"no valid prequisite found for " + testStep.getFieldName()));
+                   add(new LogMessage(false,"no valid prerquisite found for " + testStep.getFieldName()));
                }};
            }
            if(isPrerequisite)

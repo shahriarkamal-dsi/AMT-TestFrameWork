@@ -1,5 +1,7 @@
 package test.keywordScripts;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.hibernate.dialect.SybaseAnywhereDialect;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +15,7 @@ import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
+import java.net.StandardSocketOptions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -270,7 +273,7 @@ public class UIBase {
                 enable=true;
             else if(Optional.ofNullable(webElement.getAttribute("aria-disabled")).orElse("").equals("false"))
                 enable=true;
-            String logMessage=enable?"Element is enabled":"Element is enabled";
+            String logMessage=enable?"Element is enabled":"Element is not enabled";
             return new LogMessage(enable,logMessage);
 
         }catch (Exception e){
@@ -358,5 +361,6 @@ public class UIBase {
             return new LogMessage(false, "Exception occurred in compare  " + ex.getMessage());
         }
     }
+
 
 }
