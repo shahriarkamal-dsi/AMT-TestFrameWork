@@ -162,7 +162,6 @@ public class UtilKeywordScript {
             uiText.SetText("Common.Login.txtClientID",client);
             uiBase.Click("Common.Login.btnLogIn");
             LogMessage log = uiText.WaitForVisibilityOfText("Common.Login.navDashboard","Dashboard");
-            //LogMessage log = uiBase.VerifyPageLoadedTrue("Common.Homepage.pgAMTHome");
             if (log.isPassed())
                 return new LogMessage(true,"Login successfully");
             return new LogMessage(false,"Login fail");
@@ -288,6 +287,7 @@ public class UtilKeywordScript {
     public static String convertStringToNumber(String value) {
         try {
             Double digit  =  Double.parseDouble(value.replaceAll("[^\\d.]", ""));
+            System.out.println(String.valueOf(digit));
             return String.valueOf(digit) ;
 
         } catch (Exception ex) {
