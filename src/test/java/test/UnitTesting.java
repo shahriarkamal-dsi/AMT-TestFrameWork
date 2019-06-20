@@ -268,7 +268,6 @@ public class UnitTesting {
 
         //UtilKeywordScript.convertStringToNumber("$3,264.04");
         UIBase uiBase = new UIBase();
-        uiBase.compareGraterThanZero("$00000");
     }
 
 

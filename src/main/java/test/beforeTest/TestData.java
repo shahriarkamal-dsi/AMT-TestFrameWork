@@ -174,5 +174,9 @@ public class TestData {
 
     }
 
+    public void  removePreqExecutionHistory(long preqId,String client, String env) {
+        preqExecutionHistoryService.removePreqExecutionHistory(preqExecutionHistoryService.getPreqExecutionHistory(preqId,client,env));
+    }
+
 }
 
