@@ -238,6 +238,24 @@ public class UIScheduleTable extends UtilKeywordScript {
         }
     }
 
+    public LogMessage  checkClValueZeroOrNearZero(String objectLocatorData,String testData ) {
+        try {
+            /*
+             * splits[0] = columnName
+             * splits[1] = ListIndexOfColumn
+             * splits[2] = Value of the column
+             * As Last Number Need to Zero We have Put 0 [Zero]
+             * */
+            String[] splits = testData.split(",") ;
+            List<String> list =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+            String value = list.get(Integer.valueOf(splits[1]).intValue());
+            double roundValue = Math.round(Float.parseFloat(value));
+            return  (Double.toString(roundValue)).equals(splits[2]) ? new LogMessage(true, "values are equals") :  new LogMessage(false, "values are not equals");
+
+        } catch (Exception ex) {
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
     public LogMessage duplicacyCheck (String scheduleTableLocator, String columnName){
 
         System.out.println("checkDuplicacyInSingleColumnValues:");
