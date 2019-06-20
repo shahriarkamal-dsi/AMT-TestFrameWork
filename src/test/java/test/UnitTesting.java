@@ -1,18 +1,14 @@
 package test;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import test.Log.CreateLog;
-import test.beforeTest.LeaseCreateAndSearch;
-import test.beforeTest.PropertyCreateAndSearch;
-import test.beforeTest.SpaceCreateAndSearch;
-import test.beforeTest.TestData;
+import test.beforeTest.*;
 import test.coreModule.*;
 
 import test.Log.EmailSend;
 import test.driver.DriverFactory;
-import test.keywordScripts.UIBase;
-import test.keywordScripts.UITree;
-import test.keywordScripts.UtilKeywordScript;
+import test.keywordScripts.*;
 import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.OrRead;
 import test.Log.LogMessage;
@@ -21,11 +17,9 @@ import test.utility.ReadExcel;
 
 import java.io.File;
 import java.io.SerializablePermission;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -242,6 +236,40 @@ public class UnitTesting {
         assertTrue(m.get("s").equals("2"));
 
     }
+    @Test
+    public void checkAddDate() throws ParseException {
+        SimpleDateFormat dateFormat =   new SimpleDateFormat("MM/yyyy") ;
+        Date lastDate =  dateFormat.parse("12/2015");
+        Calendar cal =  Calendar.getInstance() ;
+        cal.setTime(lastDate);
+        cal.add(Calendar.MONTH, 1);
+       String date = dateFormat.format(cal.getTime()) ;
+       assertTrue(date.equals("01/2016"));
+    }
+
+    /*@Test
+    public void deleteRPR(){
+        WebDriver driver = DriverFactory.createDriver("chrome", false);
+        new UtilKeywordScript(driver).login(PropertyConfig.getLoginUrl(),PropertyConfig.getPropertyValue("userName"),PropertyConfig.getPropertyValue("password"),PropertyConfig.getPropertyValue("client"));
+
+        Map data = new HashMap<String, String>();
+        data.put("LeaseName","KM FASB Test 1");
+        data.put("chargeName","BRN");
+
+        RecurringPaymentCreateandSearch recurringPaymentCreateandSearch = new RecurringPaymentCreateandSearch(driver);
+        //recurringPaymentCreateandSearch.setWebDriver(driver);
+        recurringPaymentCreateandSearch.deleteRecurringPayment(data);
+
+    }*/
+
+    @Test
+    public void Test(){
+        //WebDriver driver = DriverFactory.createDriver("chrome", false);
+
+        //UtilKeywordScript.convertStringToNumber("$3,264.04");
+        UIBase uiBase = new UIBase();
+    }
+
 
 
 }

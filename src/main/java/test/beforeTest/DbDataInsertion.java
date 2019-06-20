@@ -278,5 +278,6 @@ public class DbDataInsertion {
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
         //return readExcel.read(sheetName);
         return readExcel.read(sheetName).stream().filter(row -> row.get("ExecutionFlag").toString().toLowerCase().equals("yes")).collect(Collectors.toList());
+
     }
 }

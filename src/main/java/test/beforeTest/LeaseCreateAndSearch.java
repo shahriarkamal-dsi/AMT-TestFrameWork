@@ -287,26 +287,26 @@ public class LeaseCreateAndSearch {
             return logMessages;
         }
     }
-     public LogMessage isRecurExistsWithinLease(String recurObjectLocator,Map recur){
-            try{
-                UIPanel uiPanel = new UIPanel(webDriver);
-                String chargetype=(String) recur.get("chargeType");
-                String  objectLocatorPrefix = "Common.Lease.";
-                String columnValue1 = (String)recur.get("chargeType");
-                String columnValue2 = (String)recur.get("spaceInfo");
-                UITable uiTable=new UITable(webDriver);
-                LogMessage logMessage = uiTable.VerifyCorrespondingColumnDataTrue(objectLocatorPrefix + "tbRPayment","Type,"+columnValue1.split("-")[0].trim() +",Space,"+columnValue2);
-                if(logMessage.isPassed()) {
-                    return new LogMessage(true, "Recurring Payment with charge type " + recur.get("chargeType") + " found under lease named " + recur.get("LeaseName"));
-                }
-                else {
-                    return new LogMessage(false, "Recurring Payment with charge type " + recur.get("chargeType") + " was not found under lease named " + recur.get("LeaseName"));
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-                return new LogMessage(false, "Exception occured in Recurring Payment with charge type " + recur.get("chargeType") + " was not found under lease named " + recur.get("LeaseName")+e.getMessage());
+    public LogMessage isRecurExistsWithinLease(String recurObjectLocator,Map recur){
+        try{
+            UIPanel uiPanel = new UIPanel(webDriver);
+            String chargetype=(String) recur.get("chargeType");
+            String  objectLocatorPrefix = "Common.Lease.";
+            String columnValue1 = (String)recur.get("chargeType");
+            String columnValue2 = (String)recur.get("spaceInfo");
+            UITable uiTable=new UITable(webDriver);
+            LogMessage logMessage = uiTable.VerifyCorrespondingColumnDataTrue(objectLocatorPrefix + "tbRPayment","Type,"+columnValue1.split("-")[0].trim() +",Space,"+columnValue2);
+            if(logMessage.isPassed()) {
+                return new LogMessage(true, "Recurring Payment with charge type " + recur.get("chargeType") + " found under lease named " + recur.get("LeaseName"));
             }
-     }
+            else {
+                return new LogMessage(false, "Recurring Payment with charge type " + recur.get("chargeType") + " was not found under lease named " + recur.get("LeaseName"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false, "Exception occured in Recurring Payment with charge type " + recur.get("chargeType") + " was not found under lease named " + recur.get("LeaseName")+e.getMessage());
+        }
+    }
     public List<LogMessage> deleteLeases(String propertyName,String propertyCode, List<Map> leases){
         UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
         List<LogMessage> logMessages=new ArrayList<>();

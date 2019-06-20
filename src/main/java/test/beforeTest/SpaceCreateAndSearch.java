@@ -125,7 +125,7 @@ public class SpaceCreateAndSearch {
             String  objectLocatorPrefix = "Common.Property.";
             UIPanel uiPanel = new UIPanel(webDriver);
             UILink uiLink = new UILink(webDriver);
-            PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ; 
+            PropertyCreateAndSearch propertyCreateAndSearch = _propertyCreateAndSearch ;
 
             LogMessage navigationLog = propertyCreateAndSearch.navigateToProperty(data);
             if (!navigationLog.isPassed())

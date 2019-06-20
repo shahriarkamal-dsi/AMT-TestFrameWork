@@ -1,5 +1,6 @@
 package test.keywordScripts;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.logging.LogManager;
 
 import test.keywordScripts.UtilDate;
+import test.utility.PropertyConfig;
 
 public class UtilRevision {
 
@@ -36,40 +38,186 @@ public class UtilRevision {
 
             String objectlocatorPrefix = "FASB.FIProcess.";
             UIText uiText = new UIText(webDriver);
-            UILink uiLink = new UILink(webDriver);
             UIBase uiBase = new UIBase(webDriver);
             UIPanel uiPanel = new UIPanel(webDriver);
-            LogMessage subLog = uiText.WaitForVisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete,60");
+            uiBase.refreshPage();
+            LogMessage subLog = uiText.WaitForVisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete,120");
+            subLog.setLogMessage(" % Complete - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
+
             subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processInfoPanel","Position in Queue:");
+            subLog.setLogMessage(" Position in Queue - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
+
             WebElement element = WebObjectSearch.getWebElement(webDriver, objectlocatorPrefix + "queueCount");
             String countString = element.getAttribute("textContent");
             subLog = uiBase.compareGreaterThanValue(countString + ",0");
+            subLog.setLogMessage("Queue Count - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
-            //subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkContinueWithProcess");
+
+            subLog = uiBase.CustomEnabledFalse(objectlocatorPrefix + "lnkContinueWithProcess");
+            subLog.setLogMessage("Continue with process button - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
-            //subLog = uiLink.verifyLinkEnabledFalse(objectlocatorPrefix + "lnkPrint");
+
+            subLog = uiBase.CustomEnabledFalse(objectlocatorPrefix + "btnPrint");
+            subLog.setLogMessage("Print button - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
-            //subLog = uiLink.verifyLinkEnabledTrue(objectlocatorPrefix + "lnkCancel");
+
+            subLog = uiBase.CustomEnabledTrue(objectlocatorPrefix + "btnCancel");
+            subLog.setLogMessage("Cancel button - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
-            subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processCount","Ready To Process 0 Revisions");
+
+            subLog = uiText.WaitForInvisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete ,900");
+            subLog.setLogMessage("% Complete - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
-            subLog = uiText.WaitForInvisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete ,60");
-            log.addSubLogMessage(subLog);
+
             if (subLog.isPassed()){
                 log.setPassed(true);
                 log.setLogMessage("Processing done");
                 return log;
             }
             log.setPassed(false);
-            log.setLogMessage("Processing fail");
+            log.setLogMessage("Processing is not complete in 15m ");
             return log;
         }catch (Exception e){
             log.setLogMessage("Exception occur");
             return log;
         }
     }
+
+    public LogMessage continueProcess(){
+        try{
+            String objectlocatorPrefix = "FASB.FIProcess.";
+            UIText uiText = new UIText(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
+            UIPanel uiPanel = new UIPanel(webDriver);
+
+            LogMessage log = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processInfoPanel","Processing Done");
+            if (log.isPassed()){
+                LogMessage subLog = uiBase.CustomEnabledTrue(objectlocatorPrefix + "lnkContinueWithProcess");
+                if (subLog.isPassed()){
+                    LogMessage ClickLog = uiBase.Click(objectlocatorPrefix + "lnkContinueWithProcess");
+                    if (ClickLog.isPassed()){
+                        return new LogMessage(true, "Click post button successfully");
+                    }
+                }else {
+                    uiBase.Click(objectlocatorPrefix + "btnCancel");
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+                    webDriver.switchTo().alert().accept();
+                    return new LogMessage(false,"Continue and process button is not enable. So cancel the process");
+                }
+            }else {
+                uiBase.Click(objectlocatorPrefix + "btnCancel");
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+                webDriver.switchTo().alert().accept();
+                return new LogMessage(false,"Continue process fail and cancel the process");
+            }
+
+            return new LogMessage(false, "Continue process fail");
+
+
+        }catch (Exception ex){
+            return new LogMessage(false,"Exception occur " + ex.getMessage());
+        }
+    }
+
+    public LogMessage validateRevisionCalculation(){
+        LogMessage log = new LogMessage();
+        try{
+
+            String objectlocatorPrefix = "FASB.FIProcess.";
+            UIText uiText = new UIText(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
+            UIPanel uiPanel = new UIPanel(webDriver);
+            LogMessage subLog = uiText.WaitForVisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete,120");
+            subLog.setLogMessage(" % Complete - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            subLog = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processInfoPanel","Position in Queue:");
+            subLog.setLogMessage(" Position in Queue - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            WebElement element = WebObjectSearch.getWebElement(webDriver, objectlocatorPrefix + "queueCount");
+            String countString = element.getAttribute("textContent");
+            subLog = uiBase.compareGreaterThanValue(countString + ",0");
+            subLog.setLogMessage("Queue Count - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            subLog = uiBase.CustomEnabledFalse(objectlocatorPrefix + "btnPost");
+            subLog.setLogMessage("Post button - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            subLog = uiBase.CustomEnabledFalse(objectlocatorPrefix + "btnTransactionReport");
+            subLog.setLogMessage("Transaction Report button - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            subLog = uiBase.CustomEnabledFalse(objectlocatorPrefix + "btnJEReport");
+            subLog.setLogMessage("JE Report button - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            subLog = uiBase.CustomEnabledFalse(objectlocatorPrefix + "btnFXJEReport");
+            subLog.setLogMessage("FX JE Report button - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            subLog = uiBase.CustomEnabledTrue(objectlocatorPrefix + "btnCancel");
+            subLog.setLogMessage("Cancel button - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            subLog = uiText.WaitForInvisibilityOfText(objectlocatorPrefix + "processInfoPanel","% Complete ,900");
+            subLog.setLogMessage("% Complete - " + subLog.getLogMessage());
+            log.addSubLogMessage(subLog);
+
+            if (subLog.isPassed()){
+                log.setPassed(true);
+                log.setLogMessage("Processing Complete for post");
+                return log;
+            }
+            log.setPassed(false);
+            log.setLogMessage("Processing is not complete for post in 15m");
+            return log;
+        }catch (Exception e){
+            log.setLogMessage("Exception occur");
+            return log;
+        }
+    }
+
+    public LogMessage postRevision(){
+        try{
+            String objectlocatorPrefix = "FASB.FIProcess.";
+            UIText uiText = new UIText(webDriver);
+            UIBase uiBase = new UIBase(webDriver);
+            UIPanel uiPanel = new UIPanel(webDriver);
+
+            LogMessage log = uiPanel.VerifyPanelContentTrue(objectlocatorPrefix + "processInfoPanel","Processing Done");
+            if (log.isPassed()){
+                LogMessage subLog = uiBase.CustomEnabledTrue(objectlocatorPrefix + "btnPost");
+                if (subLog.isPassed()){
+                    LogMessage ClickLog = uiBase.Click(objectlocatorPrefix + "btnPost");
+                    if (ClickLog.isPassed()){
+                        return new LogMessage(true, "Click post button successfully");
+                    }
+                }else {
+                    uiBase.Click(objectlocatorPrefix + "btnCancel");
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+                    webDriver.switchTo().alert().accept();
+                    return new LogMessage(false,"Post button is not enable. So cancel the process");
+                }
+
+            }else {
+                uiBase.Click(objectlocatorPrefix + "btnCancel");
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+                webDriver.switchTo().alert().accept();
+                return new LogMessage(false,"Revision process fail and cancel the process");
+            }
+
+            return new LogMessage(false, "Post revision fail");
+
+
+        }catch (Exception ex){
+            return new LogMessage(false,"Exception occur " + ex.getMessage());
+        }
+    }
+
 
     public LogMessage VerifyNoOfPeriodsInRevision(String objectLocator, String testData){
         try{
@@ -237,6 +385,45 @@ public class UtilRevision {
 
         }catch (Exception e){
             return new LogMessage(false,"Exception occurred"+e.getMessage());
+        }
+    }
+
+    public LogMessage setPostPeriod(String objectLocator,String testData){
+
+        UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+        UIText uiText = new UIText(webDriver);
+        UtilDate utilDate = new UtilDate(webDriver);
+        String postperiodDate = "";
+        try{
+            /*if(!utilKeywordScript.validateTestData(testData,2)) {
+                return new LogMessage(false, "Test data invalid");
+            }*/
+            String[] data = testData.split(",");
+            String lastPeriod = data[0];
+            String postPeriod = data[1];
+
+            WebElement userWeb = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            if(null == userWeb )
+                return new LogMessage(false,"Web element is not found");
+
+            if (!lastPeriod.isEmpty()){
+                postperiodDate = utilDate.getIncreasedDate(lastPeriod);
+                LogMessage setTextlog = uiText.SetText(objectLocator,postperiodDate);
+                if (setTextlog.isPassed())
+                    return new LogMessage(true," Period date set successfully");
+
+                return new LogMessage(false, "Period date set fail");
+
+            }else{
+                postperiodDate = utilDate.changeDateFormat(postPeriod);
+                LogMessage log = uiText.SetText(objectLocator,postperiodDate);
+                if(log.isPassed())
+                    return new LogMessage(true,"Period date set successfully");
+
+                return new LogMessage(false, "Period date set fail");
+            }
+        }catch (Exception ex){
+            return new LogMessage(false,"Exception occur " + ex.getMessage());
         }
     }
 }

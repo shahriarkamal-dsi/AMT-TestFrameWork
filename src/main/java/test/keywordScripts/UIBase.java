@@ -1,5 +1,7 @@
 package test.keywordScripts;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.hibernate.dialect.SybaseAnywhereDialect;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +15,7 @@ import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
+import java.net.StandardSocketOptions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +78,7 @@ public class UIBase {
 
     public LogMessage VerifyPageLoadedTrue(String objectlocator) {
         try {
+            UIText uiText = new UIText(webDriver);
             UtilKeywordScript.switchLastTab(webDriver);
 
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectlocator);
@@ -84,10 +88,18 @@ public class UIBase {
             for(String split:splittedObjectData){
                 matchString=matchString+split+"(.*)";
             }
-            if(webDriver.getCurrentUrl().matches(matchString)) {
-                return new LogMessage(true,"page is loaded successfully");
+            if (webDriver.getCurrentUrl().contains("/Home")){
+                LogMessage log = uiText.WaitForVisibilityOfText("Common.Login.navDashboard","Dashboard");
+                if (log.isPassed()){
+                    return new LogMessage(true, "Home page loaded successfully");
+                }else {
+                    return new LogMessage(false, "Home page is not loaded");
+                }
+            }
+            else if(webDriver.getCurrentUrl().matches(matchString)) {
+                return new LogMessage(true,"Page is loaded successfully");
             } else {
-                return new LogMessage(false,"page is not loaded");
+                return new LogMessage(false,"Page is not loaded");
             }
         } catch (Exception ex) {
             return new LogMessage(false,"Exception occur:- " + ex.getMessage());
@@ -230,7 +242,7 @@ public class UIBase {
         try{
             UITable uiTable = new UITable(webDriver);
             UIBase uiBase = new UIBase(webDriver);
-            for (int i = 0; i<10; i++){
+            for (int i = 0; i<15; i++){
                 WebElement element = webDriver.findElement(By.xpath("//*[@title='Refresh']"));
                 uiBase.Click(element);
                 WaitingForPageLoad();
@@ -242,7 +254,7 @@ public class UIBase {
                     return new LogMessage(true,"Revision found");
                 }
             }
-            return new LogMessage(false,"Revision is not found");
+            return new LogMessage(false,"Revision is not found in 15 minutes");
         }catch (Exception e){
             return new LogMessage(false,"Exception occur " + e.getMessage());
         }
@@ -261,7 +273,7 @@ public class UIBase {
                 enable=true;
             else if(Optional.ofNullable(webElement.getAttribute("aria-disabled")).orElse("").equals("false"))
                 enable=true;
-            String logMessage=enable?"Element is enabled":"Element is enabled";
+            String logMessage=enable?"Element is enabled":"Element is not enabled";
             return new LogMessage(enable,logMessage);
 
         }catch (Exception e){
@@ -349,5 +361,6 @@ public class UIBase {
             return new LogMessage(false, "Exception occurred in compare  " + ex.getMessage());
         }
     }
+
 
 }

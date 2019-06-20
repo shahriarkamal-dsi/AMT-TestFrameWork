@@ -39,7 +39,7 @@ public class LogReport {
                     if(!subLogMessages.isEmpty())
                     {
                         for(LogMessage subLogMessage: subLogMessages) {
-                            createLog.writeLog(logName, logMessage);
+                            createLog.writeLog(logName, subLogMessage);
                             if (!testCase.isPassed())
                                 createFailedLog.writeLog(logName, logMessage);
                         }
