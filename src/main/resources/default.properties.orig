@@ -2,19 +2,17 @@ browser=firefox
 headless=false
 testingEmailAddress=testing4010@gmail.com
 testingEmailPassword=12345678amt
-successfullTCrecipeints = rouf.asifur@outlook.com,asifurrouf.dsi@gmail.com,
-failedTCrecipeints = rouf.asifur@outlook.com,asifurrouf.dsi@gmail.com
-passedReprtName = PassedTCReport.html
+successfullTCrecipeints = rouf.asifur@outlook.com,asifurrouf.dsi@gmail.com
+failedTCrecipeints = rouf.asifur@outlook.com,asifurrouf.dsi@gmail
+passedReprtName =PassedTCReport.html
 passedReportDashboardName = Dashboard.png
 passedReportCategoryboardName = Category.png
 failedReprtName =FailedTCReport.html
-<<<<<<< HEAD
-loginUrl = https://uat.testamt.com/
-homeUrl = https://uat.testamt.com/Home/Index
-env=uat
+loginUrl = https://app.amtdirect.com/
+homeUrl = https://app.amtdirect.com/Home/Index
+env=app
 version = 2.69.22.2018 04252019.1
-
 dataCreate = lease
 userName = Sanjoy01
-password = amtDirect01!
+password = P@ssC0de
 client = 201480

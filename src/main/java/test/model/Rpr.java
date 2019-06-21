@@ -35,6 +35,9 @@ public class Rpr {
     @Column(name="amount" , length = 30)
     private String amount ;
 
+    @Column(name="fiscal_year" , length = 30)
+    private String fiscalYear ;
+
     public Rpr() {
     }
 
@@ -97,6 +100,13 @@ public class Rpr {
     public String getAmount() { return amount; }
 
     public void setAmount(String amount) { this.amount = amount; }
+    public String getFiscalYear() {
+        return fiscalYear;
+    }
+
+    public void setFiscalYear(String fiscalYear) {
+        this.fiscalYear = fiscalYear;
+    }
 
     public Map<String,String> getRprMap(){
         Map<String,String> rprMap=new HashMap<String, String>();
@@ -112,9 +122,9 @@ public class Rpr {
         rprMap.put("effDate",effectiveDate);
         rprMap.put("endDate",endDate);
         rprMap.put("amount",amount);
+        rprMap.put("fiscalYear",fiscalYear);
         return rprMap;
     }
 
 
 }
-

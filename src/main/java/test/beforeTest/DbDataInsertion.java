@@ -204,6 +204,7 @@ public class DbDataInsertion {
                             rpr.setEffectiveDate((String)item.get("effDate"));
                             rpr.setEndDate((String)item.get("endDate"));
                             rpr.setAmount((String)item.get("amount"));
+                            rpr.setFiscalYear((String)item.get("fiscalYear"));
                             rprService.createOrUpdateRpr(rpr);
                             PrequisiteData prequisiteData =  preqDataService.getPrequisiteDataByDataIdAndType(rpr.getId(),"rpr") ;
                             TestDataMap testDataMap =  testDataMapService.getTestDataMapByPreqIdAndTcId(prequisiteData.getPreqId(),(String) item.get("TC_ID"));
@@ -276,6 +277,6 @@ public class DbDataInsertion {
     private List<Map> getData(String sheetName) {
         ClassLoader classLoader = TestData.class.getClassLoader();
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
-      return   readExcel.read(sheetName).stream().filter(row ->  row.get("ExecutionFlag").toString().toLowerCase().equals("yes")).collect(Collectors.toList());
+        return   readExcel.read(sheetName).stream().filter(row ->  row.get("ExecutionFlag").toString().toLowerCase().equals("yes")).collect(Collectors.toList());
     }
 }
