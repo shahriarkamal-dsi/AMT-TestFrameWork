@@ -238,6 +238,17 @@ public class UIBase {
         }
     }
 
+    public LogMessage acceptPopup(){
+        try{
+            webDriver.switchTo().alert().accept();
+            return new LogMessage(true,"Pop up accept successfully");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur : " + ex.getMessage());
+        }
+    }
+
     public LogMessage waitForRevision(String objectLocatorData){
         try{
             UITable uiTable = new UITable(webDriver);

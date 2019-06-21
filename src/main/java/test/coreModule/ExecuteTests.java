@@ -96,7 +96,7 @@ public class ExecuteTests {
                     logMessages.add(new LogMessage(true, testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "(Skipped)"));
                     continue;
                 }
-                /*
+
                 if (isItPrequisite(testStep.getAction())) {
                     logMessages.add(new LogMessage(true, "Prerequisite started : " + testStep.getTestStepDescription()));
                     List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep,true);
@@ -108,8 +108,8 @@ public class ExecuteTests {
                     } else {
                         logMessages.add(new LogMessage(true, "Prerequisite fullfiled"));
                     }
-                }*/
-                if(isItDelete(testStep.getAction())) {
+                }
+             else  if(isItDelete(testStep.getAction())) {
                     if(testStep.getTestData().toLowerCase().equals("rpr")) {
                       Map rpr = _testData.getData("rpr",testCase.getTestCaseNumber()).get(0) ;
                       LogMessage lm =    recurringPaymentCreateandSearch.deleteRecurringPayment(rpr);

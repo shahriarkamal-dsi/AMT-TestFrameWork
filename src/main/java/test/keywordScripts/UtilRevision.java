@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
+import test.coreModule.TestPlan;
 import test.objectLocator.WebObjectSearch;
 
 import java.text.DateFormat;
@@ -19,7 +20,7 @@ import java.util.logging.LogManager;
 import test.keywordScripts.UtilDate;
 import test.utility.PropertyConfig;
 
-public class UtilRevision {
+public class UtilRevision extends UtilKeywordScript {
 
     private WebDriver webDriver ;
     UtilDate utildate = new UtilDate();
@@ -423,6 +424,25 @@ public class UtilRevision {
                 return new LogMessage(false, "Period date set fail");
             }
         }catch (Exception ex){
+            return new LogMessage(false,"Exception occur " + ex.getMessage());
+        }
+    }
+
+    public LogMessage storeRevisionNumber(String objectLocator,String testData){
+        try{
+            if(!validateTestData(testData,2)){
+                return new LogMessage(false, "Test data invalid");
+            }
+            UITable uiTable = new UITable(webDriver);
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            String varName = data[1];
+            String columnValue = uiTable.getLastRowColumnValue(objectLocator,columnName);
+            TestPlan.getInstance().setStoreData(varName,columnValue);
+            return new LogMessage(true, "Revision number value is stored");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
             return new LogMessage(false,"Exception occur " + ex.getMessage());
         }
     }
