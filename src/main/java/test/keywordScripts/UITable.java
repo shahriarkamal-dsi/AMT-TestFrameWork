@@ -623,7 +623,9 @@ public class UITable extends  UtilKeywordScript{
             String[] data = testData.split(",");
             String columnName = data[0];
             String varName = data[1];
-            TestPlan.getInstance().setStoreData(varName,getLastRowColumnValue(objectLocator,columnName));
+            String columnValue = getLastRowColumnValue(objectLocator,columnName);
+            //columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnValue ;
+            TestPlan.getInstance().setStoreData(varName,columnValue);
             return new LogMessage(true, "Last column value is stored");
         }catch (Exception e){
             return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
