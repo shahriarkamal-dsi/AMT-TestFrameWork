@@ -189,9 +189,13 @@ public class UIScheduleTable extends UtilKeywordScript {
     public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
         try {
             List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
-             Long distinctValue =  list.stream().distinct().count() ;
+            if(list.isEmpty())
+                return new LogMessage(true,"there is no value for this column: " +clName) ;
+            list.remove(0) ;
+            Long distinctValue = list.stream().filter(val -> !val.toString().isEmpty()).distinct().count() ;
             return list.size() == distinctValue.intValue() ? new LogMessage(true, "no duplicacy value present in " + clName) :  new LogMessage(false, "duplicacy value present in " + clName) ;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
         }
     }
@@ -200,6 +204,8 @@ public class UIScheduleTable extends UtilKeywordScript {
     public LogMessage sumCheck(String objectLocatorData,String clName ) {
         try {
             List<String> list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+            if(list.isEmpty())
+                return  new LogMessage(false,"no clm values does found for this column: " + clName) ;
           List<String> values =    list.stream().map(value -> convertStringToNumber( (String) value)).collect(Collectors.toList()) ;
           String lstValue = values.remove(values.size()-1) ;
           double totalSum  ;
@@ -217,6 +223,7 @@ public class UIScheduleTable extends UtilKeywordScript {
               return value == d ? new LogMessage(true, "total sum is right"): new LogMessage(false, "total sum is not right") ;
           }
         } catch (Exception ex) {
+            ex.printStackTrace();
             return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
         }
     }
@@ -231,6 +238,7 @@ public class UIScheduleTable extends UtilKeywordScript {
           return  value.equals(splits[2]) ? new LogMessage(true, "values are equals") :  new LogMessage(false, "values are not equals");
 
         } catch (Exception ex) {
+            ex.printStackTrace();
             return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
         }
     }
