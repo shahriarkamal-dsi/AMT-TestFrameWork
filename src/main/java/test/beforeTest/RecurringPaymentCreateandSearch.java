@@ -20,6 +20,7 @@ public class RecurringPaymentCreateandSearch {
     private WebDriver webDriver;
     private UIBase uiBase;
     private String mainWindow;
+    private UIText uiText;
     @Autowired
     LeaseCreateAndSearch _leaseCreateAndSearch ;
     public RecurringPaymentCreateandSearch(){
@@ -62,7 +63,7 @@ public class RecurringPaymentCreateandSearch {
     public LogMessage addRecurringPayment(Map data){
         try{
             String  objectLocatorPrefix = "Common.RecurringPayment." ;
-            String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" } ;
+            String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined", "fiscalYear" } ;
             WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
 
             UILink uiLink = new UILink(webDriver);
@@ -81,6 +82,21 @@ public class RecurringPaymentCreateandSearch {
                 uiDropDown.SelectItem(objectLocatorPrefix + element,(String)data.get(element));
 
             }
+
+            /* 435_18.03.2019 Setting Value for Fiscal Year*/
+
+            String mapValue = (String) data.get("leaseTermYear");
+
+            if(mapValue == "Fiscal Year" ){
+                String fiscalYearXpath = "//input[contains(@aria-owns,'__fiscal_year_dateview')]";
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                uiText.SetText(objectLocatorPrefix+fiscalYearXpath, (String) data.get("fiscalYear"));
+                System.out.println("Successfully Set Fiscal year");
+            }else{
+                System.out.println("Fiscal year Not Set");
+            }
+
+            /* 435_18.03.2019 Setting Value for Fiscal Year*/
 
             uiBase.Click(objectLocatorPrefix + "btnSave");
             uiBase.WaitingForSuccessfullPopup();
