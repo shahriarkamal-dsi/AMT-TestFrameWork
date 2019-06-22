@@ -243,6 +243,24 @@ public class UIScheduleTable extends UtilKeywordScript {
         }
     }
 
+    /*
+    *
+    * This Method is for Boundary Value Checking"
+    * */
+    public LogMessage  checkNotEqual(String objectLocatorData,String testData ) {
+        try {
+
+            String[] splits = testData.split(",") ;
+            List<String> list =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+            String value = list.get(Integer.valueOf(splits[1]).intValue());
+            return  value.equals(splits[2]) ? new LogMessage(false, "values are equals") :  new LogMessage(true, "values are not equals");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
     public void test(String object) {
         try {
             System.out.println( getAllSpecificColumnValues(object,"ROU – Base Asset Rollover Amortization"));
