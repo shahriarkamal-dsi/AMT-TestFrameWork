@@ -16,6 +16,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.JavascriptExecutor;
 
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.LogManager;
@@ -133,10 +135,33 @@ public class UIText {
             return "";
         }
     }
+    public LogMessage compareNumber(String objectLocator, String testData){
+        try{
+            String[] splittedTestData=testData.split(",");
+            double attribute1 = Double.parseDouble(getText(objectLocator));
+            double attribute2 = Double.parseDouble(splittedTestData[0].trim());
+
+            System.out.println("Webelement :"+attribute1);
+            System.out.println("Webelement Value :"+ attribute2);
+
+            if(attribute1 == attribute2)
+                return new LogMessage(true, "Value is verified");
+            else
+                return new LogMessage(false, "Value is not verified");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
+        }
+    }
+
     public LogMessage compareText(String objectLocator, String testData){
+
         try{
             String[] splittedTestData=testData.split(",");
             String attribute = getText(objectLocator);
+
+            System.out.println("Webelement :"+attribute);
+            System.out.println("Webelement Value :"+splittedTestData[0]);
+
             if(attribute.equals(splittedTestData[0].trim()))
                 return new LogMessage(true, "Value is verified");
             else
@@ -145,6 +170,7 @@ public class UIText {
             return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
     }
+
     public LogMessage compareNumericText(String objectLocator, String testData){
         try{
             String[] splittedTestData=testData.split(",");
