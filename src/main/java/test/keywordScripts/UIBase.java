@@ -354,7 +354,6 @@ public class UIBase {
         }
     }
 
-
     public LogMessage compareValue(String testData) {
         try {
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
@@ -372,6 +371,8 @@ public class UIBase {
             return new LogMessage(false, "Exception occurred in compare  " + ex.getMessage());
         }
     }
+
+
 
 
 }
