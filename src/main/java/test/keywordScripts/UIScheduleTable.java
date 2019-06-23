@@ -186,7 +186,7 @@ public class UIScheduleTable extends UtilKeywordScript {
         }
     }
     
-    public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
+    public LogMessage isDuplicatePresent(String objectLocatorData,String clName ) {
         try {
             List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
             if(list.isEmpty())
