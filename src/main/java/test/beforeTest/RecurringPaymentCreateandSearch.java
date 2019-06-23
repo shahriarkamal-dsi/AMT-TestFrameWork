@@ -86,12 +86,27 @@ public class RecurringPaymentCreateandSearch {
             /* 435_18.03.2019 Setting Value for Fiscal Year*/
 
             String mapValue = (String) data.get("leaseTermDefined");
+            String FiscalYaerObjectLocator = objectLocatorPrefix+"fiscalYear";
+            String FiscalYaerObjectLocatorByAreaOwns = objectLocatorPrefix+"fiscalYearByAreaOwns";
+
+            System.out.println("mapValue: "+mapValue);
 
             if(mapValue.equals("Fiscal Year" ) ){
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+
                 // Getting Object locator data from fiscalYear from OR"
-                uiText.SetText(objectLocatorPrefix+"fiscalYear", (String) data.get("fiscalYear"));
-                System.out.println("Successfully Set Fiscal year");
+                System.out.println("(String) data.get(fiscalYear)"+ data.get("fiscalYear"));
+                uiBase.VerifyVisibleOnScreenTrue(FiscalYaerObjectLocator);
+                uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
+                try {
+                    uiBase.Click(FiscalYaerObjectLocator);
+                    uiText.SetText(FiscalYaerObjectLocator, (String) data.get("fiscalYear"));
+                    System.out.println("Successfully Set Fiscal year");
+                } catch (Exception e) {
+                    uiBase.Click(FiscalYaerObjectLocatorByAreaOwns);
+                    uiText.SetText(FiscalYaerObjectLocatorByAreaOwns, (String) data.get("fiscalYear"));
+                    System.out.println("Successfully Set Fiscal year");
+                }
             }else{
                 System.out.println("Fiscal year Not Set");
             }
