@@ -624,11 +624,29 @@ public class UITable extends  UtilKeywordScript{
             String columnName = data[0];
             String varName = data[1];
             String columnValue = getLastRowColumnValue(objectLocator,columnName);
-            //columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnValue ;
             TestPlan.getInstance().setStoreData(varName,columnValue);
-            return new LogMessage(true, "Last column value is stored");
+            return new LogMessage(true, columnValue + " column value is stored");
         }catch (Exception e){
             return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
+        }
+    }
+    public LogMessage storeLastRowNumaricValue(String objectLocator,String testData){
+        try{
+            if(!validateTestData(testData,2)){
+                return new LogMessage(false, "Test data invalid");
+            }
+            UITable uiTable = new UITable(webDriver);
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            String varName = data[1];
+            String columnValue = uiTable.getLastRowColumnValue(objectLocator,columnName);
+            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToIntNumber(columnValue) : columnValue ;
+            TestPlan.getInstance().setStoreData(varName,columnValue);
+            return new LogMessage(true, columnValue + " value is stored");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur " + ex.getMessage());
         }
     }
 

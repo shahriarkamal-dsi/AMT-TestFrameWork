@@ -287,7 +287,17 @@ public class UtilKeywordScript {
     public static String convertStringToNumber(String value) {
         try {
             Double digit  =  Double.parseDouble(value.replaceAll("[^\\d.]", ""));
-            System.out.println(String.valueOf(digit));
+            //System.out.println(String.valueOf(digit));
+            return String.valueOf(digit) ;
+
+        } catch (Exception ex) {
+            return "" ;
+        }
+    }
+    public static String convertStringToIntNumber(String value) {
+        try {
+            Integer digit  =  Integer.parseInt(value.replaceAll("[^\\d.]", ""));
+            //System.out.println(String.valueOf(digit));
             return String.valueOf(digit) ;
 
         } catch (Exception ex) {
