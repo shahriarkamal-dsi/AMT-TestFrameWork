@@ -201,17 +201,21 @@ public class UIScheduleTable extends UtilKeywordScript {
 
         System.out.println("Method Name: isDulicayPresent");
         System.out.println("objectLocatorData "+objectLocatorData);
+        System.out.println("Column Name "+clName);
 
         try {
             List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
             System.out.println("List Value "+list);
-            System.out.println("Column Name "+clName);
 
             if(list.isEmpty())
                 return new LogMessage(true,"there is no value for this column: " +clName) ;
             list.remove(0) ;
             Long distinctValue = list.stream().filter(val -> !val.toString().isEmpty()).distinct().count() ;
-            return list.size() == distinctValue.intValue() ? new LogMessage(true, "no duplicacy value present in " + clName) :  new LogMessage(false, "duplicacy value present in " + clName) ;
+
+            System.out.println(" distinctValue : "+distinctValue.intValue());
+            System.out.println(" list.size() :" + list.size());
+
+            return (list.size()-1) == distinctValue.intValue() ? new LogMessage(true, "no duplicacy value present in " + clName) :  new LogMessage(false, "duplicacy value present in " + clName) ;
         } catch (Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
@@ -221,13 +225,15 @@ public class UIScheduleTable extends UtilKeywordScript {
 
     public LogMessage sumCheck(String objectLocatorData,String clName ) {
 
+        System.out.println("**********************");
         System.out.println("Method Name: sumCheck ");
+        System.out.println("**********************");
         System.out.println("Column Name:"+clName);
         System.out.println("objectLocatorData "+objectLocatorData);
 
         try {
             List<String> list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
-            System.out.println("LIST"+list);
+            System.out.println("LIST Items: "+ list);
 
             if(list.isEmpty())
                 return  new LogMessage(false,"no clm values does found for this column: " + clName) ;
@@ -240,11 +246,14 @@ public class UIScheduleTable extends UtilKeywordScript {
                   continue;
               double d = Double.valueOf(val).doubleValue() ;
               value += d ;
+              System.out.println("Summed UP Amount:"+ value);
           }
+
           if(lstValue.isEmpty())
               return new LogMessage(false, "total value is empty") ;
           else {
               double d = Double.valueOf(lstValue).doubleValue() ;
+              System.out.println("Last Amount:"+ d);
               return value == d ? new LogMessage(true, "total sum is right"): new LogMessage(false, "total sum is not right") ;
           }
         } catch (Exception ex) {
@@ -256,14 +265,21 @@ public class UIScheduleTable extends UtilKeywordScript {
 
     public LogMessage  checkClValue(String objectLocatorData,String testData ) {
 
+        System.out.println("******************** ");
         System.out.println("Method Name: checkClValue ");
+        System.out.println("******************** ");
         System.out.println("objectLocatorData "+objectLocatorData);
 
         try {
 
             String[] splits = testData.split(",") ;
+            System.out.println("Column Name:"+splits[0]);
+            System.out.println("Column Index:"+splits[1]);
+            System.out.println("Value to be Asserted:"+splits[2]);
+
             List<String> list =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
             String value = list.get(Integer.valueOf(splits[1]).intValue());
+
           return  value.equals(splits[2]) ? new LogMessage(true, "values are equals") :  new LogMessage(false, "values are not equals");
 
         } catch (Exception ex) {
@@ -295,12 +311,44 @@ public class UIScheduleTable extends UtilKeywordScript {
         }
     }
 
+
+    public void paymentPeriodTest(String objectLocatorData,String testData) {
+        try {
+            /*
+             * Will give three things: Column Names,Column Values)
+             * */
+
+            System.out.println("Method Name: checkPayment ");
+            System.out.println("objectLocatorData "+objectLocatorData);
+
+            String[] splits = testData.split(",") ;
+            List<String> list1 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+            List<String> list2 =  getAllSpecificColumnValues(objectLocatorData,splits[1])  ;
+
+            Map<String, String> paymentMap = new HashMap<>();
+            int bound = Math.min(list1.size(), list2.size());
+            for (int i = 0; i < bound; i++) {
+                Integer integer = i;
+                if (paymentMap.put(list1.get(integer), list2.get(integer)) != null) {
+                    throw new IllegalStateException("Duplicate key");
+                }
+            }
+            System.out.println("paymentMap "+paymentMap);
+
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
     public void test(String object) {
         try {
+            System.out.println("******************** ");
             System.out.println("Method Name: Test ");
-            System.out.println("objectLocatorData "+object);
+            System.out.println("******************** ");
 
-            System.out.println( getAllSpecificColumnValues(object,"ROU – Base Asset Rollover Amortization"));
+            System.out.println("objectLocatorData "+object);
+            System.out.println( getAllSpecificColumnValues(object,"Period"));
             System.out.println("............................................") ;
             System.out.println( getSingleRowfromScheduleTable(object,"# of Periods","2"));
             System.out.println("............................................") ;
