@@ -22,6 +22,9 @@ public class UIScheduleTable extends UtilKeywordScript {
 
 
     public List<Map> getAllvaluefromScheduleTable(String objectLocatorData ) {
+        System.out.println("getAllvaluefromScheduleTable Called ");
+        System.out.println("objectLocatorData "+objectLocatorData);
+
         try {
             List<Map> schedultable = new ArrayList<Map>() ;
             WebElement rootElement = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
@@ -59,6 +62,9 @@ public class UIScheduleTable extends UtilKeywordScript {
 
     public List getAllSpecificColumnValues(String objectLocatorData, String clName) {
 
+        System.out.println("getAllSpecificColumnValues ");
+        System.out.println("objectLocatorData "+objectLocatorData);
+
         try {
            List<Map> scheduleTable =  getAllvaluefromScheduleTable(objectLocatorData) ;
          return  scheduleTable.stream().map(row -> row.get(clName)).collect(Collectors.toList()) ;
@@ -71,6 +77,7 @@ public class UIScheduleTable extends UtilKeywordScript {
 
 
     public Map getSingleRowfromScheduleTable(String objectLocatorData, String clName, String clValue) {
+        System.out.println("objectLocatorData "+objectLocatorData);
 
         try {
             List<Map> schedultable = new ArrayList<Map>() ;
@@ -169,6 +176,9 @@ public class UIScheduleTable extends UtilKeywordScript {
 
     public LogMessage columnNameValidation (String objectLocatorData, String testData){
 
+        System.out.println("Method Name: columnNameValidation ");
+        System.out.println("objectLocatorData "+objectLocatorData);
+
         List<String> splitTestDatas= Arrays.asList(testData.split(","));
         List<String> ScheduleTableColumnNames = getScheduleTablecolumnNames(objectLocatorData);
 
@@ -187,8 +197,15 @@ public class UIScheduleTable extends UtilKeywordScript {
     }
     
     public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
+
+        System.out.println("Method Name: isDulicayPresent");
+        System.out.println("objectLocatorData "+objectLocatorData);
+
         try {
             List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+            System.out.println("List Value "+list);
+            System.out.println("Column Name "+clName);
+
             if(list.isEmpty())
                 return new LogMessage(true,"there is no value for this column: " +clName) ;
             list.remove(0) ;
@@ -202,8 +219,15 @@ public class UIScheduleTable extends UtilKeywordScript {
 
 
     public LogMessage sumCheck(String objectLocatorData,String clName ) {
+
+        System.out.println("Method Name: sumCheck ");
+        System.out.println("Column Name:"+clName);
+        System.out.println("objectLocatorData "+objectLocatorData);
+
         try {
             List<String> list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+            System.out.println("LIST"+list);
+
             if(list.isEmpty())
                 return  new LogMessage(false,"no clm values does found for this column: " + clName) ;
           List<String> values =    list.stream().map(value -> convertStringToNumber( (String) value)).collect(Collectors.toList()) ;
@@ -230,6 +254,10 @@ public class UIScheduleTable extends UtilKeywordScript {
 
 
     public LogMessage  checkClValue(String objectLocatorData,String testData ) {
+
+        System.out.println("Method Name: checkClValue ");
+        System.out.println("objectLocatorData "+objectLocatorData);
+
         try {
 
             String[] splits = testData.split(",") ;
@@ -252,6 +280,9 @@ public class UIScheduleTable extends UtilKeywordScript {
     public LogMessage  checkNotEqual(String objectLocatorData,String testData ) {
         try {
 
+            System.out.println("Method Name: checkNotEqual ");
+            System.out.println("objectLocatorData "+objectLocatorData);
+
             String[] splits = testData.split(",") ;
             List<String> list =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
             String value = list.get(Integer.valueOf(splits[1]).intValue());
@@ -265,6 +296,9 @@ public class UIScheduleTable extends UtilKeywordScript {
 
     public void test(String object) {
         try {
+            System.out.println("Method Name: Test ");
+            System.out.println("objectLocatorData "+object);
+
             System.out.println( getAllSpecificColumnValues(object,"ROU – Base Asset Rollover Amortization"));
             System.out.println("............................................") ;
             System.out.println( getSingleRowfromScheduleTable(object,"# of Periods","2"));
