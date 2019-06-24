@@ -163,6 +163,26 @@ public class UIDropDown {
         }
     }
 
+    // Not Working Properly,Need to check existence of all Dropdown Items
+
+    public LogMessage CheckItem(String objectLocator,String testData) {
+        try {
+            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
+            if(null != objectLocatorData.get(PropertyConfig.PARENT_LOCATOR)) {
+                return SelectItem(objectLocator,(String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR),testData);
+            }
+
+            WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            if (null == dropDownElement)
+                return new LogMessage(false,"Web element is not found.");
+            //Select dropDown = new Select(dropDownElement);
+            //dropDown.selectByVisibleText(testData);
+            return new LogMessage(true, "Dropdown item is selected") ;
+        } catch (Exception ex) {
+            return  new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
+        }
+    }
+
 
 
 

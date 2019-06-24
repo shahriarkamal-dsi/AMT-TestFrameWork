@@ -196,6 +196,7 @@ public class UIScheduleTable extends UtilKeywordScript {
         }
     }
     
+
     public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
 
         System.out.println("Method Name: isDulicayPresent");

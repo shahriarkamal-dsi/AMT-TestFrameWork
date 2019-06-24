@@ -172,10 +172,11 @@ public class UIText {
     }
 
     public LogMessage compareNumericText(String objectLocator, String testData){
+
         try{
             String[] splittedTestData=testData.split(",");
             String attribute = UtilKeywordScript.convertStringToNumber(getText(objectLocator));
-            if(attribute.equals(UtilKeywordScript.convertStringToNumber(splittedTestData[0].trim())))
+            if(Double.parseDouble(attribute)==Double.parseDouble(splittedTestData[0].trim()))
                 return new LogMessage(true, "Value is verified");
             else
                 return new LogMessage(false, "Value is not verified");
