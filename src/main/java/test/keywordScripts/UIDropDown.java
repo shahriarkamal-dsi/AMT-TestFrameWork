@@ -66,6 +66,48 @@ public class UIDropDown {
             return new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
         }
     }
+
+
+    public LogMessage CheckItem(String objectLocator,String testData) {
+        try {
+            Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
+            if(null != objectLocatorData.get(PropertyConfig.PARENT_LOCATOR)) {
+                return SelectItem(objectLocator,(String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR),testData);
+            }
+
+            WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            if (null == dropDownElement)
+                return new LogMessage(false,"Web element is not found.");
+            Select dropDown = new Select(dropDownElement);
+            dropDown.selectByVisibleText(testData);
+            return new LogMessage(true, "Dropdown item is selected") ;
+        } catch (Exception ex) {
+            return  new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
+        }
+    }
+
+
+    public LogMessage CheckItem(String objectLocatorData,String dropDownObjectLocatorData,String testData) {
+        try {
+            UIBase uiBase = new UIBase(webDriver);
+            WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if (null == dropDownElement)
+                return new LogMessage(false," Dropdown element is not found.");
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+            //uiBase.Click(dropDownElement);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+            List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[contains(text() , '" + testData + "')]"));
+            if (null == dropDownDataElements || dropDownDataElements.isEmpty())
+                return new LogMessage(false," Dropdown list element is not found.");
+            WebElement dropDownDataElement = dropDownDataElements.get(dropDownDataElements.size()-1);
+            //uiBase.Click(dropDownDataElement);
+            return new LogMessage(true, "Dropdown item Checked") ;
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
+        }
+    }
+
     public LogMessage searchAndSelectItem(String objectLocatorData,String dropDownObjectLocatorData,String testData) {
         try {
             WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
