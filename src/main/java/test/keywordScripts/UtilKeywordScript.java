@@ -113,6 +113,16 @@ public class UtilKeywordScript {
         }
     }
 
+    public LogMessage maximizeWindow(){
+        try{
+            webDriver.manage().window().maximize();
+            return new LogMessage(true,"Window maximize successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
+
 
     public boolean isAlertPresent(){
         boolean foundAlert = false;

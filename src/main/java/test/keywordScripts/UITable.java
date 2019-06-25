@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class UITable extends  UtilKeywordScript{
     private WebDriver webDriver;
+    private UIBase uiBase;
 
     public UITable(WebDriver driver) {
         this.webDriver = driver ;
@@ -291,6 +292,7 @@ public class UITable extends  UtilKeywordScript{
 
     public LogMessage ClickLinkInTable(String objectLocatorData, String testData) {
         try {
+            uiBase = new UIBase(webDriver);
             String columnName = "" ;
             String columnValue = "" ;
             if(!validateTestData(testData,2))
@@ -307,7 +309,8 @@ public class UITable extends  UtilKeywordScript{
             String text = element.getText();
             if(columnValue.equals(element.getText())) {
                 WebElement elm = element.findElement(By.linkText(columnValue));
-                elm.click();
+                uiBase.Click(elm);
+                //elm.click();
                 return new LogMessage(true, " Link element is clicked");
             }
             return new LogMessage(true, "Proper cell is not present.");
