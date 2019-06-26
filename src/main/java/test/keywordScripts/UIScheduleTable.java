@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
 import test.objectLocator.WebObjectSearch;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -246,7 +247,11 @@ public class UIScheduleTable extends UtilKeywordScript {
                   continue;
               double d = Double.valueOf(val).doubleValue() ;
               value += d ;
+              System.out.println("New Amount for Sum UP :"+ d);
               System.out.println("Summed UP Amount:"+ value);
+              double roundOff = Math.round(value * 100.0) / 100.0;
+              System.out.println("Round Value:"+ roundOff);
+
           }
 
           if(lstValue.isEmpty())
@@ -254,7 +259,8 @@ public class UIScheduleTable extends UtilKeywordScript {
           else {
               double d = Double.valueOf(lstValue).doubleValue() ;
               System.out.println("Last Amount:"+ d);
-              return value == d ? new LogMessage(true, "total sum is right"): new LogMessage(false, "total sum is not right") ;
+              double roundOff = Math.round(value * 100.0) / 100.0;
+              return roundOff == d ? new LogMessage(true, "total sum is right"): new LogMessage(false, "total sum is not right") ;
           }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -312,31 +318,85 @@ public class UIScheduleTable extends UtilKeywordScript {
     }
 
 
-    public void paymentPeriodTest(String objectLocatorData,String testData) {
+    public Map paymentPeriodTest(String objectLocatorData,String testData) {
+        Map<String, String> paymentMap = new HashMap<>();
         try {
             /*
              * Will give three things: Column Names,Column Values)
              * */
-
-            System.out.println("Method Name: checkPayment ");
+            System.out.println("Method Name: paymentPeriodTest ");
             System.out.println("objectLocatorData "+objectLocatorData);
-
             String[] splits = testData.split(",") ;
+            System.out.println("Column 01 :"+splits[0]);
+            System.out.println("Column 02 :"+splits[1]);
             List<String> list1 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
             List<String> list2 =  getAllSpecificColumnValues(objectLocatorData,splits[1])  ;
+            System.out.println("List 01  :"+ list1);
+            System.out.println("List 02  :"+ list2);
 
-            Map<String, String> paymentMap = new HashMap<>();
             int bound = Math.min(list1.size(), list2.size());
             for (int i = 0; i < bound; i++) {
                 Integer integer = i;
-                if (paymentMap.put(list1.get(integer), list2.get(integer)) != null) {
-                    throw new IllegalStateException("Duplicate key");
+                if(list1.get(integer)!= null && list2.get(integer) != null){
+                    System.out.println("Putting Data in Map...Time:"+ Instant.now());
+                    System.out.println("Key  :"+list1.get(integer) +"    Value:  "+list2.get(integer));
+                    paymentMap.put(list1.get(integer),convertStringToNumber(list2.get(integer)));
+                }else{
+                    System.out.println("Not Putting Data in Map...Time:"+ Instant.now());
+                    System.out.println("Key  :"+list1.get(integer) +"    Value:  "+list2.get(integer));
                 }
             }
             System.out.println("paymentMap "+paymentMap);
-
+            System.out.println(paymentMap.get("06/2016"));
+            System.out.println(paymentMap.get("08/2016"));
+            System.out.println(paymentMap.get("12/2016"));
+            System.out.println(paymentMap.get("06/2017"));
+            return paymentMap ;
         } catch ( Exception ex) {
             ex.printStackTrace();
+            return paymentMap ;
+        }
+    }
+
+    public LogMessage  checkPeriodPayment(String objectLocatorData,String testData) {
+        try {
+            String[] splits = testData.split(",") ;
+            System.out.println("Method Name: checkPeriodPayment ");
+            System.out.println("objectLocatorData "+objectLocatorData);
+            Map PMap = paymentPeriodTest(objectLocatorData,"Period,Period Payment");
+            System.out.println("Received PaymentMap Value "+ PMap);
+            System.out.println("pDouble.parseDouble((String) PMap.get(splits[0]))  "+ Double.parseDouble((String) PMap.get(splits[0])) );
+            System.out.println("Data to be validated"+splits[1]);
+
+            if(Double.parseDouble((String) PMap.get(splits[0])) == (Double.parseDouble(splits[1]))){
+                return new LogMessage(true, "Values are equal " ) ;
+            }else{
+                return new LogMessage(false, "Values are not equal " ) ;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+    public LogMessage  checkPeriodReceivable(String objectLocatorData,String testData) {
+        try {
+            String[] splits = testData.split(",") ;
+            System.out.println("Method Name: checkPeriodPayment ");
+            System.out.println("objectLocatorData "+objectLocatorData);
+            Map PMap = paymentPeriodTest(objectLocatorData,"Period,Period Receivable");
+            System.out.println("Received PaymentMap Value "+ PMap);
+            System.out.println("pDouble.parseDouble((String) PMap.get(splits[0]))  "+ Double.parseDouble((String) PMap.get(splits[0])) );
+            System.out.println("Data to be validated"+splits[1]);
+
+            if(Double.parseDouble((String) PMap.get(splits[0])) == (Double.parseDouble(splits[1]))){
+                return new LogMessage(true, "Values are equal " ) ;
+            }else{
+                return new LogMessage(false, "Values are not equal " ) ;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
         }
     }
 
