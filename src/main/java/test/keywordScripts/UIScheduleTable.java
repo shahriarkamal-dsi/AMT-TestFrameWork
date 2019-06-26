@@ -387,7 +387,7 @@ public class UIScheduleTable extends UtilKeywordScript {
             Map PMap = paymentPeriodTest(objectLocatorData,"Period,Period Receivable");
             System.out.println("Received PaymentMap Value "+ PMap);
             System.out.println("pDouble.parseDouble((String) PMap.get(splits[0]))  "+ Double.parseDouble((String) PMap.get(splits[0])) );
-            System.out.println("Data to be validated"+splits[1]);
+            System.out.println("Data to be validated  :"+splits[1]);
 
             if(Double.parseDouble((String) PMap.get(splits[0])) == (Double.parseDouble(splits[1]))){
                 return new LogMessage(true, "Values are equal " ) ;
