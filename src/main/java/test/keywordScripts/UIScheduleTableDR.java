@@ -10,15 +10,13 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class UIScheduleTable extends UtilKeywordScript {
+public class UIScheduleTableDR extends UtilKeywordScript {
     private WebDriver webDriver;
-
-
-    public UIScheduleTable(WebDriver driver) {
+    ScheduleDataDR scheduleDataDR = new ScheduleDataDR();
+    public UIScheduleTableDR(WebDriver driver) {
         this.webDriver = driver ;
     }
-
-    public UIScheduleTable(){
+    public UIScheduleTableDR(){
 
     }
 
@@ -201,10 +199,6 @@ public class UIScheduleTable extends UtilKeywordScript {
 
     public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
 
-        System.out.println("Method Name: isDulicayPresent");
-        System.out.println("objectLocatorData "+objectLocatorData);
-        System.out.println("Column Name "+clName);
-
         try {
             List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
             System.out.println("List Value "+list);
@@ -226,12 +220,6 @@ public class UIScheduleTable extends UtilKeywordScript {
 
 
     public LogMessage sumCheck(String objectLocatorData,String clName ) {
-
-        System.out.println("**********************");
-        System.out.println("Method Name: sumCheck ");
-        System.out.println("**********************");
-        System.out.println("Column Name:"+clName);
-        System.out.println("objectLocatorData "+objectLocatorData);
 
         try {
             List<String> list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
@@ -273,12 +261,6 @@ public class UIScheduleTable extends UtilKeywordScript {
 
 
     public LogMessage  checkClValue(String objectLocatorData,String testData ) {
-
-        System.out.println("******************** ");
-        System.out.println("Method Name: checkClValue ");
-        System.out.println("******************** ");
-        System.out.println("objectLocatorData "+objectLocatorData);
-
         try {
 
             String[] splits = testData.split(",") ;
@@ -296,12 +278,7 @@ public class UIScheduleTable extends UtilKeywordScript {
             return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
         }
     }
-    /*
-    *
-    * This Method is for Boundary Value Checking"
-    *
-    *
-    * */
+    /*This Method is for Boundary Value Checking*/
     public LogMessage  checkNotEqual(String objectLocatorData,String testData ) {
         try {
 
@@ -319,58 +296,10 @@ public class UIScheduleTable extends UtilKeywordScript {
         }
     }
 
-
-    public Map paymentPeriodTest(String objectLocatorData,String testData) {
-        Map<String, String> paymentMap = new HashMap<>();
-        try {
-            /*
-             * Will give three things: Column Names,Column Values)
-             * */
-            System.out.println("Method Name: paymentPeriodTest ");
-            System.out.println("objectLocatorData "+objectLocatorData);
-            String[] splits = testData.split(",") ;
-            System.out.println("Column 01 :"+splits[0]);
-            System.out.println("Column 02 :"+splits[1]);
-            List<String> list1 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
-            List<String> list2 =  getAllSpecificColumnValues(objectLocatorData,splits[1])  ;
-            System.out.println("List 01  :"+ list1);
-            System.out.println("List 02  :"+ list2);
-
-            int bound = Math.min(list1.size(), list2.size());
-            for (int i = 0; i < bound; i++) {
-                Integer integer = i;
-                if(list1.get(integer)!= null && list2.get(integer) != null){
-                    System.out.println("Putting Data in Map...Time:"+ Instant.now());
-                    System.out.println("Key  :"+list1.get(integer) +"    Value:  "+list2.get(integer));
-                    paymentMap.put(list1.get(integer),convertStringToNumber(list2.get(integer)));
-                }else{
-                    System.out.println("Not Putting Data in Map...Time:"+ Instant.now());
-                    System.out.println("Key  :"+list1.get(integer) +"    Value:  "+list2.get(integer));
-                }
-            }
-            System.out.println("paymentMap "+paymentMap);
-            System.out.println(paymentMap.get("06/2016"));
-            System.out.println(paymentMap.get("08/2016"));
-            System.out.println(paymentMap.get("12/2016"));
-            System.out.println(paymentMap.get("06/2017"));
-            return paymentMap ;
-        } catch ( Exception ex) {
-            ex.printStackTrace();
-            return paymentMap ;
-        }
-    }
-
     public LogMessage  checkPeriodPayment(String objectLocatorData,String testData) {
         try {
             String[] splits = testData.split(",") ;
-            System.out.println("Method Name: checkPeriodPayment ");
-            System.out.println("objectLocatorData "+objectLocatorData);
-            Map PMap = paymentPeriodTest(objectLocatorData,"Period,Period Receivable");
-            System.out.println("Received PaymentMap Value "+ PMap);
-            System.out.println("pDouble.parseDouble((String) PMap.get(splits[0]))  "+ Double.parseDouble((String) PMap.get(splits[0])) );
-            System.out.println("Data to be validated  :"+splits[1]);
-
-            if(Double.parseDouble((String) PMap.get(splits[0])) == (Double.parseDouble(splits[1]))){
+            if(Double.parseDouble((String) convertStringToNumber(scheduleDataDR.getInstance().getStoreData(splits[0]))) == (Double.parseDouble(splits[1]))){
                 return new LogMessage(true, "Values are equal " ) ;
             }else{
                 return new LogMessage(false, "Values are not equal " ) ;
@@ -384,14 +313,7 @@ public class UIScheduleTable extends UtilKeywordScript {
     public LogMessage  checkPeriodReceivable(String objectLocatorData,String testData) {
         try {
             String[] splits = testData.split(",") ;
-            System.out.println("Method Name: checkPeriodReceivable ");
-            System.out.println("objectLocatorData "+objectLocatorData);
-            Map PMap = paymentPeriodTest(objectLocatorData,"Period,Period Receivable");
-            System.out.println("Received PaymentMap Value "+ PMap);
-            System.out.println("pDouble.parseDouble((String) PMap.get(splits[0]))  "+ Double.parseDouble((String) PMap.get(splits[0])) );
-            System.out.println("Data to be validated  :"+splits[1]);
-
-            if(Double.parseDouble((String) PMap.get(splits[0])) == (Double.parseDouble(splits[1]))){
+            if(Double.parseDouble((String) convertStringToNumber(scheduleDataDR.getInstance().getStoreData(splits[0]))) == (Double.parseDouble(splits[1]))){
                 return new LogMessage(true, "Values are equal " ) ;
             }else{
                 return new LogMessage(false, "Values are not equal " ) ;
@@ -402,12 +324,36 @@ public class UIScheduleTable extends UtilKeywordScript {
         }
     }
 
+    public LogMessage createPaymentMap(String objectLocatorData,String testData){
+        String[] splits = testData.split(",") ;
+        List<String> list1 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+        List<String> list2 =  getAllSpecificColumnValues(objectLocatorData,splits[1])  ;
+        int bound = Math.min(list1.size(), list2.size());
+
+        try{
+            for (int i = 0; i < bound; i++) {
+                Integer integer = i;
+                if(list1.get(integer)!= null && list2.get(integer) != null){
+                    System.out.println("Putting Data in Map...Time:"+ Instant.now());
+                    System.out.println("Key  :"+list1.get(integer) +"    Value:  "+list2.get(integer));
+                    scheduleDataDR.getInstance().setPaymentMap(list1.get(integer),list2.get(integer));
+                    System.out.println("Key"+ list1.get(integer)+"  Value:"+ scheduleDataDR.getInstance().getStoreData(list1.get(integer)));
+
+                }else{
+                    System.out.println("Not Putting Data in Map...Time:"+ Instant.now());
+                    System.out.println("Key  :"+list1.get(integer) +"    Value:  "+list2.get(integer));
+                }
+            }
+            return new LogMessage(true, "Payment Map Created Successfully ") ;
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+
+    }
+
     public void test(String object) {
         try {
-            System.out.println("******************** ");
-            System.out.println("Method Name: Test ");
-            System.out.println("******************** ");
-
             System.out.println("objectLocatorData "+object);
             System.out.println( getAllSpecificColumnValues(object,"Period"));
             System.out.println("............................................") ;
