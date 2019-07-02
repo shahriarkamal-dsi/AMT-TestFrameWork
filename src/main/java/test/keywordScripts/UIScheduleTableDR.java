@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import test.Log.LogMessage;
+import test.coreModule.TestPlan;
 import test.objectLocator.WebObjectSearch;
 
 import java.time.Instant;
@@ -64,9 +65,12 @@ public class UIScheduleTableDR extends UtilKeywordScript {
 
         System.out.println("getAllSpecificColumnValues ");
         System.out.println("objectLocatorData "+objectLocatorData);
+        System.out.println("column Name :"+clName);
 
         try {
-                List<Map> scheduleTable =  getAllvaluefromScheduleTable(objectLocatorData) ;
+                //List<Map> scheduleTable =  getAllvaluefromScheduleTable(objectLocatorData) ;
+                List<Map> scheduleTable = ScheduleDataDR.getInstance().getScheduleTable();
+                System.out.println("scheduleTable Value :"+scheduleTable);
                 return  scheduleTable.stream().map(row -> row.get(clName)).collect(Collectors.toList()) ;
 
         } catch ( Exception ex) {
@@ -198,10 +202,12 @@ public class UIScheduleTableDR extends UtilKeywordScript {
     
 
     public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
+        System.out.println("Method Name: isDulicayPresent");
+        System.out.println("Column Name :"+clName);
 
         try {
             List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
-            System.out.println("List Value "+list);
+            System.out.println("List Value :"+list);
 
             if(list.isEmpty())
                 return new LogMessage(true,"there is no value for this column: " +clName) ;
@@ -299,7 +305,7 @@ public class UIScheduleTableDR extends UtilKeywordScript {
     public LogMessage  checkPeriodPayment(String objectLocatorData,String testData) {
         try {
             String[] splits = testData.split(",") ;
-            if(Double.parseDouble((String) convertStringToNumber(scheduleDataDR.getInstance().getStoreData(splits[0]))) == (Double.parseDouble(splits[1]))){
+            if(Double.parseDouble((String) convertStringToNumber(scheduleDataDR.getInstance().getPaymentMap(splits[0]))) == (Double.parseDouble(splits[1]))){
                 return new LogMessage(true, "Values are equal " ) ;
             }else{
                 return new LogMessage(false, "Values are not equal " ) ;
@@ -311,9 +317,10 @@ public class UIScheduleTableDR extends UtilKeywordScript {
     }
 
     public LogMessage  checkPeriodReceivable(String objectLocatorData,String testData) {
+        System.out.println("checkPeriodReceivable from UIScheduleTableDR");
         try {
             String[] splits = testData.split(",") ;
-            if(Double.parseDouble((String) convertStringToNumber(scheduleDataDR.getInstance().getStoreData(splits[0]))) == (Double.parseDouble(splits[1]))){
+            if(Double.parseDouble((String) convertStringToNumber(scheduleDataDR.getInstance().getPaymentMap(splits[0]))) == (Double.parseDouble(splits[1]))){
                 return new LogMessage(true, "Values are equal " ) ;
             }else{
                 return new LogMessage(false, "Values are not equal " ) ;
@@ -325,10 +332,21 @@ public class UIScheduleTableDR extends UtilKeywordScript {
     }
 
     public LogMessage createPaymentMap(String objectLocatorData,String testData){
+        System.out.println("createPaymentMap Method Called"+ Instant.now());
         String[] splits = testData.split(",") ;
-        List<String> list1 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+
+        List<String> list3 =  getAllSpecificColumnValues(objectLocatorData,splits[1])  ;
+        List<String> list4 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+        /*
+        * This list 3 and list4 have not been used ,just for partial fix of a Selenium Issue
+        * */
         List<String> list2 =  getAllSpecificColumnValues(objectLocatorData,splits[1])  ;
+        List<String> list1 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
+
+        System.out.println("LIST 01"+list1+ Instant.now());
+        System.out.println("LIST 02"+list2+ Instant.now());
         int bound = Math.min(list1.size(), list2.size());
+        System.out.println("bound :"+bound+ Instant.now());
 
         try{
             for (int i = 0; i < bound; i++) {
@@ -337,7 +355,7 @@ public class UIScheduleTableDR extends UtilKeywordScript {
                     System.out.println("Putting Data in Map...Time:"+ Instant.now());
                     System.out.println("Key  :"+list1.get(integer) +"    Value:  "+list2.get(integer));
                     scheduleDataDR.getInstance().setPaymentMap(list1.get(integer),list2.get(integer));
-                    System.out.println("Key"+ list1.get(integer)+"  Value:"+ scheduleDataDR.getInstance().getStoreData(list1.get(integer)));
+                    System.out.println("Key"+ list1.get(integer)+"  Value:"+ scheduleDataDR.getInstance().getPaymentMap(list1.get(integer)));
 
                 }else{
                     System.out.println("Not Putting Data in Map...Time:"+ Instant.now());
@@ -352,17 +370,84 @@ public class UIScheduleTableDR extends UtilKeywordScript {
 
     }
 
-    public void test(String object) {
+
+    public LogMessage createScheduleTable(String objectLocatorData){
+        System.out.println("createScheduleTableList Method Called"+ Instant.now());
+        List scheduleList = getAllvaluefromScheduleTable(objectLocatorData);
+
+        try{
+            for (int i = 0; i < scheduleList.size(); i++) {
+                Integer integer = i;
+                if(scheduleList.get(integer)!= null){
+                    System.out.println("Putting Data in Schedule...Time:"+ Instant.now());
+                    System.out.println("List Index  :"+integer+"    Value:  "+scheduleList.get(integer));
+                    scheduleDataDR.getInstance().setScheduleList(integer, scheduleList.get(integer));
+                    System.out.println("List Index "+integer +"  Value:"+ (scheduleDataDR.getInstance().getScheduleList(integer)));
+
+                }else{
+                    System.out.println("Not Putting Data in Schedule...Time:"+ Instant.now());
+                }
+            }
+            System.out.println("Created Schedule Table: "+ScheduleDataDR.getInstance().getScheduleTable());
+            return new LogMessage(true, "Schedule List Created Successfully ") ;
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+    public LogMessage clearScheduleTable(){
+        System.out.println("Method : clearScheduleTable"+ Instant.now());
+
+        try{
+            ScheduleDataDR.getInstance().clearScheduleList();
+            System.out.println("Schedule Table After Clear: "+ScheduleDataDR.getInstance().getScheduleTable());
+            return new LogMessage(true, "Schedule List Cleared Successfully ") ;
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+
+    public LogMessage clearPaymentMap(){
+        System.out.println("Method :clearPaymentMap "+ Instant.now());
+
+        try{
+            ScheduleDataDR.getInstance().clearPaymentMap();
+            System.out.println("Payment Map After Clear: "+ScheduleDataDR.getInstance().getFullPaymentMap());
+            return new LogMessage(true, "Payment Map Cleared Successfully ") ;
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+    public LogMessage test(String object) {
         try {
+            createScheduleTable(object);
+            System.out.println("Method Name : Test");
             System.out.println("objectLocatorData "+object);
             System.out.println( getAllSpecificColumnValues(object,"Period"));
             System.out.println("............................................") ;
-            System.out.println( getSingleRowfromScheduleTable(object,"# of Periods","2"));
-            System.out.println("............................................") ;
-            System.out.println( getScheduleTablecolumnNames(object));
-            System.out.println("............................................") ;
+            // System.out.println( getSingleRowfromScheduleTable(object,"# of Periods","2"));
+            // System.out.println("............................................") ;
+            // System.out.println( getScheduleTablecolumnNames(object));
+            // System.out.println("............................................") ;
+
+            if(ScheduleDataDR.getInstance().getScheduleTable().isEmpty())
+            { System.out.println("clearScheduleTable Not Called ");
+            }else{ clearScheduleTable(); }
+
+            if(ScheduleDataDR.getInstance().getFullPaymentMap().isEmpty()){
+                System.out.println("clearPaymentMap Not Called ");
+            }else{ clearPaymentMap(); }
+            return new LogMessage(true, "Tested Successfully ") ;
+
         } catch ( Exception ex) {
             ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+
         }
     }
 }
