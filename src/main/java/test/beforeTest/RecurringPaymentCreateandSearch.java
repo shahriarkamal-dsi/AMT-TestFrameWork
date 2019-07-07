@@ -62,7 +62,8 @@ public class RecurringPaymentCreateandSearch {
     public LogMessage addRecurringPayment(Map data){
         try{
             String  objectLocatorPrefix = "Common.RecurringPayment." ;
-            String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" , "fiscalYear"} ;
+            //String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" , "fiscalYear"} ;
+            String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" } ;
             WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
 
             UILink uiLink = new UILink(webDriver);
@@ -78,6 +79,8 @@ public class RecurringPaymentCreateandSearch {
 
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             for (String element : dropdownFields){
+                System.out.println("Dropdown Element:" +element);
+                System.out.println("data.get(element):" + data.get(element));
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                 uiDropDown.SelectItem(objectLocatorPrefix + element,(String)data.get(element));
 
