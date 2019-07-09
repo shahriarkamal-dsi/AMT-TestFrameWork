@@ -555,7 +555,7 @@ public class UITable extends  UtilKeywordScript{
             String columnValue1=data[1];
             String columnName2=data[2];
             String columnValue2=data[3];
-            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);//
+            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);
             WebElement element=row.get(columnName2);
             String columnValueOfUI  = UtilKeywordScript.convertStringToNumber(element.getAttribute("textContent")) ;
             if(Double.parseDouble(columnValue2)==Double.parseDouble(columnValueOfUI)){
@@ -643,7 +643,7 @@ public class UITable extends  UtilKeywordScript{
             String columnName = data[0];
             String varName = data[1];
             String columnValue = uiTable.getLastRowColumnValue(objectLocator,columnName);
-            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToIntNumber(columnValue) : columnValue ;
+            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnValue ;
             TestPlan.getInstance().setStoreData(varName,columnValue);
             return new LogMessage(true, columnValue + " value is stored");
 

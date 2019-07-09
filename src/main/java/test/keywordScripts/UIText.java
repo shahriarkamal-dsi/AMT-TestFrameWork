@@ -105,6 +105,7 @@ public class UIText {
     }
 
     public LogMessage SetTextWithoutClear(String objectLocator, String textData){
+        System.out.println("Test Data for second revision: " + textData);
         try {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == element )
@@ -115,7 +116,7 @@ public class UIText {
             uiBase.Click(element);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             element.sendKeys(textData);
-            return new LogMessage(true,"Text is set up");
+            return new LogMessage(true,textData + " - Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
             return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
