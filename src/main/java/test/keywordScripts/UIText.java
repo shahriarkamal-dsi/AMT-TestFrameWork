@@ -1,5 +1,6 @@
 package test.keywordScripts;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -34,17 +35,33 @@ public class UIText {
             UIBase uiBase = new UIBase(webDriver);
             WebElement userWeb = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == userWeb )
-                return new LogMessage(false,"webElement is not founding");
+                return new LogMessage(false,"Web element is not found");
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", userWeb);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiBase.Click(userWeb);
             userWeb.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.sendKeys(textData);
-            return new LogMessage(true,"text is set up");
+            return new LogMessage(true,textData + "- Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured:- " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
+        }
+    }
+    public LogMessage SetText(WebElement element, String textData){
+        try {
+            UIBase uiBase = new UIBase(webDriver);
+            if(null == element )
+                return new LogMessage(false,"Web element is not found");
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            uiBase.Click(element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            element.sendKeys(textData);
+            return new LogMessage(true,"Text is set up");
+        } catch(Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
         }
     }
 
@@ -65,7 +82,7 @@ public class UIText {
             return new LogMessage(true, "Text is visible");
         }catch (Exception e){
             e.printStackTrace();
-            return new LogMessage(false, "Exception occur " + e.getMessage());
+            return new LogMessage(false, "Exception occurred " + e.getMessage());
         }
     }
 
@@ -83,25 +100,26 @@ public class UIText {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(objectLocatorPath + "//*[contains(text(),'" + textData + "')]")));
             return new LogMessage(true, "Text is invisible");
         }catch (Exception e){
-            return new LogMessage(false, "Exception occur " + e.getMessage());
+            return new LogMessage(false, "Exception occurred " + e.getMessage());
         }
     }
 
     public LogMessage SetTextWithoutClear(String objectLocator, String textData){
+        System.out.println("Test Data for second revision: " + textData);
         try {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == element )
-                return new LogMessage(false,"Element not found");
+                return new LogMessage(false,"Element is not found");
             ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             UIBase uiBase = new UIBase(webDriver);
             uiBase.Click(element);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             element.sendKeys(textData);
-            return new LogMessage(true,"Text is set up");
+            return new LogMessage(true,textData + " - Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured:- " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
         }
     }
 
@@ -125,9 +143,22 @@ public class UIText {
             else
                 return new LogMessage(false, "Value is not verified");
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur" + e.getMessage());
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
     }
+    public LogMessage compareTextWithComma(String objectLocator, String testData){
+        try{
+
+            String attribute = getText(objectLocator);
+            if(attribute.equals(testData.trim()))
+                return new LogMessage(true, testData + " Value is verified");
+            else
+                return new LogMessage(false, testData + " Value is not verified");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
+        }
+    }
+
     public LogMessage compareNumericText(String objectLocator, String testData){
         try{
             String[] splittedTestData=testData.split(",");
@@ -137,26 +168,21 @@ public class UIText {
             else
                 return new LogMessage(false, "Value is not verified");
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur" + e.getMessage());
+            return new LogMessage(false,"Exception occured" + e.getMessage());
         }
     }
 
     public LogMessage compareNumberAfterIncrement(String testData){
 
-        System.out.println("TestDat: " + testData);
          UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
             if(!utilKeywordScript.validateTestData(testData,3)) {
-                return new LogMessage(false, "test data invalid");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] splittedTestData = testData.split(",");
             Integer data = Integer.valueOf(splittedTestData[0].trim()) + Integer.valueOf(splittedTestData[1].trim());
             String numberToInc = UtilKeywordScript.convertStringToNumber(String.valueOf(data));
             String numberToCompare = UtilKeywordScript.convertStringToNumber(splittedTestData[2].trim());
-
-            System.out.println("numberToInc: " + numberToInc);
-            System.out.println("numberToCompare: " + numberToCompare);
-
 
             if (numberToCompare.equals(numberToInc)){
                 return new LogMessage(true,"Value is verified");
@@ -165,7 +191,7 @@ public class UIText {
                 return new LogMessage(false,"Value is not verified");
             }
         }catch (Exception e){
-            return new LogMessage(false,"Exception occur");
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
 
     }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import test.service.* ;
 
@@ -158,6 +159,7 @@ public class DbDataInsertion {
                             space.setFloor((String) item.get("Floor"));
                             space.setStartDate((String) item.get("startDate"));
                             space.setEndDate((String) item.get("endDate"));
+                            space.setRentableLease((String) item.get("rentableLease") );
                             spaceService.createOrUpdateSpace(space);
                             PrequisiteData prequisiteData =  preqDataService.getPrequisiteDataByDataIdAndType(space.getId(),"space") ;
                             TestDataMap testDataMap =  testDataMapService.getTestDataMapByPreqIdAndTcId(prequisiteData.getPreqId(),(String) item.get("TC_ID"));
@@ -274,6 +276,6 @@ public class DbDataInsertion {
     private List<Map> getData(String sheetName) {
         ClassLoader classLoader = TestData.class.getClassLoader();
         ReadExcel readExcel = new ReadExcel(classLoader.getResource("dataCreate/DataCreate.xlsx").getPath());
-        return readExcel.read(sheetName);
+      return   readExcel.read(sheetName).stream().filter(row ->  row.get("ExecutionFlag").toString().toLowerCase().equals("yes")).collect(Collectors.toList());
     }
 }

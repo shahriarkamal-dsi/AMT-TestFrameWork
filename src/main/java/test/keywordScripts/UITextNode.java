@@ -29,13 +29,13 @@ public class UITextNode {
             List<WebElement> clickElement = webDriver.findElements(By.xpath(objectLocatorPath +"//*[text()='" +testDatas[0] + "']"));
             //WebElement rootElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if (null == clickElement || clickElement.isEmpty())
-                return new LogMessage(false,"element is not found.");
+                return new LogMessage(false,"Web element is not found.");
 
             UIBase uiBase = new UIBase(webDriver);
            return uiBase.ClickDbClickRClick(clickElement.get(0),testDatas[1]);
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,"excetion occured: " + ex.getMessage());
+            return new LogMessage(false,"exception occurred: " + ex.getMessage());
         }
     }
 

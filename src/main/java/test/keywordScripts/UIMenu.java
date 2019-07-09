@@ -23,10 +23,10 @@ public class UIMenu {
              for(String menuItem : menuItems) {
                  webDriver.findElement(By.linkText(menuItem)).click();
              }
-             return new LogMessage(true,"menu items are clicked");
+             return new LogMessage(true,"Menu item clicked");
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured:- " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
         }
     }
 }

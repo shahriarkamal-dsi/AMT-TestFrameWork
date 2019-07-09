@@ -10,6 +10,7 @@ import test.coreModule.TestPlan;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class UITable extends  UtilKeywordScript{
     private WebDriver webDriver;
+    private UIBase uiBase;
 
     public UITable(WebDriver driver) {
         this.webDriver = driver ;
@@ -233,28 +235,28 @@ public class UITable extends  UtilKeywordScript{
             String columnName = "" ;
             String columnValue = "" ;
             if(!validateTestData(testData,2))
-                return  new LogMessage(false, "test data invalid");
+                return  new LogMessage(false, "Test data invalid");
             String[] data = testData.split(",");
             columnName = data[0] ;
             columnValue = data[1] ;
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
 
             if(null == row || row.isEmpty())
-                return new LogMessage(false, "no table data");
+                return new LogMessage(false, "No table data found");
             if(!row.containsKey(columnName))
-                return new LogMessage(false, "column name not present");
+                return new LogMessage(false, "Column name is not present");
 
             WebElement element = row.get(columnName) ;
             String text = element.getText();
             if(element.getText().contains(columnValue)) {
                 UIBase uibase = new UIBase(webDriver);
                 uibase.ClickDbClickRClick(element,"DBLCLICK");
-                return new LogMessage(true, "element is double clicked");
+                return new LogMessage(true, "Element is double clicked");
             }
-            return new LogMessage(true, "proper cell is not present.");
+            return new LogMessage(true, "Proper cell is not present.");
         } catch(Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured: " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred: " + ex.getMessage());
         }
     }
     public LogMessage ClickCellInTable(String objectLocatorData, String testData) {
@@ -262,26 +264,26 @@ public class UITable extends  UtilKeywordScript{
             String columnName = "" ;
             String columnValue = "" ;
             if(!validateTestData(testData,2))
-                return  new LogMessage(false, "test data invalid");
+                return  new LogMessage(false, "Test data invalid");
             String[] data = testData.split(",");
             columnName = data[0] ;
             columnValue = data[1] ;
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
             if(null == row || row.isEmpty())
-                return new LogMessage(false, "no table data");
+                return new LogMessage(false, "No table data found");
             if(!row.containsKey(columnName))
-                return new LogMessage(false, "column name not present");
+                return new LogMessage(false, "Column name is not present");
             WebElement element = row.get(columnName) ;
             String text = element.getText();
             if(columnValue.equals(element.getText())) {
                 element.click();
-                return new LogMessage(true, "element is clicked");
+                return new LogMessage(true, "Element is clicked");
             }
-            return new LogMessage(true, "proper cell is not present.");
+            return new LogMessage(true, "Proper cell is not present.");
 
         } catch(Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured: " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred: " + ex.getMessage());
         }
     }
 
@@ -290,30 +292,32 @@ public class UITable extends  UtilKeywordScript{
 
     public LogMessage ClickLinkInTable(String objectLocatorData, String testData) {
         try {
+            uiBase = new UIBase(webDriver);
             String columnName = "" ;
             String columnValue = "" ;
             if(!validateTestData(testData,2))
-                return  new LogMessage(false, "test data invalid");
+                return  new LogMessage(false, "Test data invalid");
             String[] data = testData.split(",");
             columnName = data[0] ;
             columnValue = data[1] ;
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,columnName,columnValue,null);
             if(null == row || row.isEmpty())
-                return new LogMessage(false, "no table data");
+                return new LogMessage(false, "No table data found");
             if(!row.containsKey(columnName))
-                return new LogMessage(false, "column name not present");
+                return new LogMessage(false, "Column name is not present");
             WebElement element = row.get(columnName) ;
             String text = element.getText();
             if(columnValue.equals(element.getText())) {
                 WebElement elm = element.findElement(By.linkText(columnValue));
-                elm.click();
-                return new LogMessage(true, " link element is clicked");
+                uiBase.Click(elm);
+                //elm.click();
+                return new LogMessage(true, " Link element is clicked");
             }
-            return new LogMessage(true, "proper cell is not present.");
+            return new LogMessage(true, "Proper cell is not present.");
 
         } catch(Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured: " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred: " + ex.getMessage());
         }
     }
 
@@ -323,26 +327,26 @@ public class UITable extends  UtilKeywordScript{
             String columnValue = "" ;
             String rowIndex = "";
             if(!validateTestData(testData,3))
-                return  new LogMessage(false, "test data invalid");
+                return  new LogMessage(false, "Test data invalid");
             String[] data = testData.split(",");
             columnName = data[0] ;
             rowIndex = data[1];
             columnValue = data[2] ;
             Map<String, WebElement>  row = getSingleRowfromTable(objectLocatorData,null,null,Integer.parseInt(rowIndex));
             if(null == row || row.isEmpty())
-                return new LogMessage(false, "no table data");
+                return new LogMessage(false, "No table data found");
             if(!row.containsKey(columnName))
-                return new LogMessage(false, "column name not present");
+                return new LogMessage(false, "Column name is not present");
 
             WebElement element = row.get(columnName) ;
             String text = element.getText();
             if(columnValue.equals(element.getText())) {
-                return new LogMessage(true, "proper cell is  present");
+                return new LogMessage(true, "Proper cell is present");
             }
-            return new LogMessage(false, "proper cell is not present.");
+            return new LogMessage(false, "Proper cell is not present.");
         } catch(Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured: " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred: " + ex.getMessage());
         }
     }
 
@@ -350,7 +354,7 @@ public class UITable extends  UtilKeywordScript{
 
         try{
             if(!validateTestData(testData,4)){
-                return  new LogMessage(false, "test data invalid");
+                return  new LogMessage(false, "Test data invalid");
             }
             boolean isMatched=false;
             String[] data = testData.split(",");
@@ -361,7 +365,7 @@ public class UITable extends  UtilKeywordScript{
             List<Map<String,WebElement>> rows = getAllValuesfromTable(objectLocatorData);
 
             if (null == rows || rows.isEmpty()){
-                return new LogMessage(false,"no table data found");
+                return new LogMessage(false,"No table data found");
             }
             if(columnValue2.toUpperCase().equals("NA"))
                 isMatched =  rows.stream().anyMatch(row ->
@@ -376,7 +380,7 @@ public class UITable extends  UtilKeywordScript{
             return  isMatched  ? new LogMessage(true,"Corresponding column data verified") :  new LogMessage(false,"Proper cell is not present");
         }catch (Exception e){
             e.printStackTrace();
-            return new  LogMessage(false,"Exception occer " + e.getMessage());
+            return new  LogMessage(false,"Exception occurred " + e.getMessage());
         }
     }
 
@@ -386,16 +390,16 @@ public class UITable extends  UtilKeywordScript{
              String columnValue = "" ;
              String rowIndex =  "" ;
              if(!validateTestData(testData,3))
-                 return new LogMessage(false, "test data not valid");
+                 return new LogMessage(false, "Test data invalid");
              columnName = testData.split(",")[0] ;
              rowIndex = testData.split(",")[1] ;
             columnValue = testData.split(",")[2] ;
             Map<String, WebElement> row = getSingleRowfromTable(objectLocatorData,null,null,Integer.valueOf(rowIndex));
             //System.out.println(row);
             if(null == row || row.isEmpty())
-                return new LogMessage(false, "no table data");
+                return new LogMessage(false, "No table data found");
             if(!row.containsKey(columnName))
-                return new LogMessage(false, "column name not present");
+                return new LogMessage(false, "Column name is not present");
 
             WebElement element = row.get(columnName) ;
             if(element.isEnabled()) {
@@ -404,12 +408,12 @@ public class UITable extends  UtilKeywordScript{
                 WebElement webElement=element.findElement(By.tagName("input"));
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                 webElement.sendKeys(columnValue);
-                return new LogMessage(true,"enter text data");
+                return new LogMessage(true,"Enter text data");
             } else {
-                return new LogMessage(false," text field disabled");
+                return new LogMessage(false," Text field disabled");
             }
         } catch ( Exception ex ) {
-            return new LogMessage(false, "exception occured " + ex.getMessage());
+            return new LogMessage(false, "Exception occurred " + ex.getMessage());
         }
     }
 
@@ -421,7 +425,7 @@ public class UITable extends  UtilKeywordScript{
             String rowIndex =  "" ;
             String inputTag = "";
             if(!validateTestData(testData,3))
-                return new LogMessage(false, "test data not valid");
+                return new LogMessage(false, "Test data invalid");
             columnName = testData.split(",")[0] ;
             rowIndex = testData.split(",")[1] ;
             columnValue = testData.split(",")[2] ;
@@ -431,23 +435,23 @@ public class UITable extends  UtilKeywordScript{
             Map<String, WebElement> row = getSingleRowfromTable(objectLocatorData,null,null,Integer.valueOf(rowIndex));
             //System.out.println(row);
             if(null == row || row.isEmpty())
-                return new LogMessage(false, "no table data");
+                return new LogMessage(false, "No table data found");
             if(!row.containsKey(columnName))
-                return new LogMessage(false, "column name not present");
+                return new LogMessage(false, "Column name is not present");
             WebElement element = row.get(columnName) ;
             if(element.isEnabled()) {
                 if(inputTag != "")
                     element.findElement(By.tagName(inputTag)).click();
                 else
                     element.click();
-                return new LogMessage(true,"click table data");
+                return new LogMessage(true,"Click table data");
             } else {
-                return new LogMessage(false," text field disabled");
+                return new LogMessage(false," Text field disabled");
             }
 
         } catch ( Exception ex ) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occured " + ex.getMessage());
+            return new LogMessage(false, "Exception occurred " + ex.getMessage());
         }
     }
 
@@ -456,7 +460,7 @@ public class UITable extends  UtilKeywordScript{
             String columnName = "" ;
             String columnValue = "" ;
             if(!validateTestData(testData,2))
-                return new LogMessage(false, "test data not valid");
+                return new LogMessage(false, "Test data invalid");
             columnName = testData.split(",")[0] ;
             columnValue = testData.split(",")[1] ;
 
@@ -486,14 +490,14 @@ public class UITable extends  UtilKeywordScript{
 
                         }
                         UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
-                       return  new LogMessage(true, "column filter done");
+                       return  new LogMessage(true, "Column filter done");
 
                     }
                 }
-            return  new LogMessage(false, "column name not present");
+            return  new LogMessage(false, "Column name is not present");
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false,"exception occured " + ex.getMessage());
+            return new LogMessage(false,"Exception occurred " + ex.getMessage());
         }
     }
 
@@ -523,45 +527,45 @@ public class UITable extends  UtilKeywordScript{
             String columnName = "" ;
             String rowIndex = "" ;
             if(!validateTestData(testData,3))
-                return new LogMessage(false, "test data not valid");
+                return new LogMessage(false, "Test data invalid");
             varName = testData.split(",")[0] ;
             columnName = testData.split(",")[1] ;
             rowIndex = testData.split(",")[2] ;
             Map<String, WebElement> row = getSingleRowfromTable(objectLocatorData,null,null,Integer.valueOf(rowIndex));
             if(!row.containsKey(columnName))
-                return new LogMessage( false, "column name is not present") ;
+                return new LogMessage( false, "Column name is not present") ;
             String columnValue = row.get(columnName).getText() ;
-            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnName ;
+            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnValue ;
             TestPlan.getInstance().setStoreData(varName,columnValue);
 
-            return new LogMessage( true, "column value is stored") ;
+            return new LogMessage( true, "Column value is stored") ;
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage( false, "exception occured in StoreColumnValue  " + ex.getMessage()) ;
+            return new LogMessage( false, "Exception occurred " + ex.getMessage()) ;
         }
     }
     public LogMessage CompareEqualInTable(String objectLocator,String testData){
         try{
             if(!validateTestData(testData,4)){
-                return  new LogMessage(false, "test data invalid");
+                return  new LogMessage(false, "Test data invalid");
             }
             String[] data=testData.split(",");
             String columnName1=data[0];
             String columnValue1=data[1];
             String columnName2=data[2];
             String columnValue2=data[3];
-            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);//
+            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);
             WebElement element=row.get(columnName2);
             String columnValueOfUI  = UtilKeywordScript.convertStringToNumber(element.getAttribute("textContent")) ;
             if(Double.parseDouble(columnValue2)==Double.parseDouble(columnValueOfUI)){
-                return new LogMessage( true, "Verified Equal Value");
+                return new LogMessage( true, "Verified equal value");
             }
             else
-                return new LogMessage( false, "Verified Equal Value false");
+                return new LogMessage( false, "Verified equal value false");
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage( false, "exception occured " + ex.getMessage()) ;
+            return new LogMessage( false, "Exception occurred " + ex.getMessage()) ;
         }
 
     }
@@ -570,7 +574,7 @@ public class UITable extends  UtilKeywordScript{
         try {
             UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
             if (!utilKeywordScript.validateTestData(testData, 4)) {
-                return new LogMessage(false, "Not enough data");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] data = testData.split(",");
             final String columnName = Optional.ofNullable(data[0]).orElse("");
@@ -580,21 +584,21 @@ public class UITable extends  UtilKeywordScript{
             UITable uiTable = new UITable(webDriver);
             Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocator, columnName, columnValue, null);
             if (null == row || row.isEmpty()) {
-                return new LogMessage(false, "no table data found");
+                return new LogMessage(false, "No table data found");
             }
             String varValue = Optional.ofNullable(row.get(columnName2).getAttribute("textContent")).orElse("");
             TestPlan.getInstance().setStoreData(varName, varValue);
             return new LogMessage(true, "UI value :" + varValue + " is stored");
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new LogMessage(false, "exception occurred in StoreUIValue  " + ex.getMessage());
+            return new LogMessage(false, "Exception occurred  " + ex.getMessage());
         }
     }
     public LogMessage CheckAllColumnInOrder(String objectLocator,String testData)
     {
         try{
             if(!validateTestData(testData,2)) {
-                return new LogMessage(false, "test data invalid");
+                return new LogMessage(false, "Test data invalid");
             }
             boolean sorted=false;
             String[] data=testData.split(",");
@@ -611,21 +615,63 @@ public class UITable extends  UtilKeywordScript{
                 sorted= Ordering.natural().reverse().isOrdered(columnValues);
             return sorted?new LogMessage(sorted,"All column values are sorted"): new LogMessage(sorted,"Column values are unsorted");
         }catch (Exception e){
-            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+            return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
         }
     }
     public LogMessage StoreLastRowColumnValue(String objectLocator,String testData){
         try {
             if(!validateTestData(testData,2)) {
-                return new LogMessage(false, "test data invalid");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] data = testData.split(",");
             String columnName = data[0];
             String varName = data[1];
-            TestPlan.getInstance().setStoreData(varName,getLastRowColumnValue(objectLocator,columnName));
-            return new LogMessage(true, "Last Column value is stored");
+            String columnValue = getLastRowColumnValue(objectLocator,columnName);
+            TestPlan.getInstance().setStoreData(varName,columnValue);
+            return new LogMessage(true, columnValue + " column value is stored");
         }catch (Exception e){
-            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+            return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
+        }
+    }
+    public LogMessage storeLastRowNumaricValue(String objectLocator,String testData){
+        try{
+            if(!validateTestData(testData,2)){
+                return new LogMessage(false, "Test data invalid");
+            }
+            UITable uiTable = new UITable(webDriver);
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            String varName = data[1];
+            String columnValue = uiTable.getLastRowColumnValue(objectLocator,columnName);
+            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnValue ;
+            TestPlan.getInstance().setStoreData(varName,columnValue);
+            return new LogMessage(true, columnValue + " value is stored");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur " + ex.getMessage());
+        }
+    }
+
+    public LogMessage StoreLastRowIncreasedDateValue(String objectLocator,String testData){
+        try {
+            SimpleDateFormat dateFormat =   new SimpleDateFormat("MM/yyyy") ;
+            if(!validateTestData(testData,2)) {
+                return new LogMessage(false, "Test data invalid");
+            }
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            String varName = data[1];
+            String date = getLastRowColumnValue(objectLocator,columnName) ;
+            Date lastDate =  dateFormat.parse(date);
+            Calendar cal =  Calendar.getInstance() ;
+            cal.setTime(lastDate);
+            cal.add(Calendar.MONTH, 1);
+            date = dateFormat.format(cal.getTime()) ;
+            TestPlan.getInstance().setStoreData(varName,date);
+            return new LogMessage(true, "Last column value is stored");
+        }catch (Exception e){
+            return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
         }
     }
     public String getLastRowColumnValue(String objectLocator,String columnName){
@@ -658,15 +704,15 @@ public class UITable extends  UtilKeywordScript{
     {
         try{
             if(!validateTestData(testData,3)) {
-                return new LogMessage(false, "test data invalid");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] data = testData.split(",");
             if(getSpecificRowColumnValue(objectLocator,data[0]+","+data[1]).equals(data[2]))
-                return new LogMessage( true, "column value verified") ;
+                return new LogMessage( true, "Column value verified") ;
             else
-                return new LogMessage( false, "Column value not verified") ;
+                return new LogMessage( false, "Column value is not verified") ;
         }catch (Exception e){
-            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+            return new LogMessage( false, "exception occurred " + e.getMessage()) ;
         }
     }
     public LogMessage compareLastRowColumnValue(String objectLocator,String testData)
@@ -675,16 +721,16 @@ public class UITable extends  UtilKeywordScript{
         UITable uiTable=new UITable(webDriver);
         try{
             if(!utilKeywordScript.validateTestData(testData,2)) {
-                return new LogMessage(false, "test data invalid");
+                return new LogMessage(false, "Test data invalid");
             }
             String[] data = testData.split(",");
             String columnName = data[0];
             if(uiTable.getLastRowColumnValue(objectLocator,columnName).equals(data[1]))
                 return new LogMessage( true, "Last row column value verified") ;
             else
-                return new LogMessage( false, "Last row column value not verified") ;
+                return new LogMessage( false, "Last row column value is not verified") ;
         }catch (Exception e){
-            return new LogMessage( false, "exception occured " + e.getMessage()) ;
+            return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
         }
     }
 

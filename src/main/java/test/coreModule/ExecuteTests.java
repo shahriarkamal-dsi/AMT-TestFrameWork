@@ -1,16 +1,15 @@
 package test.coreModule;
 
+import com.aventstack.extentreports.Status;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import test.Log.CreateLog;
 import test.Log.LogMessage;
-import test.beforeTest.LeaseCreateAndSearch;
-import test.beforeTest.PropertyCreateAndSearch;
-import test.beforeTest.SpaceCreateAndSearch;
-import test.beforeTest.TestData;
+import test.beforeTest.*;
 import test.keywordScripts.UIBase;
 import test.keywordScripts.UtilKeywordScript;
+import test.service.PreqDataService;
 import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 import test.coreModule.TestCase;
@@ -29,11 +28,15 @@ public class ExecuteTests {
     @Autowired
     private TestData _testData ;
     @Autowired
+    private RecurringPaymentCreateandSearch recurringPaymentCreateandSearch ;
+    @Autowired
     private PropertyCreateAndSearch _propertyCreateAndSearch ;
     @Autowired
     private LeaseCreateAndSearch _leaseCreateAndSearch ;
     @Autowired
     private SpaceCreateAndSearch _spaceCreateAndSearch ;
+    @Autowired
+    private PreqDataService _preqDataService ;
 
     private WebDriver webDriver ;
     public ExecuteTests() {
@@ -93,6 +96,7 @@ public class ExecuteTests {
                     logMessages.add(new LogMessage(true, testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "(Skipped)"));
                     continue;
                 }
+
                 if (isItPrequisite(testStep.getAction())) {
                     logMessages.add(new LogMessage(true, "Prerequisite started : " + testStep.getTestStepDescription()));
                     List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep,true);
@@ -104,11 +108,28 @@ public class ExecuteTests {
                     } else {
                         logMessages.add(new LogMessage(true, "Prerequisite fullfiled"));
                     }
-                }else if(isItCommon(testStep.getAction())){
+                }
+             else  if(isItDelete(testStep.getAction())) {
+                    if(testStep.getTestData().toLowerCase().equals("rpr")) {
+                      Map rpr = _testData.getData("rpr",testCase.getTestCaseNumber()).get(0) ;
+                      LogMessage lm =    recurringPaymentCreateandSearch.deleteRecurringPayment(rpr);
+                      if(lm.isPassed()) {
+                         Long dataId = Long.valueOf( (String) rpr.get("dataId")) ;
+                        Long preqDataId =  _preqDataService.getPrequisiteDataByDataIdAndType(dataId,"rpr").getPreqId();
+                        _testData.removePreqExecutionHistory(preqDataId,TestPlan.getInstance().getCurrentTestEnvironment().getClient(),TestPlan.getInstance().getCurrentTestEnvironment().getEnv());
+                      }
+                    }
+
+                }
+                else if(isItCommon(testStep.getAction())){
                     List<LogMessage> preqLogMessages = runPrequisite(testCase, testStep,false);
                     logMessages.addAll(preqLogMessages);
                     testCase.setPassed(preqLogMessages.stream().allMatch(logMessage -> logMessage.isPassed()));
+                    //if there is any blocked status we do not go further
+                   if( preqLogMessages.stream().anyMatch(logMessage -> logMessage.getStatus().equals(Status.ERROR)))
+                       return logMessages;
                 } else {
+
                     logMessages.add(runSingleStep(testStep, testCase));
                     if (!testStep.isPassed() && testStep.isCritical()) {
                         testCase.setPassed(false);
@@ -168,11 +189,17 @@ public class ExecuteTests {
             int delayTime=delayTime(testStep.delayTime());
             if(!(delayTime<=0))
                 UtilKeywordScript.delay(delayTime);
-            if(logMessage.isPassed())
-                logMessage.setLogMessage(passedLogMessage.isEmpty()? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage(): passedLogMessage);
-            else
-                logMessage.setLogMessage(failedLogMessage.isEmpty()? testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + logMessage.getLogMessage(): failedLogMessage);
-
+            if(logMessage.isPassed()) {
+                logMessage.setStatus(Status.PASS);
+                logMessage.setLogMessage(createLogMessage(passedLogMessage, testStep, logMessage));
+            }
+            else {
+                if(critical)
+                    logMessage.setStatus(Status.ERROR);
+                else
+                    logMessage.setStatus(Status.FAIL);
+                logMessage.setLogMessage(createLogMessage(failedLogMessage, testStep, logMessage));
+            }
             testStep.setPassed(logMessage.isPassed());
 
             if (pageRefresh){
@@ -213,7 +240,7 @@ public class ExecuteTests {
            if(!prerequiste.isPresent()) {
                return new ArrayList<LogMessage>()
                {{
-                   add(new LogMessage(false,"no valid prequisite found for " + testStep.getFieldName()));
+                   add(new LogMessage(false,"no valid prerquisite found for " + testStep.getFieldName()));
                }};
            }
            if(isPrerequisite)
@@ -241,6 +268,10 @@ public class ExecuteTests {
     }
     private Boolean isItCommon(String action) {
         if (action.equals(PropertyConfig.COMMON_COMMAND)) return true;
+        return false;
+    }
+    private Boolean isItDelete(String action) {
+        if (action.equals(PropertyConfig.DELETE_COMMAND)) return true;
         return false;
     }
     public String updateTestData(String testCaseId,String testData, Optional<Map> utilData){
@@ -293,6 +324,30 @@ public class ExecuteTests {
 
         }catch (Exception e){
             return PropertyConfig.SHORT_WAIT_TIME_SECONDS;
+        }
+    }
+
+    private String createLogMessage(String message, TestStep testStep,LogMessage log){
+        String logMessage = "";
+        if (!( null == message || message.isEmpty())){
+            return message;
+        }else {
+            if ((testStep.getTestStepDescription().isEmpty()) && (testStep.getFieldName().isEmpty())){
+                logMessage = log.getLogMessage();
+            }
+            else if ((testStep.getTestStepDescription().isEmpty()) && !(testStep.getFieldName().isEmpty())){
+                logMessage = testStep.getFieldName() + "--" + log.getLogMessage();
+            }
+            else if ((testStep.getTestStepDescription().isEmpty()) && !(testStep.getFieldName().isEmpty())){
+                logMessage = testStep.getFieldName() + "--" + log.getLogMessage();
+            }
+            else if (!(testStep.getTestStepDescription().isEmpty()) && (testStep.getFieldName().isEmpty())){
+                logMessage = testStep.getTestStepDescription() + "--" + log.getLogMessage();
+            }
+            else {
+                logMessage = testStep.getTestStepDescription() + " --" + testStep.getFieldName() + "--" + log.getLogMessage();
+            }
+            return logMessage;
         }
     }
 }

@@ -46,11 +46,11 @@ public class UITree {
                     System.out.println(element.getText());
                 }*/
 
-            return new LogMessage(true,"web element is expanded");
+            return new LogMessage(true,"Web element is expanded");
         }catch (Exception ex)
         {
             ex.printStackTrace();
-            return new LogMessage(false,"web element is not expanded");
+            return new LogMessage(false,"Web element is not expanded");
         }
     }
 }

@@ -38,14 +38,15 @@ public class LogReport {
                     List<LogMessage> subLogMessages=logMessage.getSubLogMessage();
                     if(!subLogMessages.isEmpty())
                     {
-                        for(LogMessage subLogMessage: subLogMessages)
-                        {
-                            createLog.writeLog(logName,subLogMessage.getLogMessage(),subLogMessage.isPassed(),subLogMessage.isSkipped());
+                        for(LogMessage subLogMessage: subLogMessages) {
+                            createLog.writeLog(logName, subLogMessage);
+                            if (!testCase.isPassed())
+                                createFailedLog.writeLog(logName, logMessage);
                         }
                     }
-                    createLog.writeLog(logName,logMessage.getLogMessage(),logMessage.isPassed(),logMessage.isSkipped());
+                    createLog.writeLog(logName,logMessage);
                     if(!testCase.isPassed()){
-                createFailedLog.writeLog(logName,logMessage.getLogMessage(),logMessage.isPassed(),logMessage.isSkipped());
+                createFailedLog.writeLog(logName,logMessage);
             }
         }
     }

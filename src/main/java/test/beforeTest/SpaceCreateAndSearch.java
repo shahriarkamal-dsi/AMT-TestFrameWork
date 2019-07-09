@@ -1,8 +1,11 @@
 package test.beforeTest;
 
 import org.json.JSONObject;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import test.Log.LogMessage;
@@ -63,7 +66,7 @@ public class SpaceCreateAndSearch {
         try{
             String  objectLocatorPrefix = "Common.Space." ;
             UILink uiLink = new UILink(webDriver);
-
+            UIInput uiInput = new UIInput(webDriver);
             UIText uiText = new UIText(webDriver);
 
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
@@ -84,6 +87,11 @@ public class SpaceCreateAndSearch {
             uiText.SetText(objectLocatorPrefix+"startDate", (String) data.get("startDate"));
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiText.SetText(objectLocatorPrefix+"endDate", (String) data.get("endDate"));
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+
+            WebElement rentableLease = (webDriver.findElements(By.xpath("//input[contains(@id,'__RENTABLE_SQFT')]/preceding-sibling::input"))).get(0);
+            rentableLease.sendKeys((String) data.get("rentableLease"));
+
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             uiBase.Click(objectLocatorPrefix + "btnSave");
 

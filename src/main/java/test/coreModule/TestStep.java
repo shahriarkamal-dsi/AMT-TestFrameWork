@@ -4,6 +4,7 @@ import test.utility.PropertyConfig;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class TestStep {
     private Map step ;
@@ -38,17 +39,17 @@ public class TestStep {
     }
     public String getTestStepDescription(){
         try {
-            return (String) step.get(PropertyConfig.TEST_STEP_DESCRIPTION);
+            return  Optional.ofNullable((String)step.get(PropertyConfig.TEST_STEP_DESCRIPTION)).orElse("");
         }catch(Exception ex) {
-            return null;
+            return "";
         }
     }
 
     public String getFieldName(){
         try {
-            return (String) step.get(PropertyConfig.FIELD_NAME);
+            return Optional.ofNullable((String) step.get(PropertyConfig.FIELD_NAME)).orElse("");
         }catch(Exception ex) {
-            return null;
+            return "";
         }
     }
 
@@ -82,7 +83,7 @@ public class TestStep {
         try {
             return  step.get(PropertyConfig.CRITICAL).toString().toLowerCase().equals("no") ? false : true;
         }catch(Exception ex) {
-            return false;
+            return true;
         }
     }
 
@@ -90,7 +91,7 @@ public class TestStep {
         try {
             return  step.get(PropertyConfig.EXECUTION_FLAG).toString().toLowerCase().equals("yes") ? true : false;
         }catch(Exception ex) {
-            return false;
+            return true;
         }
     }
     public String delayTime(){
