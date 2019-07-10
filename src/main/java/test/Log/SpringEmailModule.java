@@ -33,29 +33,61 @@ public class SpringEmailModule {
             File logFile = new File("./Report/" + PropertyConfig.getPropertyValue("passedReprtName"));
             File dashBoard = new File("./Report/PassedImage/Dashboard.png");
             File extentReportUserManual = new File("./Report/User Manual.pdf");
-            helper.addAttachment("LogReport.html",logFile);
-            helper.addAttachment("ReadMe.pdf",extentReportUserManual);
             helper.setSubject(getPassedEmailSubject());
-            helper.setText(
-                    "<html>"
-                            + "<body>"
-                            + "<div>Hi All,"
-                            + "<div> <br> Please find below the Snapshot of the Automated Login Smoke Test executed against <b> " + env + "</b> Version: <b>" + version + " </b></div>"  + "<div>"
-                            + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
-                            + "<div> <p> Attached a detailed script execution report in html format.In bottom there is a Theme Selector button. We used Black Theme Here."
-                            + "<br> Please use the attached ReadMe file for help with the dashboard elements."
-                            + "<br> "
-                            + "<br> "
-                            +"<br> <b><i>NOTE: </i></b> The attached html file might not render properly if viewed from any mobile device."
-                            +"<br> We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
-                            + "<div>Thanks,</div>"
-                            + "<div><b>QA Automation Team</b></div>"
-                            + "</div></body>"
-                            + "</html>", true);
-            // helper.addInline("rightSideImage",
-            //     new File("C:/images/SpringSource-logo.jpg"));
 
-            helper.addInline("leftSideImage", dashBoard);
+            if(logFile.exists() && !logFile.isDirectory()){
+                helper.addAttachment("ReadMe.pdf",extentReportUserManual);
+            }else {
+                System.out.println("User Manual Missing");
+            }
+
+            if(logFile.exists() && !logFile.isDirectory()){
+                helper.addAttachment("LogReport.html",logFile);
+            }else {
+                System.out.println("Logfile Missing");
+            }
+
+            if(dashBoard.exists() && !dashBoard.isDirectory()) {
+                helper.setText(
+                        "<html>"
+                                + "<body>"
+                                + "<div>Hi All,"
+                                + "<div> <br> Please find below the Snapshot of the Automated Login Smoke Test executed against <b> " + env + "</b> Version: <b>" + version + " </b></div>"  + "<div>"
+                                + "<img src='cid:leftSideImage' style='float:center;'  width='800' height='400' />"  + "</div>"
+                                + "<div> <p> Attached a detailed script execution report in html format.In bottom there is a Theme Selector button. We used Black Theme Here."
+                                + "<br> Please use the attached ReadMe file for help with the dashboard elements."
+                                + "<br> "
+                                + "<br> "
+                                +"<br> <b><i>NOTE: </i></b> The attached html file might not render properly if viewed from any mobile device."
+                                +"<br> We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
+                                + "<div>Thanks,</div>"
+                                + "<div><b>QA Automation Team</b></div>"
+                                + "</div></body>"
+                                + "</html>", true);
+                // helper.addInline("rightSideImage",
+                //     new File("C:/images/SpringSource-logo.jpg"));
+
+                helper.addInline("leftSideImage", dashBoard);
+            }else{
+                helper.setText(
+                        "<html>"
+                                + "<body>"
+                                + "<div>Hi All,"
+                                + "<div> <br> Please find below the Test Result for Smoke Test executed against <b> " + env + "</b> Version: <b>" + version + " </b></div>"  + "<div>"
+                                + "<div> <p> Attached a detailed script execution report in html format.In bottom there is a Theme Selector button. We used Black Theme Here."
+                                + "<br> Please use the attached ReadMe file for help with the dashboard elements."
+                                + "<br> "
+                                + "<br> "
+                                +"<br> <b><i>NOTE: </i></b> The attached html file might not render properly if viewed from any mobile device."
+                                +"<br> We are currently in the process of fixing this. However, it looks good when opened from outlook on desktop. </p> </div> "
+                                + "<div>Thanks,</div>"
+                                + "<div><b>QA Automation Team</b></div>"
+                                + "</div></body>"
+                                + "</html>", true);
+                // helper.addInline("rightSideImage",
+                //     new File("C:/images/SpringSource-logo.jpg"));
+            }
+
 
             mailSender.send(message);
         } catch (MessagingException e) {
