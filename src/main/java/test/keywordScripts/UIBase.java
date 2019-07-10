@@ -270,6 +270,50 @@ public class UIBase {
             return new LogMessage(false,"Exception occur " + e.getMessage());
         }
     }
+
+    public LogMessage waitForSecondRevision(String objectLocatorData, String testData){
+        try{
+            UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            UITable uiTable = new UITable(webDriver);
+            UIText uiText = new UIText(webDriver);
+            UILink uiLink = new UILink(webDriver);
+            String objectLocatorPrefix = "FASB.FIRevisions.";
+            if(!utilKeywordScript.validateTestData(testData,2)) {
+                return new LogMessage(false, "Test data invalid");
+            }
+            String[] data = testData.split(",");
+            String leaseName = data[0];
+            String propertyName = data[1];
+
+            for (int i = 0; i<30; i++){
+                refreshPage();
+                LogMessage revisionPageLog = VerifyPageLoadedTrue(objectLocatorPrefix + "pgFIRevisions");
+                if (!revisionPageLog.isPassed()){
+                    continue;
+                }
+                Click(objectLocatorPrefix + "lnkSelectLease");
+                WaitingForPageLoad();
+                VerifyVisibleOnScreenTrue(objectLocatorPrefix + "panelLeaseSelection");
+                uiText.SetText(objectLocatorPrefix + "txtSearch" , leaseName);
+                uiLink.ClickLink(objectLocatorPrefix + "panelLeaseSelection", "Search");
+                WaitingForPageLoad();
+                uiTable.ClickCellInTable(objectLocatorPrefix + "tbLeaseSelection", "Property Name,"+propertyName);
+                uiLink.ClickLink(objectLocatorPrefix + "panelLeaseSelection","Select");
+                WaitingForPageLoad();
+                LogMessage revisionLog = uiTable.compareLastRowColumnValue(objectLocatorData,"Revision,2");
+                if (!revisionLog.isPassed()){
+                    UtilKeywordScript.delay(30);
+                }
+                else{
+                    return new LogMessage(true,"Revision found");
+                }
+            }
+            return new LogMessage(false,"Revision is not found in 15 minutes");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
+
     public LogMessage CustomEnabledTrue(String objectLocatorData){
         try{
             WebElement webElement;
@@ -357,11 +401,11 @@ public class UIBase {
     public LogMessage compareValue(String testData) {
         try {
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            String value = testData.split(",")[0].trim();
+            String compareTovalue = testData.split(",")[1].trim();
             if(!utilKeywordScript.validateTestData(testData,2)){
                 return new LogMessage(false, "Not enough data");
             }
-            String value = testData.split(",")[0].trim();
-            String compareTovalue = testData.split(",")[1].trim();
             if (value.equals(compareTovalue))
                 return new LogMessage(true, "Value matches with the referred value");
             else

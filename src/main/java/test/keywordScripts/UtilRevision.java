@@ -155,11 +155,11 @@ public class UtilRevision extends UtilKeywordScript {
             subLog = uiBase.CustomEnabledFalse(objectlocatorPrefix + "btnJEReport");
             subLog.setLogMessage("JE Report button - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
-
+            /*
             subLog = uiBase.CustomEnabledFalse(objectlocatorPrefix + "btnFXJEReport");
             subLog.setLogMessage("FX JE Report button - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);
-
+            */
             subLog = uiBase.CustomEnabledTrue(objectlocatorPrefix + "btnCancel");
             subLog.setLogMessage("Cancel button - " + subLog.getLogMessage());
             log.addSubLogMessage(subLog);

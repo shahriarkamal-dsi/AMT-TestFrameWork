@@ -268,6 +268,8 @@ public class UnitTesting {
 
         //UtilKeywordScript.convertStringToNumber("$3,264.04");
         UIBase uiBase = new UIBase();
+        UtilDate utilDate = new UtilDate();
+        utilDate.storeChangeDateFormat("04/02/2017,Test");
     }
 
 
