@@ -224,6 +224,24 @@ public class UIScheduleTableDR extends UtilKeywordScript {
         }
     }
 
+    public LogMessage isDulicatePresentInColumn(String objectLocatorData,String clName ) {
+
+        try {
+            List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+            System.out.println("List Value :"+list);
+
+            if(list.isEmpty())
+                return new LogMessage(true,"there is no value for this column: " +clName) ;
+            list.remove(0) ;
+            Long distinctValue = list.stream().filter(val -> !val.toString().isEmpty()).distinct().count() ;
+
+            return (list.size()) == distinctValue.intValue() ? new LogMessage(true, "no duplicate value present in " + clName) :  new LogMessage(false, "duplicate value present in " + clName) ;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
 
     public LogMessage sumCheck(String objectLocatorData,String clName ) {
 

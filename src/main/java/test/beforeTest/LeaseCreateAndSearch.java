@@ -115,7 +115,7 @@ public class LeaseCreateAndSearch {
                         break;
                     }
                 }
-                uiDropDown.SelectItem(objectlocatorPrefix + objectLocatorName, (String)data.get(elementName));
+                uiDropDown.SelectSpecialItem(objectlocatorPrefix + objectLocatorName, (String)data.get(elementName));
                 UtilKeywordScript.delay(5);
             }
 
