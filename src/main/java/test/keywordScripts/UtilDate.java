@@ -77,25 +77,42 @@ public class UtilDate extends  UtilKeywordScript {
     }
 
     public LogMessage StoreIncreasedDate(String testData){
+
         try {
             SimpleDateFormat dateFormat =   new SimpleDateFormat("MM/yyyy") ;
+            SimpleDateFormat fullDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            Date lastDate;
+            Calendar cal;
             if(!validateTestData(testData,2)) {
                 return new LogMessage(false, "Test data invalid");
             }
             String[] data = testData.split(",");
             String date = data[0];
             String varName = data[1];
-            Date lastDate =  dateFormat.parse(date);
-            Calendar cal =  Calendar.getInstance() ;
-            cal.setTime(lastDate);
-            cal.add(Calendar.MONTH, 1);
-            date = dateFormat.format(cal.getTime()) ;
-            TestPlan.getInstance().setStoreData(varName,date);
-            return new LogMessage(true, "increased date  value is stored");
+            String[] fullData = testData.split("/");
+            if (fullData.length == 3){
+                lastDate = fullDateFormat.parse(date);
+                cal = Calendar.getInstance();
+                cal.setTime(lastDate);
+                cal.add(Calendar.MONTH,1);
+                date = fullDateFormat.format(cal.getTime()) ;
+                TestPlan.getInstance().setStoreData(varName,date);
+                return new LogMessage(true, date + " - increased date  value is stored");
+            }else {
+                lastDate =  dateFormat.parse(date);
+                cal =  Calendar.getInstance() ;
+                cal.setTime(lastDate);
+                cal.add(Calendar.MONTH, 1);
+                date = dateFormat.format(cal.getTime()) ;
+                TestPlan.getInstance().setStoreData(varName,date);
+                return new LogMessage(true, date + " - increased date  value is stored");
+            }
+
         }catch (Exception e){
             return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
         }
     }
+
     public String getIncreasedDate(String testData){
         try {
             SimpleDateFormat dateFormat =   new SimpleDateFormat("MM/yyyy") ;
@@ -123,6 +140,27 @@ public class UtilDate extends  UtilKeywordScript {
             return  dateFormat2.format(cal.getTime()) ;
         }catch (Exception e){
             return testData ;
+        }
+    }
+
+    public LogMessage storeChangeDateFormat(String testData){
+        try {
+            SimpleDateFormat dateFormat1 =   new SimpleDateFormat("MM/dd/yyyy") ;
+            SimpleDateFormat dateFormat2 =   new SimpleDateFormat("MM/yyyy") ;
+            if(!validateTestData(testData,2)) {
+                return new LogMessage(false, "Test data invalid");
+            }
+            String[] data = testData.split(",");
+            String date = data[0];
+            String varName = data[1];
+            Date parseDate =  dateFormat1.parse(date);
+            Calendar cal =  Calendar.getInstance() ;
+            cal.setTime(parseDate);
+            String changeDate = dateFormat2.format(cal.getTime());
+            TestPlan.getInstance().setStoreData(varName,changeDate);
+            return new LogMessage(true, changeDate +" - Date  value is stored");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occur " + e.getMessage());
         }
     }
 

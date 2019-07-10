@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class UITable extends  UtilKeywordScript{
     private WebDriver webDriver;
+    private UIBase uiBase;
 
     public UITable(WebDriver driver) {
         this.webDriver = driver ;
@@ -291,6 +292,7 @@ public class UITable extends  UtilKeywordScript{
 
     public LogMessage ClickLinkInTable(String objectLocatorData, String testData) {
         try {
+            uiBase = new UIBase(webDriver);
             String columnName = "" ;
             String columnValue = "" ;
             if(!validateTestData(testData,2))
@@ -307,7 +309,8 @@ public class UITable extends  UtilKeywordScript{
             String text = element.getText();
             if(columnValue.equals(element.getText())) {
                 WebElement elm = element.findElement(By.linkText(columnValue));
-                elm.click();
+                uiBase.Click(elm);
+                //elm.click();
                 return new LogMessage(true, " Link element is clicked");
             }
             return new LogMessage(true, "Proper cell is not present.");
@@ -552,7 +555,7 @@ public class UITable extends  UtilKeywordScript{
             String columnValue1=data[1];
             String columnName2=data[2];
             String columnValue2=data[3];
-            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);//
+            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);
             WebElement element=row.get(columnName2);
             String columnValueOfUI  = UtilKeywordScript.convertStringToNumber(element.getAttribute("textContent")) ;
             if(Double.parseDouble(columnValue2)==Double.parseDouble(columnValueOfUI)){
@@ -624,11 +627,29 @@ public class UITable extends  UtilKeywordScript{
             String columnName = data[0];
             String varName = data[1];
             String columnValue = getLastRowColumnValue(objectLocator,columnName);
-            //columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnValue ;
             TestPlan.getInstance().setStoreData(varName,columnValue);
-            return new LogMessage(true, "Last column value is stored");
+            return new LogMessage(true, columnValue + " column value is stored");
         }catch (Exception e){
             return new LogMessage( false, "Exception occurred " + e.getMessage()) ;
+        }
+    }
+    public LogMessage storeLastRowNumaricValue(String objectLocator,String testData){
+        try{
+            if(!validateTestData(testData,2)){
+                return new LogMessage(false, "Test data invalid");
+            }
+            UITable uiTable = new UITable(webDriver);
+            String[] data = testData.split(",");
+            String columnName = data[0];
+            String varName = data[1];
+            String columnValue = uiTable.getLastRowColumnValue(objectLocator,columnName);
+            columnValue =  UtilKeywordScript.isItDigit(columnValue) ? UtilKeywordScript.convertStringToNumber(columnValue) : columnValue ;
+            TestPlan.getInstance().setStoreData(varName,columnValue);
+            return new LogMessage(true, columnValue + " value is stored");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur " + ex.getMessage());
         }
     }
 

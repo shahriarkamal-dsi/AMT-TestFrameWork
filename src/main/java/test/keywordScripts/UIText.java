@@ -42,7 +42,7 @@ public class UIText {
             userWeb.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.sendKeys(textData);
-            return new LogMessage(true,"Text is set up");
+            return new LogMessage(true,textData + "- Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
             return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
@@ -105,6 +105,7 @@ public class UIText {
     }
 
     public LogMessage SetTextWithoutClear(String objectLocator, String textData){
+        System.out.println("Test Data for second revision: " + textData);
         try {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == element )
@@ -115,7 +116,7 @@ public class UIText {
             uiBase.Click(element);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             element.sendKeys(textData);
-            return new LogMessage(true,"Text is set up");
+            return new LogMessage(true,textData + " - Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
             return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
@@ -145,6 +146,19 @@ public class UIText {
             return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
     }
+    public LogMessage compareTextWithComma(String objectLocator, String testData){
+        try{
+
+            String attribute = getText(objectLocator);
+            if(attribute.equals(testData.trim()))
+                return new LogMessage(true, testData + " Value is verified");
+            else
+                return new LogMessage(false, testData + " Value is not verified");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
+        }
+    }
+
     public LogMessage compareNumericText(String objectLocator, String testData){
         try{
             String[] splittedTestData=testData.split(",");
@@ -160,7 +174,6 @@ public class UIText {
 
     public LogMessage compareNumberAfterIncrement(String testData){
 
-        System.out.println("TestDat: " + testData);
          UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
             if(!utilKeywordScript.validateTestData(testData,3)) {
@@ -170,10 +183,6 @@ public class UIText {
             Integer data = Integer.valueOf(splittedTestData[0].trim()) + Integer.valueOf(splittedTestData[1].trim());
             String numberToInc = UtilKeywordScript.convertStringToNumber(String.valueOf(data));
             String numberToCompare = UtilKeywordScript.convertStringToNumber(splittedTestData[2].trim());
-
-            System.out.println("numberToInc: " + numberToInc);
-            System.out.println("numberToCompare: " + numberToCompare);
-
 
             if (numberToCompare.equals(numberToInc)){
                 return new LogMessage(true,"Value is verified");

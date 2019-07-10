@@ -113,6 +113,16 @@ public class UtilKeywordScript {
         }
     }
 
+    public LogMessage maximizeWindow(){
+        try{
+            webDriver.manage().window().maximize();
+            return new LogMessage(true,"Window maximize successfully");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new LogMessage(false,"Exception occur " + e.getMessage());
+        }
+    }
+
 
     public boolean isAlertPresent(){
         boolean foundAlert = false;
@@ -152,7 +162,6 @@ public class UtilKeywordScript {
     }
 
     public  LogMessage login(String url, String userName, String password, String client){
-
         try{
             UIBase uiBase = new UIBase(webDriver) ;
             UIText uiText = new UIText(webDriver) ;
@@ -162,8 +171,9 @@ public class UtilKeywordScript {
             uiText.SetText("Common.Login.txtClientID",client);
             uiBase.Click("Common.Login.btnLogIn");
             LogMessage log = uiText.WaitForVisibilityOfText("Common.Login.navDashboard","Dashboard");
-            if (log.isPassed())
+            if (log.isPassed()){
                 return new LogMessage(true,"Login successfully");
+            }
             return new LogMessage(false,"Login fail");
         }catch (Exception e){
             e.printStackTrace();
@@ -287,7 +297,16 @@ public class UtilKeywordScript {
     public static String convertStringToNumber(String value) {
         try {
             Double digit  =  Double.parseDouble(value.replaceAll("[^\\d.]", ""));
-            System.out.println(String.valueOf(digit));
+            return String.valueOf(digit) ;
+
+        } catch (Exception ex) {
+            return "" ;
+        }
+    }
+    public static String convertStringToIntNumber(String value) {
+        try {
+            Integer digit  =  Integer.parseInt(value.replaceAll("[^\\d.]", ""));
+            //System.out.println(String.valueOf(digit));
             return String.valueOf(digit) ;
 
         } catch (Exception ex) {

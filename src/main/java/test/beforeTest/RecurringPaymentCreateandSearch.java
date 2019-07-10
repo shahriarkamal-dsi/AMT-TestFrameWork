@@ -78,10 +78,9 @@ public class RecurringPaymentCreateandSearch {
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             for (String element : dropdownFields){
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-                uiDropDown.SelectItem(objectLocatorPrefix + element,(String)data.get(element));
+                uiDropDown.SelectSpecialItem(objectLocatorPrefix + element,(String)data.get(element));
 
             }
-
             uiBase.Click(objectLocatorPrefix + "btnSave");
             uiBase.WaitingForSuccessfullPopup();
 
