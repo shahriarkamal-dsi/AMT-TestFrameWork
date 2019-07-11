@@ -82,8 +82,7 @@ public class RecurringPaymentCreateandSearch {
                 System.out.println("Dropdown Element:" +element);
                 System.out.println("data.get(element):" + data.get(element));
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-                uiDropDown.SelectItem(objectLocatorPrefix + element,(String)data.get(element));
-
+                uiDropDown.SelectSpecialItem(objectLocatorPrefix + element,(String)data.get(element));
             }
 
             /* 435_18.03.2019 Setting Value for Fiscal Year*/
