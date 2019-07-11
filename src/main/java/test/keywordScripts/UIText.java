@@ -81,7 +81,7 @@ public class UIText {
             String objectLocatorPath= (String) objectLocatorData.get(PropertyConfig.OBJECT_LOCATORS);
             WebDriverWait wait = new WebDriverWait(webDriver, time);
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(objectLocatorPath +"//*[contains(text(),'" + textData + "')]")));
-            return new LogMessage(true, "Text is visible");
+            return new LogMessage(true,textData + "- Text is set up");
         }catch (Exception e){
             e.printStackTrace();
             return new LogMessage(false, "Exception occurred " + e.getMessage());
@@ -166,6 +166,19 @@ public class UIText {
                 return new LogMessage(true, "Value is verified");
             else
                 return new LogMessage(false, "Value is not verified");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
+        }
+    }
+    
+  public LogMessage compareTextWithComma(String objectLocator, String testData){
+        try{
+
+            String attribute = getText(objectLocator);
+            if(attribute.equals(testData.trim()))
+                return new LogMessage(true, testData + " Value is verified");
+            else
+                return new LogMessage(false, testData + " Value is not verified");
         }catch (Exception e){
             return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
