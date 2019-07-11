@@ -16,6 +16,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.JavascriptExecutor;
 
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.LogManager;
@@ -42,7 +44,7 @@ public class UIText {
             userWeb.clear();
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             userWeb.sendKeys(textData);
-            return new LogMessage(true,textData + "- Text is set up");
+            return new LogMessage(true,"Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
             return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
@@ -105,7 +107,6 @@ public class UIText {
     }
 
     public LogMessage SetTextWithoutClear(String objectLocator, String textData){
-        System.out.println("Test Data for second revision: " + textData);
         try {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == element )
@@ -116,7 +117,7 @@ public class UIText {
             uiBase.Click(element);
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
             element.sendKeys(textData);
-            return new LogMessage(true,textData + " - Text is set up");
+            return new LogMessage(true,"Text is set up");
         } catch(Exception ex){
             ex.printStackTrace();
             return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
@@ -134,10 +135,33 @@ public class UIText {
             return "";
         }
     }
+    public LogMessage compareNumber(String objectLocator, String testData){
+        try{
+            String[] splittedTestData=testData.split(",");
+            double attribute1 = Double.parseDouble(getText(objectLocator));
+            double attribute2 = Double.parseDouble(splittedTestData[0].trim());
+
+            System.out.println("Webelement :"+attribute1);
+            System.out.println("Webelement Value :"+ attribute2);
+
+            if(attribute1 == attribute2)
+                return new LogMessage(true, "Value is verified");
+            else
+                return new LogMessage(false, "Value is not verified");
+        }catch (Exception e){
+            return new LogMessage(false,"Exception occurred" + e.getMessage());
+        }
+    }
+
     public LogMessage compareText(String objectLocator, String testData){
+
         try{
             String[] splittedTestData=testData.split(",");
             String attribute = getText(objectLocator);
+
+            System.out.println("Webelement :"+attribute);
+            System.out.println("Webelement Value :"+splittedTestData[0]);
+
             if(attribute.equals(splittedTestData[0].trim()))
                 return new LogMessage(true, "Value is verified");
             else
@@ -146,24 +170,13 @@ public class UIText {
             return new LogMessage(false,"Exception occurred" + e.getMessage());
         }
     }
-    public LogMessage compareTextWithComma(String objectLocator, String testData){
-        try{
-
-            String attribute = getText(objectLocator);
-            if(attribute.equals(testData.trim()))
-                return new LogMessage(true, testData + " Value is verified");
-            else
-                return new LogMessage(false, testData + " Value is not verified");
-        }catch (Exception e){
-            return new LogMessage(false,"Exception occurred" + e.getMessage());
-        }
-    }
 
     public LogMessage compareNumericText(String objectLocator, String testData){
+
         try{
             String[] splittedTestData=testData.split(",");
             String attribute = UtilKeywordScript.convertStringToNumber(getText(objectLocator));
-            if(attribute.equals(UtilKeywordScript.convertStringToNumber(splittedTestData[0].trim())))
+            if(Double.parseDouble(attribute)==Double.parseDouble(splittedTestData[0].trim()))
                 return new LogMessage(true, "Value is verified");
             else
                 return new LogMessage(false, "Value is not verified");
@@ -174,6 +187,7 @@ public class UIText {
 
     public LogMessage compareNumberAfterIncrement(String testData){
 
+        System.out.println("TestDat: " + testData);
          UtilKeywordScript utilKeywordScript = new UtilKeywordScript(webDriver);
         try{
             if(!utilKeywordScript.validateTestData(testData,3)) {
@@ -183,6 +197,10 @@ public class UIText {
             Integer data = Integer.valueOf(splittedTestData[0].trim()) + Integer.valueOf(splittedTestData[1].trim());
             String numberToInc = UtilKeywordScript.convertStringToNumber(String.valueOf(data));
             String numberToCompare = UtilKeywordScript.convertStringToNumber(splittedTestData[2].trim());
+
+            System.out.println("numberToInc: " + numberToInc);
+            System.out.println("numberToCompare: " + numberToCompare);
+
 
             if (numberToCompare.equals(numberToInc)){
                 return new LogMessage(true,"Value is verified");

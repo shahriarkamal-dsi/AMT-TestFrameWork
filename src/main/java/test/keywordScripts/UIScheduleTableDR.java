@@ -50,7 +50,7 @@ public class UIScheduleTableDR extends UtilKeywordScript {
                 }
                 schedultable.add(rowdata);
             }
-            return schedultable ;
+                 return schedultable ;
             //schedultable.stream().forEach(r-> System.out.println(r));
 
         } catch (Exception ex) {
@@ -68,10 +68,10 @@ public class UIScheduleTableDR extends UtilKeywordScript {
         System.out.println("column Name :"+clName);
 
         try {
-            //List<Map> scheduleTable =  getAllvaluefromScheduleTable(objectLocatorData) ;
-            List<Map> scheduleTable = ScheduleDataDR.getInstance().getScheduleTable();
-            System.out.println("scheduleTable Value :"+scheduleTable);
-            return  scheduleTable.stream().map(row -> row.get(clName)).collect(Collectors.toList()) ;
+                //List<Map> scheduleTable =  getAllvaluefromScheduleTable(objectLocatorData) ;
+                List<Map> scheduleTable = ScheduleDataDR.getInstance().getScheduleTable();
+                System.out.println("scheduleTable Value :"+scheduleTable);
+                return  scheduleTable.stream().map(row -> row.get(clName)).collect(Collectors.toList()) ;
 
         } catch ( Exception ex) {
             ex.printStackTrace();
@@ -199,7 +199,7 @@ public class UIScheduleTableDR extends UtilKeywordScript {
             return new LogMessage(false,"Column Names Have not Validated");
         }
     }
-
+    
 
     public LogMessage isDulicayPresent(String objectLocatorData,String clName ) {
         System.out.println("Method Name: isDulicayPresent");
@@ -224,24 +224,6 @@ public class UIScheduleTableDR extends UtilKeywordScript {
         }
     }
 
-    public LogMessage isDulicatePresentInColumn(String objectLocatorData,String clName ) {
-
-        try {
-            List list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
-            System.out.println("List Value :"+list);
-
-            if(list.isEmpty())
-                return new LogMessage(true,"there is no value for this column: " +clName) ;
-            list.remove(0) ;
-            Long distinctValue = list.stream().filter(val -> !val.toString().isEmpty()).distinct().count() ;
-
-            return (list.size()) == distinctValue.intValue() ? new LogMessage(true, "no duplicate value present in " + clName) :  new LogMessage(false, "duplicate value present in " + clName) ;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
-        }
-    }
-
 
     public LogMessage sumCheck(String objectLocatorData,String clName ) {
 
@@ -253,30 +235,30 @@ public class UIScheduleTableDR extends UtilKeywordScript {
 
             if(list.isEmpty())
                 return  new LogMessage(false,"no clm values does found for this column: " + clName) ;
-            List<String> values =    list.stream().map(value -> convertStringToNumber( (String) value)).collect(Collectors.toList()) ;
-            String lstValue = values.remove(values.size()-1) ;
-            double totalSum  ;
-            double value = 0;
-            for( String val : values) {
-                if(val.isEmpty())
-                    continue;
-                double d = Double.valueOf(val).doubleValue() ;
-                value += d ;
-                System.out.println("New Amount for Sum UP :"+ d);
-                System.out.println("Summed UP Amount:"+ value);
-                double roundOff = Math.round(value * 100.0) / 100.0;
-                System.out.println("Round Value:"+ roundOff);
+          List<String> values =    list.stream().map(value -> convertStringToNumber( (String) value)).collect(Collectors.toList()) ;
+          String lstValue = values.remove(values.size()-1) ;
+          double totalSum  ;
+          double value = 0;
+          for( String val : values) {
+              if(val.isEmpty())
+                  continue;
+              double d = Double.valueOf(val).doubleValue() ;
+              value += d ;
+              System.out.println("New Amount for Sum UP :"+ d);
+              System.out.println("Summed UP Amount:"+ value);
+              double roundOff = Math.round(value * 100.0) / 100.0;
+              System.out.println("Round Value:"+ roundOff);
 
-            }
+          }
 
-            if(lstValue.isEmpty())
-                return new LogMessage(false, "total value is empty") ;
-            else {
-                double d = Double.valueOf(lstValue).doubleValue() ;
-                System.out.println("Last Amount:"+ d);
-                double roundOff = Math.round(value * 100.0) / 100.0;
-                return roundOff == d ? new LogMessage(true, "total sum is right"): new LogMessage(false, "total sum is not right") ;
-            }
+          if(lstValue.isEmpty())
+              return new LogMessage(false, "total value is empty") ;
+          else {
+              double d = Double.valueOf(lstValue).doubleValue() ;
+              System.out.println("Last Amount:"+ d);
+              double roundOff = Math.round(value * 100.0) / 100.0;
+              return roundOff == d ? new LogMessage(true, "total sum is right"): new LogMessage(false, "total sum is not right") ;
+          }
         } catch (Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
@@ -295,7 +277,7 @@ public class UIScheduleTableDR extends UtilKeywordScript {
             List<String> list =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
             String value = list.get(Integer.valueOf(splits[1]).intValue());
 
-            return  value.equals(splits[2]) ? new LogMessage(true, "values are equals") :  new LogMessage(false, "values are not equals");
+          return  value.equals(splits[2]) ? new LogMessage(true, "values are equals") :  new LogMessage(false, "values are not equals");
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -356,8 +338,8 @@ public class UIScheduleTableDR extends UtilKeywordScript {
         List<String> list3 =  getAllSpecificColumnValues(objectLocatorData,splits[1])  ;
         List<String> list4 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
         /*
-         * This list 3 and list4 have not been used ,just for partial fix of a Selenium Issue
-         * */
+        * This list 3 and list4 have not been used ,just for partial fix of a Selenium Issue
+        * */
         List<String> list2 =  getAllSpecificColumnValues(objectLocatorData,splits[1])  ;
         List<String> list1 =  getAllSpecificColumnValues(objectLocatorData,splits[0])  ;
 

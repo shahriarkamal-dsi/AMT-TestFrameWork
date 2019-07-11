@@ -398,7 +398,6 @@ public class UIBase {
         }
     }
 
-
     public LogMessage compareValue(String testData) {
         try {
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);

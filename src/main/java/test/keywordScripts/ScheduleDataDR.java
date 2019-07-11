@@ -8,9 +8,9 @@ public class ScheduleDataDR {
     public Map paymentMap = new HashMap<String,String>() ;
     public List scheduleList = new ArrayList();
     /*
-     * Adding paymentMap,scheduleTable
-     * Adding setPaymentMap,getPaymentMap and setScheduleTable,getScheduleTable
-     * */
+    * Adding paymentMap,scheduleTable
+    * Adding setPaymentMap,getPaymentMap and setScheduleTable,getScheduleTable
+    * */
 
 
     public String getPaymentMap(String key) {
@@ -55,8 +55,8 @@ public class ScheduleDataDR {
 
     public ScheduleDataDR() {
     }
-    public static ScheduleDataDR getInstance() {
+   public static ScheduleDataDR getInstance() {
         return SCHEDULE_DATA;
-    }
+   }
 
 }

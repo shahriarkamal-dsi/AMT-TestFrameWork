@@ -62,12 +62,14 @@ public class RecurringPaymentCreateandSearch {
     public LogMessage addRecurringPayment(Map data){
         try{
             String  objectLocatorPrefix = "Common.RecurringPayment." ;
+            //String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" , "fiscalYear"} ;
             String[] dropdownFields = new String[] {"spaceInfo","chargeType","frequency","escalationType" , "leaseTermYear" , "leaseTermDefined" } ;
             WebDriverWait wait = new WebDriverWait(webDriver, PropertyConfig.WAIT_TIME_EXPLICIT_WAIT);
 
             UILink uiLink = new UILink(webDriver);
             UIBase uiBase = new UIBase(webDriver);
             UITable uiTable = new UITable(webDriver);
+            UIText uiText = new UIText(webDriver);
 
             uiLink.ClickLink("Common.Lease.tbRPayment","Add New");
             UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
@@ -77,10 +79,43 @@ public class RecurringPaymentCreateandSearch {
 
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             for (String element : dropdownFields){
+                System.out.println("Dropdown Element:" +element);
+                System.out.println("data.get(element):" + data.get(element));
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-                uiDropDown.SelectSpecialItem(objectLocatorPrefix + element,(String)data.get(element));
+                uiDropDown.SelectItem(objectLocatorPrefix + element,(String)data.get(element));
 
             }
+
+            /* 435_18.03.2019 Setting Value for Fiscal Year*/
+
+            String mapValue = (String) data.get("leaseTermDefined");
+            String FiscalYaerObjectLocator = objectLocatorPrefix+"fiscalYear";
+            String FiscalYaerObjectLocatorByAreaOwns = objectLocatorPrefix+"fiscalYearByAreaOwns";
+
+            System.out.println("mapValue: "+mapValue);
+
+            if(mapValue.equals("Fiscal Year" ) ){
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+
+                // Getting Object locator data from fiscalYear from OR"
+                System.out.println("(String) data.get(fiscalYear)"+ data.get("fiscalYear"));
+                uiBase.VerifyVisibleOnScreenTrue(FiscalYaerObjectLocator);
+                uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
+                try {
+                    uiBase.Click(FiscalYaerObjectLocator);
+                    uiText.SetText(FiscalYaerObjectLocator, (String) data.get("fiscalYear"));
+                    System.out.println("Successfully Set Fiscal year");
+                } catch (Exception e) {
+                    uiBase.Click(FiscalYaerObjectLocatorByAreaOwns);
+                    uiText.SetText(FiscalYaerObjectLocatorByAreaOwns, (String) data.get("fiscalYear"));
+                    System.out.println("Successfully Set Fiscal year");
+                }
+            }else{
+                System.out.println("Fiscal year Not Set");
+            }
+
+            /* 435_18.03.2019 Setting Value for Fiscal Year*/
+
             uiBase.Click(objectLocatorPrefix + "btnSave");
             uiBase.WaitingForSuccessfullPopup();
 

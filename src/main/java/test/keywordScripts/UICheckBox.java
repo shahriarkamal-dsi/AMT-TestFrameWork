@@ -31,6 +31,8 @@ public class UICheckBox {
 
     public LogMessage VerifyCheckboxCheckedFalse(String objectLocatorData) {
         try {
+
+            System.out.println("ObjectLocator :"+objectLocatorData);
             WebElement element = WebObjectSearch.getWebElement(webDriver, objectLocatorData);
             if (null == element)
                 return new LogMessage(false, "UI element is not found");
