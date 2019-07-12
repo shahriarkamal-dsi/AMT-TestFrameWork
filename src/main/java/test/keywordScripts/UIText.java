@@ -123,6 +123,21 @@ public class UIText {
             return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
         }
     }
+    public LogMessage SetTextWithoutClick(String objectLocator, String textData){
+        try {
+            WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
+            if(null == element )
+                return new LogMessage(false,"Element is not found");
+            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            element.clear();
+            element.sendKeys(textData);
+            return new LogMessage(true,"Text is set up");
+        } catch(Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occurred:- " + ex.getMessage());
+        }
+    }
 
     public String getText(String objectLocator){
         try {
