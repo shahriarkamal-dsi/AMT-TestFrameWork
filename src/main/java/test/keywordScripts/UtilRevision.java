@@ -288,6 +288,47 @@ public class UtilRevision extends UtilKeywordScript {
         }
     }
 
+    public LogMessage setAmountToCapitalizeForVerification(String objectLocator,String testData){
+        try{
+            UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
+            if(!utilKeywordScript.validateTestData(testData,3)){
+                return new LogMessage(false, "Test data invalid");
+            }
+            String[] data = testData.split(",");
+            final String columnName = Optional.ofNullable(data[0]).orElse("") ;
+            final String columnValue = Optional.ofNullable(data[1]).orElse("") ;
+            final double rentalAmount=Double.parseDouble(Optional.ofNullable(data[2]).orElse(""));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            UITable uiTable=new UITable(webDriver);
+            Map<String, WebElement> row = uiTable.getSingleRowfromTable(objectLocator,columnName,columnValue,null);
+            if (null == row || row.isEmpty()){
+                return new LogMessage(false,"No table data found");
+            }
+            //WebElement startDateElement=row.get("FASB/IASB Start Date");
+            //LocalDate startDate=LocalDate.parse(startDateElement.getAttribute("textContent").trim(),formatter);
+            //WebElement endDateElement=row.get("FASB/IASB End Date");
+            //LocalDate endDate=LocalDate.parse(endDateElement.getAttribute("textContent").trim(),formatter);
+            //double noOfMonths =(double) (ChronoUnit.MONTHS.between(startDate,endDate)+1);
+
+            double amountToCapitalize=Double.parseDouble(UtilKeywordScript.convertStringToNumber(row.get("Total Amount to Be Capitalized").getAttribute("textContent")));
+            ScheduleDataDR.getInstance().setAmountToCapitalize(amountToCapitalize);
+            /*
+            * Checking ScheduleDataDR.getInstance().getAmountToCapitalize() and ScheduleDataDR.getInstance().setAmountToCapitalize()
+            * is working properly
+            * */
+            System.out.println("amountToCapitalize value is :"+ScheduleDataDR.getInstance().getAmountToCapitalize());
+            return new  LogMessage(true,"AmountToCapitalized  Saved Successfully for Verification");
+            /*if(amountToCapitalize==(noOfMonths*rentalAmount)){
+                return new  LogMessage(true,"Amount to capitalize verified");
+            }
+            else
+                return new  LogMessage(false,"Amount to capitalize is not verified");*/
+        }catch (Exception e){
+            e.printStackTrace();
+            return new  LogMessage(false,"Exception occurred " + e.getMessage());
+        }
+    }
+
     public LogMessage verifyPeriodof13Period(String objectLocator,String testData){
         try{
             UtilKeywordScript utilKeywordScript=new UtilKeywordScript(webDriver);
