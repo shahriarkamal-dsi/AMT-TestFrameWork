@@ -282,6 +282,54 @@ public class UIScheduleTableDR extends UtilKeywordScript {
     }
 
 
+    public LogMessage amountToCapitalizedCheck(String objectLocatorData,String clName ) {
+
+        try {
+            List<String> list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
+
+            System.out.println("Column Name: "+ clName);
+            System.out.println("LIST Items: "+ list);
+
+            if(list.isEmpty())
+                return  new LogMessage(false,"no clm values does found for this column: " + clName) ;
+            List<String> values =    list.stream().map(value -> convertStringToNumber( (String) value)).collect(Collectors.toList()) ;
+            String lstValue = values.remove(values.size()-1) ;
+            double totalSum  ;
+            double value = 0;
+            for( String val : values) {
+                if(val.isEmpty())
+                    continue;
+                double d = Double.valueOf(val).doubleValue() ;
+                value += d ;
+                System.out.println("New Amount for Sum UP :"+ d);
+                System.out.println("Summed UP Amount:"+ value);
+                double roundOff = Math.round(value * 100.0) / 100.0;
+                System.out.println("Round Value:"+ roundOff);
+
+            }
+
+            if(lstValue.isEmpty())
+                return new LogMessage(false, "total value is empty") ;
+            else {
+                double d = Double.valueOf(lstValue).doubleValue() ;
+                double roundOff = Math.round(value * 100.0) / 100.0;
+                System.out.println("Last Amount from Schedule Table:"+ d);
+                System.out.println("Summed UP Amount:"+ value);
+                System.out.println("ScheduleDataDR.getInstance().getAmountToCapitalize() :"+ ScheduleDataDR.getInstance().getAmountToCapitalize());
+
+
+                if(roundOff == d && roundOff ==ScheduleDataDR.getInstance().getAmountToCapitalize()){
+                    return new LogMessage(true, "amountToCapitalizedCheck Passed ") ;
+                }else{
+                    return new LogMessage(false, "amountToCapitalizedCheck Failed ") ;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "exception occurred " + ex.getMessage()) ;
+        }
+    }
+
     public LogMessage  checkClValue(String objectLocatorData,String testData ) {
         try {
 

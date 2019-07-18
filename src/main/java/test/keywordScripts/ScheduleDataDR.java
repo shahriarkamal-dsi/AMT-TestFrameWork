@@ -7,6 +7,8 @@ public class ScheduleDataDR {
 
     public Map paymentMap = new HashMap<String,String>() ;
     public List scheduleList = new ArrayList();
+    public double amountToCapitalize;
+
     /*
     * Adding paymentMap,scheduleTable
     * Adding setPaymentMap,getPaymentMap and setScheduleTable,getScheduleTable
@@ -59,4 +61,11 @@ public class ScheduleDataDR {
         return SCHEDULE_DATA;
    }
 
+    public double getAmountToCapitalize() {
+        return amountToCapitalize;
+    }
+
+    public void setAmountToCapitalize(double amountToCapitalize) {
+        this.amountToCapitalize = amountToCapitalize;
+    }
 }
