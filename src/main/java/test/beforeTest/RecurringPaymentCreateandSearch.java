@@ -88,26 +88,26 @@ public class RecurringPaymentCreateandSearch {
             /* 435_18.03.2019 Setting Value for Fiscal Year*/
 
             String mapValue = (String) data.get("leaseTermDefined");
-            String FiscalYaerObjectLocator = objectLocatorPrefix+"fiscalYear";
+            String FiscalYaerObjectLocator = objectLocatorPrefix+"txtFiscalYear";
             String FiscalYaerObjectLocatorByAreaOwns = objectLocatorPrefix+"fiscalYearByAreaOwns";
 
-            System.out.println("mapValue: "+mapValue);
+            System.out.println("mapValue EQUAL: "+mapValue);
 
             if(mapValue.equals("Fiscal Year" ) ){
-                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-
+                UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
                 // Getting Object locator data from fiscalYear from OR"
                 System.out.println("(String) data.get(fiscalYear)"+ data.get("fiscalYear"));
-                uiBase.VerifyVisibleOnScreenTrue(FiscalYaerObjectLocator);
-                uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
+
+                //uiBase.VerifyVisibleOnScreenTrue(FiscalYaerObjectLocator);
+                //uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
+
                 try {
                     uiBase.Click(FiscalYaerObjectLocator);
+                    UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
                     uiText.SetText(FiscalYaerObjectLocator, (String) data.get("fiscalYear"));
                     System.out.println("Successfully Set Fiscal year");
                 } catch (Exception e) {
-                    uiBase.Click(FiscalYaerObjectLocatorByAreaOwns);
-                    uiText.SetText(FiscalYaerObjectLocatorByAreaOwns, (String) data.get("fiscalYear"));
-                    System.out.println("Successfully Set Fiscal year");
+                    System.out.println("Exception :"+e);
                 }
             }else{
                 System.out.println("Fiscal year Not Set");
@@ -124,21 +124,21 @@ public class RecurringPaymentCreateandSearch {
             UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
 
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0,"+ (String)data.get("effDate"));
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
             uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
 
             uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "Annual,0,0");
 
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND*3);
 
             uiBase.Click(objectLocatorPrefix + "saveRentalActivity");
 
@@ -150,10 +150,10 @@ public class RecurringPaymentCreateandSearch {
             //uiBase.WaitingForPageLoad();
             LogMessage lm = uiBase.WaitingForSuccessfullPopup();
 
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND*3);
 
             uiBase.Click(objectLocatorPrefix + "btnClose");
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
             Set<String> set =webDriver.getWindowHandles();
             Iterator<String> itr= set.iterator();
             while(itr.hasNext()){

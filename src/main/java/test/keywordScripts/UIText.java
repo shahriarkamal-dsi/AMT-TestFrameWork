@@ -11,19 +11,21 @@ import test.objectLocator.ObjectLocatorDataStorage;
 import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.JavascriptExecutor;
-
-
-import java.time.LocalDate;
-import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.LogManager;
 
 public class UIText {
     private WebDriver webDriver;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     public UIText(){
 
@@ -144,12 +146,36 @@ public class UIText {
             System.out.println("Webelement :"+attribute1);
             System.out.println("Webelement Value :"+ attribute2);
 
-            if(attribute1 == attribute2)
+            if(Math.round(attribute1) == attribute2)
                 return new LogMessage(true, "Value is verified");
             else
                 return new LogMessage(false, "Value is not verified");
         }catch (Exception e){
             return new LogMessage(false,"Exception occurred" + e.getMessage());
+        }
+    }
+
+    public LogMessage compareMonthGap(String objectLocator, String testData){
+        try{
+            String[] splittedTestData=testData.split(",");
+
+            int Months = Integer.parseInt(getText(objectLocator).replaceAll("\\.0*$", ""));
+            String startDate = splittedTestData[0].trim();
+            String endDate = splittedTestData[1].trim();
+            LocalDate SD = LocalDate.parse(startDate, formatter);
+            LocalDate ED = LocalDate.parse(endDate, formatter);
+            long monthBetween = ChronoUnit.MONTHS.between(SD, ED);
+            System.out.println(monthBetween);
+
+            if(Months == (monthBetween+1))
+                return new LogMessage(true, "Month is verified :"+"Months >>"+Months+"monthBetween >>"+monthBetween);
+            else
+                return new LogMessage(false, "Month is not verified"+"Months >>"+Months+"monthBetween >>"+monthBetween);
+
+        }catch (Exception e){
+            System.out.println("Exception occurred");
+            return new LogMessage(false,"Exception occurred at compareMonthGap :" + e.getMessage());
+
         }
     }
 

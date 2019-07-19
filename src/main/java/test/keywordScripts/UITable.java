@@ -11,6 +11,9 @@ import test.objectLocator.WebObjectSearch;
 import test.utility.PropertyConfig;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,6 +26,7 @@ public class UITable extends  UtilKeywordScript{
     public UITable(WebDriver driver) {
         this.webDriver = driver ;
     }
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     public UITable(){
 
@@ -568,6 +572,88 @@ public class UITable extends  UtilKeywordScript{
             return new LogMessage( false, "Exception occurred " + ex.getMessage()) ;
         }
 
+    }
+
+    public LogMessage CompareEqualInStraightLineDemoMethod(String objectLocator,String testData){
+        try{
+            if(!validateTestData(testData,4)){
+                return  new LogMessage(false, "Test data invalid");
+            }
+            String[] data=testData.split(",");
+
+            String startDate = data[0].trim();
+            String endDate = data[1].trim();
+            LocalDate SD = LocalDate.parse(startDate, formatter);
+            LocalDate ED = LocalDate.parse(endDate, formatter);
+            float monthBetween = (ChronoUnit.MONTHS.between(SD, ED))+1;
+            System.out.println("monthBetween value:"+monthBetween);
+            System.out.println("Integer.parseInt(data[5] value:"+Integer.parseInt(data[5]));
+            float straightLineValue = (Integer.parseInt(data[5]) / monthBetween);
+            System.out.println("straightLine Value :"+straightLineValue);
+            double roundOff = Math.round(straightLineValue * 100.0) / 100.0;
+            System.out.println("roundOff Value :"+roundOff);
+
+            String columnName1=data[2];
+            String columnValue1=data[3];
+            String columnName2=data[4];
+            String columnValue2= String.valueOf(roundOff);
+
+            System.out.println("columnName1 :"+columnName1);
+            System.out.println("columnValue1 :"+columnValue1);
+            System.out.println("columnName2 :"+columnName2);
+            System.out.println("columnValue2 :"+columnValue2);
+
+            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,columnName1,columnValue1,null);
+            WebElement element=row.get(columnName2);
+            String columnValueOfUI  = UtilKeywordScript.convertStringToNumber(element.getAttribute("textContent")) ;
+
+            System.out.println("Double.parseDouble(columnValue2) :"+Double.parseDouble(columnValue2));
+            System.out.println("Double.parseDouble(columnValueOfUI) :"+Double.parseDouble(columnValueOfUI));
+
+            if(Double.parseDouble(columnValue2)==Double.parseDouble(columnValueOfUI)){
+                return new LogMessage( true, "Verified equal value for StraightLine");
+            }
+            else
+                return new LogMessage( false, "Verified equal value false for StraightLine");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage( false, "Exception occurred " + ex.getMessage()) ;
+        }
+    }
+
+    public LogMessage CompareValueInStraightLine(String objectLocator,String testData){
+        try{
+            String[] data=testData.split(",");
+
+            String Space=data[0];
+
+            System.out.println("Space :"+Space);
+
+            Map<String, WebElement> row = getSingleRowfromTable(objectLocator,"Space",Space,null);
+            WebElement NoOfPeriodsElement =row.get("# of Periods");
+            float NoOfPeriodsValue  = Float.parseFloat(UtilKeywordScript.convertStringToNumber(NoOfPeriodsElement.getAttribute("textContent"))) ;
+            WebElement TotalAmount2BeCapitalizedElement =row.get("Total Amount to Be Capitalized");
+            float TotalAmount2BeCapitalizedValue  = Float.parseFloat(UtilKeywordScript.convertStringToNumber(TotalAmount2BeCapitalizedElement.getAttribute("textContent"))) ;
+            WebElement StraightLineElement =row.get("Straight Line");
+            float StraightLineValue  = Float.parseFloat(UtilKeywordScript.convertStringToNumber(StraightLineElement.getAttribute("textContent")) );
+            float ClaculatedStraightLineValue = TotalAmount2BeCapitalizedValue / NoOfPeriodsValue ;
+            double roundOffClaculatedStraightLineValue = Math.round(ClaculatedStraightLineValue * 100.0) / 100.0;
+            double StraightLineValueFromUI = Double.parseDouble(Float.toString(StraightLineValue));
+
+            System.out.println("StraightLineValue from UI :"+StraightLineValueFromUI);
+            System.out.println("StraightLineValue from Calculation) :"+ ClaculatedStraightLineValue);
+            System.out.println("roundOffClaculatedStraightLineValue :"+roundOffClaculatedStraightLineValue);
+
+
+            if(roundOffClaculatedStraightLineValue == StraightLineValueFromUI){
+                return new LogMessage( true, "Verified equal value for StraightLine");
+            }
+            else
+                return new LogMessage( false, "Verified equal value false for StraightLine");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage( false, "Exception occurred " + ex.getMessage()) ;
+        }
     }
 
     public LogMessage storeUITableValue(String objectLocator, String testData) {

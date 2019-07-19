@@ -1,17 +1,12 @@
 package test.beforeTest;
 
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import test.model.*;
-import test.utility.PropertyConfig;
 import test.utility.ReadExcel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import test.service.* ;

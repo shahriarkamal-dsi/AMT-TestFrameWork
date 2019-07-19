@@ -40,6 +40,8 @@ public class PropertyConfig {
     public static Integer NUMBER_OF_ITERATIONS =5;
     public static Integer WAIT_TIME_EXPLICIT_WAIT=60;
     public static Integer ONE_SECOND =1;
+    public static Integer FIVE_SECOND =5;
+    public static Integer TEN_SECOND =10;
     public static String LOGMESSAGE="LogMessage";
     public static String DELAY="Delay";
     public static String PARENT="Parent";
