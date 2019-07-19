@@ -102,6 +102,7 @@ public class UIText {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(objectLocatorPath + "//*[contains(text(),'" + textData + "')]")));
             return new LogMessage(true, "Text is invisible");
         }catch (Exception e){
+            e.printStackTrace();
             return new LogMessage(false, "Exception occurred " + e.getMessage());
         }
     }
@@ -128,9 +129,8 @@ public class UIText {
             WebElement element = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if(null == element )
                 return new LogMessage(false,"Element is not found");
-            ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
-            element.clear();
+            //((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
             element.sendKeys(textData);
             return new LogMessage(true,"Text is set up");
         } catch(Exception ex){

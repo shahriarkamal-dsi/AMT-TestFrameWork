@@ -38,6 +38,18 @@ public class Rpr {
     @Column(name="fiscal_year" , length = 30)
     private String fiscalYear ;
 
+    @Column(name="base_amount" , length = 30)
+    private String baseAmount ;
+
+    @Column(name="percent_increase" , length = 30)
+    private String percentIncrease ;
+
+    @Column(name="cal_frequency" , length = 30)
+    private String calFrequency ;
+
+    @Column(name="rental_activity" , length = 30)
+    private String rentalActivity ;
+
     public Rpr() {
     }
 
@@ -123,8 +135,43 @@ public class Rpr {
         rprMap.put("endDate",endDate);
         rprMap.put("amount",amount);
         rprMap.put("fiscalYear",fiscalYear);
+        rprMap.put("baseAmount",baseAmount);
+        rprMap.put("percentIncrease",percentIncrease);
+        rprMap.put("calFrequency",calFrequency);
+        rprMap.put("rentalActivity",rentalActivity);
         return rprMap;
     }
 
 
+    public String getBaseAmount() {
+        return baseAmount;
+    }
+
+    public void setBaseAmount(String baseAmount) {
+        this.baseAmount = baseAmount;
+    }
+
+    public String getPercentIncrease() {
+        return percentIncrease;
+    }
+
+    public void setPercentIncrease(String percentIncrease) {
+        this.percentIncrease = percentIncrease;
+    }
+
+    public String getCalFrequency() {
+        return calFrequency;
+    }
+
+    public void setCalFrequency(String calFrequency) {
+        this.calFrequency = calFrequency;
+    }
+
+    public String getRentalActivity() {
+        return rentalActivity;
+    }
+
+    public void setRentalActivity(String rentalActivity) {
+        this.rentalActivity = rentalActivity;
+    }
 }
