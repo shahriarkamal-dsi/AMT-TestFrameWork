@@ -200,6 +200,10 @@ public class DbDataInsertion {
                             rpr.setEndDate((String)item.get("endDate"));
                             rpr.setAmount((String)item.get("amount"));
                             rpr.setFiscalYear((String)item.get("fiscalYear"));
+                            rpr.setBaseAmount((String)item.get("baseAmount"));
+                            rpr.setPercentIncrease((String)item.get("percentIncrease"));
+                            rpr.setCalFrequency((String)item.get("calFrequency"));
+                            rpr.setRentalActivity((String)item.get("rentalActivity"));
                             rprService.createOrUpdateRpr(rpr);
                             PrequisiteData prequisiteData =  preqDataService.getPrequisiteDataByDataIdAndType(rpr.getId(),"rpr") ;
                             TestDataMap testDataMap =  testDataMapService.getTestDataMapByPreqIdAndTcId(prequisiteData.getPreqId(),(String) item.get("TC_ID"));

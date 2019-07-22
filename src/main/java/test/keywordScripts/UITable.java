@@ -417,6 +417,7 @@ public class UITable extends  UtilKeywordScript{
                 return new LogMessage(false," Text field disabled");
             }
         } catch ( Exception ex ) {
+            ex.printStackTrace();
             return new LogMessage(false, "Exception occurred " + ex.getMessage());
         }
     }

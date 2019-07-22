@@ -79,8 +79,6 @@ public class RecurringPaymentCreateandSearch {
 
             UIDropDown uiDropDown = new UIDropDown(webDriver);
             for (String element : dropdownFields){
-                System.out.println("Dropdown Element:" +element);
-                System.out.println("data.get(element):" + data.get(element));
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                 uiDropDown.SelectSpecialItem(objectLocatorPrefix + element,(String)data.get(element));
             }
@@ -88,26 +86,26 @@ public class RecurringPaymentCreateandSearch {
             /* 435_18.03.2019 Setting Value for Fiscal Year*/
 
             String mapValue = (String) data.get("leaseTermDefined");
-            String FiscalYaerObjectLocator = objectLocatorPrefix+"txtFiscalYear";
+            String FiscalYaerObjectLocator = objectLocatorPrefix+"fiscalYear";
             String FiscalYaerObjectLocatorByAreaOwns = objectLocatorPrefix+"fiscalYearByAreaOwns";
 
-            System.out.println("mapValue EQUAL: "+mapValue);
+            System.out.println("mapValue: "+mapValue);
 
             if(mapValue.equals("Fiscal Year" ) ){
-                UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+
                 // Getting Object locator data from fiscalYear from OR"
                 System.out.println("(String) data.get(fiscalYear)"+ data.get("fiscalYear"));
-
-                //uiBase.VerifyVisibleOnScreenTrue(FiscalYaerObjectLocator);
-                //uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
-
+                uiBase.VerifyVisibleOnScreenTrue(FiscalYaerObjectLocator);
+                uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
                 try {
                     uiBase.Click(FiscalYaerObjectLocator);
-                    UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
                     uiText.SetText(FiscalYaerObjectLocator, (String) data.get("fiscalYear"));
                     System.out.println("Successfully Set Fiscal year");
                 } catch (Exception e) {
-                    System.out.println("Exception :"+e);
+                    uiBase.Click(FiscalYaerObjectLocatorByAreaOwns);
+                    uiText.SetText(FiscalYaerObjectLocatorByAreaOwns, (String) data.get("fiscalYear"));
+                    System.out.println("Successfully Set Fiscal year");
                 }
             }else{
                 System.out.println("Fiscal year Not Set");
@@ -118,42 +116,93 @@ public class RecurringPaymentCreateandSearch {
             uiBase.Click(objectLocatorPrefix + "btnSave");
             uiBase.WaitingForSuccessfullPopup();
 
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Rental Activity")));
+            String autoPopulate = (String) data.get("rentalActivity");
+            if (!autoPopulate.isEmpty() && autoPopulate.toLowerCase().equals("auto-populate")){
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Auto-Populate Rental Activity")));
+                //findElement();
+                uiLink.ClickLink("","Auto-Populate Rental Activity");
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+                UtilKeywordScript.switchLastTab(webDriver);
+                webDriver.manage().window().maximize();
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+                uiText.SetText(objectLocatorPrefix + "dtEffectiveDate", (String) data.get("effDate"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+                //Add base amount
+                WebElement baseAmount = (webDriver.findElements(By.xpath("//input[contains(@id,'txtAutoPopulate_BaseAmount')]/preceding-sibling::input"))).get(0);
+                baseAmount.sendKeys((String) data.get("baseAmount"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+                //Add percent increase
+                WebElement percentIncrease = (webDriver.findElements(By.xpath("//input[contains(@id,'txtAutoPopulate_PercentIncrease')]/preceding-sibling::input"))).get(0);
+                percentIncrease.sendKeys((String) data.get("percentIncrease"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
+                // Add cal frequency
+                WebElement calFrequency = (webDriver.findElements(By.xpath("//input[contains(@id,'txtAutoPopulate_CalcFreq')]/preceding-sibling::input"))).get(0);
+                calFrequency.sendKeys((String) data.get("calFrequency"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+                uiText.SetText(objectLocatorPrefix + "dtEndDate", (String) data.get("endDate"));
 
-            uiLink.ClickLink("","Add Rental Activity");
-            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+                uiBase.Click(objectLocatorPrefix + "btnRecalculate");
+                uiText.WaitForInvisibilityOfText(objectLocatorPrefix + "grdAutoPopulate","No items to display");
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
 
-            uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
-            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0,"+ (String)data.get("effDate"));
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
-            uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
-            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
-            uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
-            uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
 
-            uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "Annual,0,0");
+                uiBase.Click(objectLocatorPrefix + "btnApply");
 
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND*3);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+                UtilKeywordScript.switchLastTab(webDriver);
 
-            uiBase.Click(objectLocatorPrefix + "saveRentalActivity");
+                //uiBase.WaitingForPageLoad();
+                //uiBase.WaitingForPageLoad();
 
-            //uiBase.WaitingForPageLoad();
-            uiBase.WaitingForSuccessfullPopup();
+                UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
+                //UtilKeywordScript.switchLastTab(webDriver);
+                //System.out.println("Driver after first switch: " + webDriver);
+
+                uiText.WaitForInvisibilityOfText(objectLocatorPrefix + "grdRentalActivityDetail","No items to display");
+                UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
+                //UtilKeywordScript.switchLastTab(webDriver);
+                //System.out.println("Driver in final state: " + webDriver);
+
+
+
+            }else{
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Rental Activity")));
+
+                uiLink.ClickLink("","Add Rental Activity");
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+
+                uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0," + (String)data.get("effDate"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Eff Date,0,"+ (String)data.get("effDate"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*End Date,0," + (String)data.get("endDate"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                uiTable.EnterCellData(objectLocatorPrefix + "tableRecurrentPayment", "*Amount,0," + (String)data.get("amount"));
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+
+                uiTable.DoubleClickCellInTable(objectLocatorPrefix + "tableRecurrentPayment", "Annual,0,0");
+
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+
+                uiBase.Click(objectLocatorPrefix + "saveRentalActivity");
+
+                //uiBase.WaitingForPageLoad();
+                uiBase.WaitingForSuccessfullPopup();
+            }
 
             uiBase.Click(objectLocatorPrefix + "btnSave");
 
             //uiBase.WaitingForPageLoad();
             LogMessage lm = uiBase.WaitingForSuccessfullPopup();
 
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND*3);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
 
             uiBase.Click(objectLocatorPrefix + "btnClose");
-            UtilKeywordScript.delay(PropertyConfig.FIVE_SECOND);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
             Set<String> set =webDriver.getWindowHandles();
             Iterator<String> itr= set.iterator();
             while(itr.hasNext()){
