@@ -416,7 +416,18 @@ public class UIBase {
         }
     }
 
+    public LogMessage checkpopupfor2ndRevision(){
+        try{
+            Click("Common.RecurringPayment.btnSave");
+            WebDriverWait wait = new WebDriverWait(webDriver, 6);
+            wait.until(ExpectedConditions.alertIsPresent());
+            webDriver.switchTo().alert().accept();
+            return new LogMessage(true,"");
 
-
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur : " + ex.getMessage());
+        }
+    }
 
 }
