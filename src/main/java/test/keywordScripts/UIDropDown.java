@@ -108,16 +108,18 @@ public LogMessage SelectSpecialItem(String objectLocator,String testData) {
     }
     public LogMessage CheckItem(String objectLocator,String testData) {
         try {
+            UIBase uiBase = new UIBase(webDriver);
             Map objectLocatorData = ObjectLocatorDataStorage.getObjectLocator(objectLocator);
             if(null != objectLocatorData.get(PropertyConfig.PARENT_LOCATOR)) {
                 return SelectItem(objectLocator,(String) objectLocatorData.get(PropertyConfig.PARENT_LOCATOR),testData);
             }
-
             WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocator);
             if (null == dropDownElement)
                 return new LogMessage(false,"Web element is not found.");
             Select dropDown = new Select(dropDownElement);
             dropDown.selectByVisibleText(testData);
+            //WebElement dropDownDataElement = dropDownDataElements.get(dropDownDataElements.size()-1);
+            //uiBase.Click(dropDownDataElement);
             return new LogMessage(true, "Dropdown item is selected") ;
         } catch (Exception ex) {
             return  new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
@@ -138,13 +140,14 @@ public LogMessage SelectSpecialItem(String objectLocator,String testData) {
             if (null == dropDownDataElements || dropDownDataElements.isEmpty())
                 return new LogMessage(false," Dropdown list element is not found.");
             WebElement dropDownDataElement = dropDownDataElements.get(dropDownDataElements.size()-1);
-            //uiBase.Click(dropDownDataElement);
+            uiBase.Click(dropDownDataElement);
             return new LogMessage(true, "Dropdown item Checked") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
         }
     }
+
 
     public LogMessage searchAndSelectItem(String objectLocatorData,String dropDownObjectLocatorData,String testData) {
         try {
@@ -160,7 +163,29 @@ public LogMessage SelectSpecialItem(String objectLocator,String testData) {
                 return new LogMessage(false," Dropdown list element is not found.");
             dropDownDataElements.get(dropDownDataElements.size()-1).click();
             //UIBase uiBase = new UIBase(webDriver);
-            // uiBase.Click(dropDownDataElement);
+            //uiBase.Click(dropDownDataElement);
+            return new LogMessage(true, "Dropdown item is selected") ;
+        } catch ( Exception ex) {
+            ex.printStackTrace();
+            return new LogMessage(false, "Exception occurred: " + ex.getMessage()) ;
+        }
+    }
+
+    public LogMessage searchAndSelectItem(String objectLocatorData,String testData) {
+        try {
+            WebElement dropDownElement = WebObjectSearch.getWebElement(webDriver,objectLocatorData);
+            if (null == dropDownElement)
+                return new LogMessage(false," Dropdown element is not found.");
+            dropDownElement.clear();
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+            dropDownElement.sendKeys(testData);
+            UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
+            //List<WebElement> dropDownDataElements = webDriver.findElements(By.xpath(dropDownObjectLocatorData + "//*[text() = '" + testData + "']"));
+            //if (null == dropDownDataElements || dropDownDataElements.isEmpty())
+                //return new LogMessage(false," Dropdown list element is not found.");
+            //dropDownDataElements.get(dropDownDataElements.size()-1).click();
+            //UIBase uiBase = new UIBase(webDriver);
+           // uiBase.Click(dropDownDataElement);
             return new LogMessage(true, "Dropdown item is selected") ;
         } catch ( Exception ex) {
             ex.printStackTrace();
