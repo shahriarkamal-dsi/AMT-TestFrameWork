@@ -86,7 +86,7 @@ public class RecurringPaymentCreateandSearch {
             /* 435_18.03.2019 Setting Value for Fiscal Year*/
 
             String mapValue = (String) data.get("leaseTermDefined");
-            String FiscalYaerObjectLocator = objectLocatorPrefix+"fiscalYear";
+            String FiscalYaerObjectLocator = objectLocatorPrefix+"txtFiscalYear";
             String FiscalYaerObjectLocatorByAreaOwns = objectLocatorPrefix+"fiscalYearByAreaOwns";
 
             System.out.println("mapValue: "+mapValue);
@@ -100,10 +100,13 @@ public class RecurringPaymentCreateandSearch {
                 uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
                 try {
                     uiBase.Click(FiscalYaerObjectLocator);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                     uiText.SetText(FiscalYaerObjectLocator, (String) data.get("fiscalYear"));
                     System.out.println("Successfully Set Fiscal year");
                 } catch (Exception e) {
+                    e.printStackTrace();
                     uiBase.Click(FiscalYaerObjectLocatorByAreaOwns);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
                     uiText.SetText(FiscalYaerObjectLocatorByAreaOwns, (String) data.get("fiscalYear"));
                     System.out.println("Successfully Set Fiscal year");
                 }
@@ -117,7 +120,8 @@ public class RecurringPaymentCreateandSearch {
             uiBase.WaitingForSuccessfullPopup();
 
             String autoPopulate = (String) data.get("rentalActivity");
-            if (!autoPopulate.isEmpty() && autoPopulate.toLowerCase().equals("auto-populate")){
+            System.out.println("Auto populated " + autoPopulate);
+            if (null != autoPopulate  && !autoPopulate.isEmpty() && autoPopulate.toLowerCase().equals("auto-populate")){
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Auto-Populate Rental Activity")));
                 //findElement();
                 uiLink.ClickLink("","Auto-Populate Rental Activity");
@@ -155,12 +159,12 @@ public class RecurringPaymentCreateandSearch {
                 //uiBase.WaitingForPageLoad();
 
                 UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
-                //UtilKeywordScript.switchLastTab(webDriver);
+                UtilKeywordScript.switchLastTab(webDriver);
                 //System.out.println("Driver after first switch: " + webDriver);
 
                 uiText.WaitForInvisibilityOfText(objectLocatorPrefix + "grdRentalActivityDetail","No items to display");
                 UtilKeywordScript.delay(PropertyConfig.SHORT_WAIT_TIME_SECONDS);
-                //UtilKeywordScript.switchLastTab(webDriver);
+                UtilKeywordScript.switchLastTab(webDriver);
                 //System.out.println("Driver in final state: " + webDriver);
 
 
