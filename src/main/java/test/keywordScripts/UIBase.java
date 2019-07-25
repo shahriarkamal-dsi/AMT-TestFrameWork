@@ -183,7 +183,7 @@ public class UIBase {
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("splashScr")));
             return new LogMessage(true,"Page load successfully");
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             return new LogMessage(false, "Exception occurred during loading page");
         }
     }
@@ -413,6 +413,49 @@ public class UIBase {
         } catch (Exception ex) {
             ex.printStackTrace();
             return new LogMessage(false, "Exception occurred in compare  " + ex.getMessage());
+        }
+    }
+
+
+    public LogMessage checkpopupfor2ndRevision(){
+        try{
+            Click("Common.RecurringPayment.btnSave");
+            WebDriverWait wait = new WebDriverWait(webDriver, 6);
+            wait.until(ExpectedConditions.alertIsPresent());
+            webDriver.switchTo().alert().accept();
+            return new LogMessage(true,"");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur : " + ex.getMessage());
+        }
+    }
+
+    public LogMessage checkpopupfor2ndRevisionSave(){
+        try{
+            Click("Common.RecurringPayment.saveRentalActivity");
+            WebDriverWait wait = new WebDriverWait(webDriver, 6);
+            wait.until(ExpectedConditions.alertIsPresent());
+            webDriver.switchTo().alert().accept();
+            return new LogMessage(true,"");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur : " + ex.getMessage());
+        }
+    }
+
+    public LogMessage checkpopupfor2ndRevisionApply(){
+        try{
+            Click("Common.RecurringPayment.btnApply");
+            WebDriverWait wait = new WebDriverWait(webDriver, 6);
+            wait.until(ExpectedConditions.alertIsPresent());
+            webDriver.switchTo().alert().accept();
+            return new LogMessage(true,"");
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new LogMessage(false,"Exception occur : " + ex.getMessage());
         }
     }
 
