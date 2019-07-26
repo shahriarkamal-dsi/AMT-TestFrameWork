@@ -286,7 +286,7 @@ public class UIScheduleTableDR extends UtilKeywordScript {
 
         try {
             List<String> list =  getAllSpecificColumnValues(objectLocatorData,clName)  ;
-
+            System.out.println("amountToCapitalizedCheck: ");
             System.out.println("Column Name: "+ clName);
             System.out.println("LIST Items: "+ list);
 
