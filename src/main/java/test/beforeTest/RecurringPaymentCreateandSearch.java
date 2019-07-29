@@ -100,13 +100,13 @@ public class RecurringPaymentCreateandSearch {
                 uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
                 try {
                     uiBase.Click(FiscalYaerObjectLocator);
-                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                     uiText.SetText(FiscalYaerObjectLocator, (String) data.get("fiscalYear"));
                     System.out.println("Successfully Set Fiscal year");
                 } catch (Exception e) {
                     e.printStackTrace();
                     uiBase.Click(FiscalYaerObjectLocatorByAreaOwns);
-                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                     uiText.SetText(FiscalYaerObjectLocatorByAreaOwns, (String) data.get("fiscalYear"));
                     System.out.println("Successfully Set Fiscal year");
                 }
