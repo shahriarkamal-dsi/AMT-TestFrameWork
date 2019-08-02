@@ -100,13 +100,13 @@ public class RecurringPaymentCreateandSearch {
                 uiBase.VerifyEnabledTrue(FiscalYaerObjectLocator);
                 try {
                     uiBase.Click(FiscalYaerObjectLocator);
-                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                     uiText.SetText(FiscalYaerObjectLocator, (String) data.get("fiscalYear"));
                     System.out.println("Successfully Set Fiscal year");
                 } catch (Exception e) {
                     e.printStackTrace();
                     uiBase.Click(FiscalYaerObjectLocatorByAreaOwns);
-                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND);
+                    UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                     uiText.SetText(FiscalYaerObjectLocatorByAreaOwns, (String) data.get("fiscalYear"));
                     System.out.println("Successfully Set Fiscal year");
                 }
@@ -133,14 +133,17 @@ public class RecurringPaymentCreateandSearch {
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                 //Add base amount
                 WebElement baseAmount = (webDriver.findElements(By.xpath("//input[contains(@id,'txtAutoPopulate_BaseAmount')]/preceding-sibling::input"))).get(0);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                 baseAmount.sendKeys((String) data.get("baseAmount"));
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                 //Add percent increase
                 WebElement percentIncrease = (webDriver.findElements(By.xpath("//input[contains(@id,'txtAutoPopulate_PercentIncrease')]/preceding-sibling::input"))).get(0);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                 percentIncrease.sendKeys((String) data.get("percentIncrease"));
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                 // Add cal frequency
                 WebElement calFrequency = (webDriver.findElements(By.xpath("//input[contains(@id,'txtAutoPopulate_CalcFreq')]/preceding-sibling::input"))).get(0);
+                UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*2);
                 calFrequency.sendKeys((String) data.get("calFrequency"));
                 UtilKeywordScript.delay(PropertyConfig.ONE_SECOND*3);
                 uiText.SetText(objectLocatorPrefix + "dtEndDate", (String) data.get("endDate"));
